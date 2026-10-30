@@ -1,0 +1,21 @@
+import Link from "next/link";
+import { LegalPage } from "@/components/legal-page";
+import { pageMetadata, site } from "@/lib/site";
+
+export const metadata = pageMetadata(
+  "Terms",
+  "Terms for using the Vihar catalogue and accessing its original browser games, including early-build availability, content, and support.",
+  "/terms",
+);
+
+export default function TermsPage() {
+  return <LegalPage title="A few ground rules." path="/terms" description="A little clarity helps keep this a welcoming space to play." summary="Use Vihar respectfully, check a game’s requirements before playing, and remember that early builds can change. Your rights under applicable law remain yours." sections={[
+    { id: "using-vihar", title: "Using Vihar", content: <><p>These terms apply to the Vihar catalogue at {site.url}. By using it, you agree to use the service lawfully and in line with these terms. If you do not agree, please stop using the service. Children should use games with the guidance of a parent or guardian.</p><p>The catalogue helps you discover our games. Games are hosted separately and may provide additional instructions or terms. Read their descriptions, controls, and content information before playing.</p></> },
+    { id: "availability", title: "Games and availability", content: <><p>Bap Ka Rasta is an early playable browser build. Features, device support, and availability may change, and bugs or interruptions can occur. We do not guarantee uninterrupted service or compatibility with every device.</p><p>“Coming soon” and “In development” identify work that is not yet available to play. They are not release-date promises. Concept artwork expresses a visual direction and may differ from gameplay; actual screenshots are labelled separately. No downloadable game release is currently offered.</p></> },
+    { id: "respect", title: "A respectful space", content: <><p>Do not use the website to break the law, interfere with another person’s access, overload the service, bypass access controls, distribute harmful code, or attempt to access information that is not yours.</p><p>Send support requests and feedback respectfully. Game depictions of driving, traffic, and collisions are fictional entertainment and must not be treated as real-world driving instruction.</p></> },
+    { id: "ownership", title: "Games, art, and ownership", content: <><p>Vihar’s branding, original games, code, writing, and artwork are protected by applicable intellectual-property laws. Access to the website lets you browse and use the games as offered; it does not transfer ownership or grant a general right to redistribute, sell, or republish them.</p><p>Fonts, icons, libraries, and other third-party materials retain their own licences and credits. A public source repository is not itself a licence to reuse its contents. Any separate licence supplied with a particular asset or project controls its permitted use.</p></> },
+    { id: "external-sites", title: "Other websites and services", content: <p>Play links take you to a separate game address. Other links may take you to services such as GitHub. Those websites are responsible for their own services, policies, and availability. The <Link href="/privacy">privacy notice</Link> explains the distinction between the catalogue and independently hosted games.</p> },
+    { id: "responsibility", title: "Limitations and your rights", content: <><p>To the extent allowed by applicable law, the catalogue and early game builds are provided as available, without promises that they will be error-free or suitable for every purpose. You are responsible for your device, internet connection, and taking sensible breaks while playing.</p><p>Nothing in these terms excludes liability or limits consumer rights that cannot legally be excluded or limited. Mandatory protections under applicable law take precedence.</p></> },
+    { id: "updates", title: "Changes and contact", content: <><p>We may update the website, games, and these terms as the project develops. The date at the top records the most recent revision. Material changes will be described where relevant.</p><p>For questions about these terms, email <a href={"mailto:" + site.email}>{site.email}</a>. For technical help, start with <Link href="/help">Help &amp; support</Link> or <Link href="/contact">contact us</Link>.</p></> },
+  ]} />;
+}

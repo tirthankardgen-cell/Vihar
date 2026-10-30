@@ -16,10 +16,21 @@ export const site = {
   description:
     "Discover original browser games from Vihar. Explore different worlds, take a little break, and find your next space to play.",
   gameUrl: httpsUrl(
-    process.env.BAP_KA_RASTA_URL || "https://bap-ka-rasta.vercel.app",
+    process.env.BAP_KA_RASTA_URL || "https://rasta.vihar.online",
     "BAP_KA_RASTA_URL",
   ),
 };
+
+const canonical = new URL(site.url);
+if (canonical.pathname !== "/" || canonical.search || canonical.hash) {
+  throw new Error("SITE_URL must be an HTTPS origin, without a path, query, or fragment.");
+}
+
+export const isPreview = process.env.VERCEL_ENV === "preview";
+export const publicRoutes = [
+  "/", "/games", "/games/bap-ka-rasta", "/games/ekka-chor",
+  "/about", "/help", "/contact", "/privacy", "/terms",
+] as const;
 
 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(site.email)) {
   throw new Error("SUPPORT_EMAIL must be a valid email address.");

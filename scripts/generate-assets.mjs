@@ -58,7 +58,7 @@ const atmosphere = `<defs>
   <linearGradient id="terra" x2=".7" y2="1"><stop stop-color="#DBA17B"/><stop offset="1" stop-color="#B76C51"/></linearGradient>
   <linearGradient id="sage" x2="1" y2="1"><stop stop-color="#8C9B79"/><stop offset="1" stop-color="#4F6654"/></linearGradient>
   <filter id="softShadow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="17"/></filter>
-  <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".68" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".055"/></feComponentTransfer><feBlend in="SourceGraphic" mode="multiply"/></filter>
+  <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".68" numOctaves="3" stitchTiles="stitch" result="noise"/><feColorMatrix in="noise" type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".025"/></feComponentTransfer><feComposite in2="SourceGraphic" operator="in" result="maskedNoise"/><feBlend in="SourceGraphic" in2="maskedNoise" mode="multiply"/></filter>
 </defs>`;
 
 const palm = (x, y, scale = 1) => `<g transform="translate(${x} ${y}) scale(${scale})"><path d="M0 0c5-66-4-99-13-135" fill="none" stroke="#917356" stroke-width="7"/><g fill="url(#sage)"><path d="M-13-133c-12-38-68-40-83-20 41-5 62 16 83 20Z"/><path d="M-13-133c-49-18-73 7-76 36 23-20 48-23 76-36Z"/><path d="M-13-133c-37 0-43 31-35 55 4-27 21-33 35-55Z"/><path d="M-13-133c13-45 45-41 63-28-33 7-41 15-63 28Z"/><path d="M-13-133c35-28 70-13 76 10-27-14-49-4-76-10Z"/><path d="M-13-133c42-9 57 16 53 45-10-25-26-33-53-45Z"/><path d="M-13-133c-8-37 8-55 28-63-13 24-14 44-28 63Z"/></g></g>`;
@@ -137,9 +137,11 @@ const cover = await readFile(at("assets/original/bap-ka-rasta-landing.webp"));
 await sharp(cover).resize(1536, 1024, { fit: "cover", position: "centre" }).webp({ quality: 88 }).toFile(at("public/images/bap-ka-rasta-cover.webp"));
 
 const socialBase = (title, subtitle, illustration, type = "brand") => svg("0 0 1200 630", `<defs><linearGradient id="socialBg" x2="1" y2="1"><stop stop-color="#FAF9F6"/><stop offset="1" stop-color="#EEE8F0"/></linearGradient></defs><rect width="1200" height="630" fill="url(#socialBg)"/><g transform="translate(66 62) scale(.72)">${emblem()}</g><g transform="translate(155 87) scale(1.25)">${wordmark()}</g><text x="66" y="${type === "brand" ? 299 : 307}" font-family="Georgia,serif" font-size="${type === "brand" ? 90 : 77}" letter-spacing="-4" fill="#26272C">${title}</text><text x="69" y="372" font-family="Arial,sans-serif" font-size="25" fill="#62616A">${subtitle}</text><text x="69" y="552" font-family="Arial,sans-serif" font-size="20" fill="#62616A" letter-spacing="2">VIHAR.ONLINE</text>${illustration}`);
-const courtyardData = `data:image/webp;base64,${(await readFile(at("public/images/courtyard.webp"))).toString("base64")}`;
-const ekkaData = `data:image/webp;base64,${(await readFile(at("public/images/ekka-chor.webp"))).toString("base64")}`;
-const gameData = `data:image/webp;base64,${cover.toString("base64")}`;
+// librsvg reliably decodes embedded PNGs; embedded WebP can silently disappear.
+const pngData = async (input) => "data:image/png;base64," + (await sharp(input).png().toBuffer()).toString("base64");
+const courtyardData = await pngData(at("public/images/courtyard.webp"));
+const ekkaData = await pngData(at("public/images/ekka-chor.webp"));
+const gameData = await pngData(cover);
 await sharp(Buffer.from(socialBase("A space to play.", "Original games. Different worlds.", `<image href="${courtyardData}" x="647" y="45" width="610" height="610"/>`))).png().toFile(at("public/images/social-vihar.png"));
 await sharp(Buffer.from(socialBase("Bap Ka Rasta.", "Your auto. Your city. Your little escape.", `<defs><clipPath id="coverClip"><rect x="690" y="52" width="458" height="526" rx="24"/></clipPath></defs><image href="${gameData}" x="580" y="52" width="790" height="526" preserveAspectRatio="xMidYMid slice" clip-path="url(#coverClip)"/><rect x="715" y="522" width="181" height="31" rx="15" fill="#FAF9F6"/><text x="805" y="543" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#26272C">Concept artwork</text>`, "game"))).png().toFile(at("public/images/social-bap-ka-rasta.png"));
 await sharp(Buffer.from(socialBase("Ekka Chor.", "A new world is taking shape. Coming soon.", `<defs><clipPath id="coverClip"><rect x="705" y="52" width="443" height="526" rx="24"/></clipPath></defs><image href="${ekkaData}" x="575" y="52" width="700" height="526" preserveAspectRatio="xMidYMid slice" clip-path="url(#coverClip)"/>`, "game"))).png().toFile(at("public/images/social-ekka-chor.png"));

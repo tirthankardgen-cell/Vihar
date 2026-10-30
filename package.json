@@ -11,7 +11,8 @@
     "lint": "eslint . --max-warnings=0",
     "typecheck": "next typegen && tsc --noEmit",
     "check": "npm run lint && npm run typecheck && npm run build",
-    "assets": "node scripts/generate-assets.mjs"
+    "assets": "node scripts/generate-assets.mjs",
+    "verify": "node scripts/verify-site.mjs"
   },
   "engines": {
     "node": "22.x"

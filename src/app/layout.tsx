@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { StructuredData } from "@/components/structured-data";
-import { site } from "@/lib/site";
+import { isPreview, site } from "@/lib/site";
 import "./globals.css";
 
 const dmSans = localFont({
@@ -30,6 +30,9 @@ export const metadata: Metadata = {
   authors: [{ name: site.name, url: site.url }],
   creator: site.name,
   category: "games",
+  robots: isPreview
+    ? { index: false, follow: false }
+    : { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
   referrer: "strict-origin-when-cross-origin",
   alternates: { canonical: "/" },
   openGraph: {
