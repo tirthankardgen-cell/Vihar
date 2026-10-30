@@ -1,3 +1,4 @@
+import { DiscoveryFaq } from "@/components/discovery-faq";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowDown, ArrowRight, ArrowUpRight, Compass, Monitor, Play, Sparkles } from "lucide-react";
@@ -67,8 +68,9 @@ export default function Home() {
         </div>
       </section>
 
+      <div className="section container"><DiscoveryFaq featured /></div>
+
       <section className="closing-section"><div className="container closing-inner"><span className="closing-spark" aria-hidden="true">✳</span><p>Nothing to finish. Nowhere to rush.</p><h2>Shall we <em>play?</em></h2><Link href="/games" className="button button-dark">Find your little escape <ArrowUpRight size={18} aria-hidden="true" /></Link></div></section>
-      <StructuredData data={{ "@context": "https://schema.org", "@type": "WebSite", name: "Vihar", url: site.url, description: site.description, publisher: { "@id": `${site.url}/#organization` }, inLanguage: "en" }} />
     </>
   );
 }

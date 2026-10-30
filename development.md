@@ -15,6 +15,17 @@ This is the single developer handoff, operational guide, asset register and chan
 
 ## Change history
 
+### Make FAQs visible on the homepage — 2026-10-31 03:23:01 IST (UTC+05:30)
+
+Author: Codex. The owner could not find the FAQs and requested a correction and GitHub push. Previously the new answers were only on /help.
+
+- Added a clearly titled Frequently asked questions section at /#faqs, before the closing homepage action, with a responsive two-column desktop / one-column mobile layout. The first answer is open on initial load; every answer uses native keyboard-accessible details/summary controls and works without JavaScript.
+- Added FAQs links in desktop navigation, mobile navigation and the footer. The homepage section links to all Help questions and troubleshooting. Both pages use the same factual answer source.
+- Kept FAQPage structured data on /help only to avoid repeating the same marked-up FAQ across pages. Removed a redundant homepage WebSite entity; the stable identified WebSite entity remains.
+- Extended production verification to require the homepage FAQ anchor, heading, navigation link, initially open answer and all shared question/answer text.
+- Validation: npm run check and npm run verify passed under Node.js 22, including the new homepage FAQ assertions; git diff --check passed. Push is explicitly authorized; deployment success remains separate from the push.
+
+
 ### Logo fidelity, discovery and AdSense review — 2026-10-31 03:12:32 IST (UTC+05:30)
 
 Author: Codex, at the owner's request. Base GitHub commit: 4e893e0784e03211886e45f88dd25780a36bc174.

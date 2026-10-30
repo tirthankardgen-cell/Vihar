@@ -150,11 +150,18 @@ try {
   const llms = await get("/llms.txt");
   assert.equal(llms.status, 200);
   assert((await llms.text()).includes(new URL("/help", canonical).href));
+  const homepage = pages.get("/");
+  assert(homepage.includes('id="faqs"'), "Homepage needs a visible FAQ destination");
+  assert(homepage.includes("Frequently asked questions"), "Homepage FAQ heading");
+  assert(homepage.includes('href="/#faqs"'), "Navigation must link to FAQs");
+  assert(/<details[^>]*open=""/.test(homepage), "First homepage answer must be open initially");
   const help = pages.get("/help");
   const faq = [...help.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)]
     .map((match) => JSON.parse(match[1])).find((data) => data["@type"] === "FAQPage");
   assert(faq && faq.mainEntity.length === 4, "Visible discovery FAQ schema");
   for (const question of faq.mainEntity) {
+    assert(homepage.includes(question.name));
+    assert(homepage.includes(question.acceptedAnswer.text));
     assert(help.includes(question.name));
     assert(help.includes(question.acceptedAnswer.text));
   }
