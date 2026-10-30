@@ -1,0 +1,39 @@
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight, ArrowUpRight, Compass, Keyboard, Monitor, Play, Smartphone, Volume2 } from "lucide-react";
+import { Breadcrumbs } from "@/components/page-intro";
+import { BreadcrumbData, StructuredData } from "@/components/structured-data";
+import { featuredGame } from "@/lib/games";
+import { pageMetadata, site } from "@/lib/site";
+
+export const metadata = pageMetadata("Bap Ka Rasta — Mumbai auto rickshaw game", "Drive a black-and-yellow auto through Mumbai-inspired streets. Discover Bap Ka Rasta, an early playable browser game from Vihar. No account needed.", "/games/bap-ka-rasta", "/images/social-bap-ka-rasta.png");
+
+const controls = [
+  ["Accelerate", "W / ↑"], ["Brake, then reverse", "S / ↓"], ["Steer", "A D / ← →"], ["Handbrake", "Space"], ["Select gear", "1–4"], ["Horn", "H"], ["Change camera", "C"], ["Reset to the road", "R"], ["Pause", "Esc / P"],
+];
+
+export default function BapKaRastaPage() {
+  return (
+    <>
+      <div className="container game-detail-page">
+        <Breadcrumbs items={[{ label: "Games", href: "/games" }, { label: "Bap Ka Rasta" }]} />
+        <div className="game-detail-intro"><div><p className="eyebrow"><span className="tiny-spark" aria-hidden="true">✳</span> Your auto. Your own sweet time.</p><h1>Bap Ka <em>Rasta.</em></h1><p>Take the long way home. Mumbai has a little more to show you.</p></div><div className="game-launch"><a href={featuredGame.playUrl} target="_blank" rel="noopener noreferrer" className="button button-dark"><Play size={15} fill="currentColor" aria-hidden="true" /> Play now <ArrowUpRight size={18} aria-hidden="true" /></a><span>Opens the game in a new tab.</span></div></div>
+        <div className="game-facts"><span className="status-badge status-available"><span className="status-dot" aria-hidden="true" />Early playable build</span><span><Monitor size={16} aria-hidden="true" /> Browser</span><span>Single player</span><span>Driving · Exploration</span><span>No account needed</span></div>
+        <figure className="detail-cover"><Image src={featuredGame.artwork} alt={featuredGame.artworkAlt} width={1536} height={1024} sizes="(max-width: 1280px) 100vw, 1280px" preload /><figcaption>Concept artwork · The playable world is shown below.</figcaption></figure>
+        <div className="game-detail-body">
+          <div className="game-story"><p className="eyebrow">Apna sheher. Apni sawaari. Apna rasta.</p><h2>The road is yours.<br /><em>Mostly.</em></h2><p>Slide into a black-and-yellow auto rickshaw and head out into a neighbourhood inspired by South Mumbai. Follow the sea edge, find a narrow galli, or make another loop around the block.</p><p>You’ll share the streets with traffic, pedestrians and street vendors. There are no laps or missions in this build. Just you, your auto, and the pleasure of seeing what’s around the next corner.</p><div className="game-highlights"><div><Compass size={22} aria-hidden="true" /><h3>Follow your curiosity</h3><p>Explore an independently imagined, Mumbai-inspired street network.</p></div><div><Volume2 size={22} aria-hidden="true" /><h3>A city with a soundtrack</h3><p>Engine sounds, street ambience and a horn for when words won’t do.</p></div></div></div>
+          <aside className="game-side-note"><p className="eyebrow">Before you head out</p><h3>A little heads-up.</h3><p>This is an early playable prototype. Mumbai and the auto rickshaw are available; other city and vehicle previews are still in development.</p><p>Expect stylised traffic and collisions. This is an arcade world, not a driving lesson.</p><p>No saved progress or multiplayer in this build.</p><Link href="/help" className="text-link">Need a hand? <ArrowRight size={16} aria-hidden="true" /></Link></aside>
+        </div>
+        <section className="screenshots-section" aria-labelledby="screenshots-title"><div className="section-title-row"><div><p className="eyebrow">A peek around the corner</p><h2 id="screenshots-title">From the <em>streets.</em></h2></div><span className="quiet-note">Actual browser gameplay · Early build</span></div><div className="screenshots-grid"><figure><Image src="/images/bap-ka-rasta-gameplay.webp" alt="Actual Bap Ka Rasta gameplay showing an auto rickshaw on a Mumbai-inspired street" width={1440} height={900} sizes="(max-width: 700px) 100vw, 60vw" /><figcaption>A little room to roam.</figcaption></figure><figure><Image src="/images/bap-ka-rasta-camera.webp" alt="Actual Bap Ka Rasta gameplay from the driver’s camera inside the auto rickshaw" width={1440} height={900} sizes="(max-width: 700px) 100vw, 40vw" /><figcaption>See the city from your seat.</figcaption></figure></div></section>
+        <div className="practical-grid">
+          <section className="practical-panel" aria-labelledby="controls-title"><Keyboard size={25} aria-hidden="true" /><h2 id="controls-title">Make yourself at home.</h2><p>Keyboard controls</p><dl className="controls-list">{controls.map(([action, key]) => <div key={action}><dt>{action}</dt><dd><kbd>{key}</kbd></dd></div>)}</dl><p className="small-note">Hold the brake after stopping to reverse. Steering and acceleration work together.</p></section>
+          <section className="practical-panel" aria-labelledby="requirements-title"><Smartphone size={25} aria-hidden="true" /><h2 id="requirements-title">A few things to know.</h2><h3>Your browser</h3><p>Use an up-to-date browser with WebGL 2 and hardware acceleration enabled. A keyboard and a larger screen are a good place to start.</p><h3>Playing on your phone</h3><p>Touch controls are included. The game uses a landscape play area; turning your phone sideways gives you more room. Performance varies by device, and broad phone and Safari testing is still in progress.</p><h3>A smoother ride</h3><p>Switch to Low graphics in the pause menu if things feel slow. The game pauses when you leave the tab. Resume when you’re ready.</p><h3>Sound</h3><p>Select “Chal Chala” to begin and enable audio. You can mute it at any time. The catalogue never plays sound.</p></section>
+        </div>
+        <section className="release-note"><p className="eyebrow">Build notes</p><div><h2>One city. One auto. A beginning.</h2><p>The current prototype includes Mumbai free roaming, two camera views, keyboard and touch controls, four gears, sound controls, and Standard / Low graphics. There is no downloadable release yet.</p><a href="https://github.com/tirthankardgen-cell/Bap-Ka-Rasta/blob/main/README.md" className="text-link" target="_blank" rel="noopener noreferrer">Read the current build notes <ArrowUpRight size={16} aria-hidden="true" /><span className="sr-only"> on GitHub, opens in a new tab</span></a></div></section>
+      </div>
+      <section className="game-end-cta"><div className="container"><span className="eyebrow">The city can wait. So can your to-do list.</span><h2>Ready for a little <em>detour?</em></h2><a href={featuredGame.playUrl} target="_blank" rel="noopener noreferrer" className="button button-dark">Let’s drive <ArrowUpRight size={18} aria-hidden="true" /><span className="sr-only"> — opens Bap Ka Rasta in a new tab</span></a></div></section>
+      <BreadcrumbData items={[{ name: "Games", path: "/games" }, { name: "Bap Ka Rasta", path: "/games/bap-ka-rasta" }]} />
+      <StructuredData data={{ "@context": "https://schema.org", "@type": "VideoGame", name: "Bap Ka Rasta", description: "An early playable, single-player browser driving game. Explore Mumbai-inspired streets in an auto rickshaw.", url: `${site.url}/games/bap-ka-rasta`, image: `${site.url}/images/social-bap-ka-rasta.png`, gamePlatform: "Web browser", operatingSystem: "Web browser with WebGL 2", genre: ["Driving", "Exploration"], playMode: "SinglePlayer", inLanguage: "en", publisher: { "@id": `${site.url}/#organization` }, sameAs: featuredGame.playUrl }} />
+    </>
+  );
+}
