@@ -7,12 +7,15 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const at = (...parts) => path.join(root, ...parts);
 await Promise.all(["public/images", "public/fonts", "public/brand", "assets/original"].map((dir) => mkdir(at(dir), { recursive: true })));
 
-for (const [source, target] of [
-  ["dm-sans/files/dm-sans-latin-wght-normal.woff2", "dm-sans-latin.woff2"],
-  ["newsreader/files/newsreader-latin-wght-normal.woff2", "newsreader-latin.woff2"],
-  ["newsreader/files/newsreader-latin-wght-italic.woff2", "newsreader-latin-italic.woff2"],
-]) await copyFile(at("node_modules/@fontsource-variable", source), at("public/fonts", target));
-for (const family of ["dm-sans", "newsreader"]) await copyFile(at("node_modules/@fontsource-variable", family, "LICENSE"), at("public/fonts", `${family}-LICENSE.txt`));
+for (const [packageName, source, target] of [
+  ["@fontsource-variable/dm-sans", "files/dm-sans-latin-wght-normal.woff2", "dm-sans-latin.woff2"],
+  ["@fontsource/newsreader", "files/newsreader-latin-400-normal.woff2", "newsreader-latin.woff2"],
+  ["@fontsource/newsreader", "files/newsreader-latin-500-normal.woff2", "newsreader-latin-medium.woff2"],
+  ["@fontsource/newsreader", "files/newsreader-latin-400-italic.woff2", "newsreader-latin-italic.woff2"],
+]) await copyFile(at("node_modules", packageName, source), at("public/fonts", target));
+for (const [packageName, target] of [["@fontsource-variable/dm-sans", "dm-sans"], ["@fontsource/newsreader", "newsreader"]]) {
+  await copyFile(at("node_modules", packageName, "LICENSE"), at("public/fonts", `${target}-LICENSE.txt`));
+}
 
 const emblem = (ink = "#26272C", dot = "#C77B53") => `<g fill="${ink}"><path d="M44 3 12 25C5 30 2 36 2 45v43l14-5V45c0-5 2-8 6-11l22-15V3ZM52 3l32 22c7 5 10 11 10 20v43l-14-5V45c0-5-2-8-6-11L52 19V3Z"/><path d="M19 43h10c4 0 7 2 9 6l10 25 10-25c2-4 5-6 9-6h10L55 96H41L19 43Z"/></g><circle cx="48" cy="42" r="7.5" fill="${dot}"/>`;
 const wordmark = (ink = "#26272C") => `<g fill="${ink}" fill-rule="evenodd"><path d="M0 0h5l7 18L19 0h5L14 25h-4L0 0Z"/><path d="M34 0h5v25h-5Z"/><path d="M50 0h5v10h13V0h5v25h-5V14H55v11h-5Z"/><path d="M94 0h5l11 25h-5l-2.5-6h-12L88 25h-5L94 0Zm-1.8 15h8.6L96.5 4.5 92.2 15Z"/><path d="M120 0h12c7 0 10 3 10 8 0 4-2 6.5-6 7.5l8 9.5h-6l-7-9h-6v9h-5V0Zm5 4v8h7c3 0 5-1.2 5-4s-2-4-5-4h-7Z"/></g>`;
@@ -131,6 +134,13 @@ const playground = svg("0 0 960 960", `${atmosphere}<rect width="960" height="96
 for (const [name, source, width] of [["courtyard", courtyard, 1100], ["ekka-chor", ekkaChor, 1200], ["playground", playground, 960]]) {
   await writeFile(at("assets/original", `${name}.svg`), source);
   await sharp(Buffer.from(source)).resize(width).webp({ quality: 86, effort: 6 }).toFile(at("public/images", `${name}.webp`));
+}
+
+for (const name of ["bap-ka-rasta-gameplay", "bap-ka-rasta-camera"]) {
+  await sharp(at("assets/original", name + ".png"))
+    .resize(1440, 900, { fit: "cover" })
+    .webp({ quality: 86, effort: 6 })
+    .toFile(at("public/images", name + ".webp"));
 }
 
 const cover = await readFile(at("assets/original/bap-ka-rasta-landing.webp"));

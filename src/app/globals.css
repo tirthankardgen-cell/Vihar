@@ -5,7 +5,7 @@
   --font-serif: var(--font-newsreader);
   --color-canvas: #faf9f6;
   --color-ink: #26272c;
-  --color-terracotta: #a85936;
+  --color-terracotta: #985033;
   --color-lilac: #eeeffc;
 }
 
@@ -15,7 +15,7 @@
   --ink: #26272c;
   --muted: #62616a;
   --line: #e3e0d9;
-  --terra: #a85936;
+  --terra: #985033;
   --lavender: #eeedf5;
   --serif: var(--font-newsreader), Georgia, serif;
 }

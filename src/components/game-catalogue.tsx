@@ -14,6 +14,7 @@ export function GameCatalogue({ games }: { games: Game[] }) {
 
   return (
     <div className="catalogue">
+      <h2 className="sr-only">Game collection</h2>
       <div className="catalogue-toolbar">
         <div className="filter-group" role="group" aria-label="Filter games by availability">
           {([{ value: "all", label: "All games" }, { value: "playable", label: "Play now" }, { value: "upcoming", label: "Coming soon" }] as const).map(({ value, label }) => <button type="button" key={value} onClick={() => setFilter(value)} aria-pressed={filter === value}>{label}<span>{games.filter((game) => value === "all" || game.status === value).length}</span></button>)}

@@ -23,7 +23,7 @@ export default function Home() {
             <p className="hero-footnote"><span aria-hidden="true" />No sign-up. Just show up and play.</p>
           </div>
           <div className="hero-art">
-            <Image src="/images/courtyard.webp" alt="An imagined courtyard with a welcoming arch, a winding path, a kite and a terracotta sun" width={1100} height={1100} sizes="(max-width: 767px) 100vw, 55vw" preload className="courtyard-image" />
+            <Image src="/images/courtyard.webp" alt="An imagined courtyard with a welcoming arch, a winding path, a kite and a terracotta sun" width={1100} height={1100} sizes="(max-width: 519px) calc(100vw - 40px), (max-width: 767px) 480px, (max-width: 1376px) calc(53vw + 6px), (max-width: 1599px) 735px, 764px" loading="eager" fetchPriority="high" className="courtyard-image" />
             <div className="art-caption"><span className="caption-line" aria-hidden="true" /><span>A world outside the everyday.</span></div>
           </div>
         </div>
@@ -34,8 +34,8 @@ export default function Home() {
         <div className="container">
           <div className="section-heading"><p className="eyebrow"><span className="section-number">01 /</span> In the spotlight</p><span className="quiet-note">A little escape, ready when you are.</span></div>
           <div className="featured-card">
-            <Link href="/games/bap-ka-rasta" className="featured-visual" aria-label="Discover Bap Ka Rasta">
-              <Image src={featuredGame.artwork} alt={featuredGame.artworkAlt} fill sizes="(max-width: 767px) 100vw, 60vw" />
+            <Link href="/games/bap-ka-rasta" className="featured-visual" aria-label="Discover Bap Ka Rasta. Mumbai, with a little imagination. Concept artwork.">
+              <Image src={featuredGame.artwork} alt={featuredGame.artworkAlt} fill sizes="(max-width: 767px) calc(100vw - 42px), (max-width: 1376px) 52vw, 700px" />
               <span className="featured-location"><span aria-hidden="true">↗</span> Mumbai, with a little imagination.</span>
               <span className="artwork-label">Concept artwork</span>
             </Link>

@@ -15,11 +15,13 @@ const dmSans = localFont({
 
 const newsreader = localFont({
   src: [
-    { path: "../../public/fonts/newsreader-latin.woff2", style: "normal", weight: "200 800" },
-    { path: "../../public/fonts/newsreader-latin-italic.woff2", style: "italic", weight: "200 800" },
+    { path: "../../public/fonts/newsreader-latin.woff2", style: "normal", weight: "400" },
+    { path: "../../public/fonts/newsreader-latin-medium.woff2", style: "normal", weight: "500" },
+    { path: "../../public/fonts/newsreader-latin-italic.woff2", style: "italic", weight: "400" },
   ],
   variable: "--font-newsreader",
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {

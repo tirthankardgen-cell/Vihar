@@ -12,7 +12,7 @@ import sharp from "sharp";
 const require = createRequire(import.meta.url);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const base = "http://127.0.0.1:" + (process.env.VERIFY_PORT || "4179");
-const canonical = new URL(process.env.SITE_URL || "https://vihar.online");
+const canonical = new URL(process.env.SITE_URL || "https://www.vihar.online");
 const gameUrl = process.env.BAP_KA_RASTA_URL || "https://rasta.vihar.online";
 const email = process.env.SUPPORT_EMAIL || "contact@vihar.online";
 const preview = process.env.VERCEL_ENV === "preview";
@@ -66,7 +66,9 @@ try {
     assert(description && !descriptions.has(description), route + " needs a unique description");
     titles.add(title);
     descriptions.add(description);
-    assert.equal(decode(attribute(html, "link", "rel", "canonical", "href") || ""), new URL(route, canonical).href, route + " canonical");
+    const pageCanonical = attribute(html, "link", "rel", "canonical", "href");
+    assert(pageCanonical, route + " needs a canonical URL");
+    assert.equal(new URL(decode(pageCanonical)).href, new URL(route, canonical).href, route + " canonical");
     const robots = attribute(html, "meta", "name", "robots");
     assert(robots && robots.includes(preview ? "noindex" : "index"), route + " robots");
     if (!preview) assert(!robots.includes("noindex"), route + " must be indexable");
@@ -106,7 +108,7 @@ try {
   for (const asset of [
     "/images/courtyard.webp", "/images/playground.webp", "/images/bap-ka-rasta-cover.webp",
     "/images/bap-ka-rasta-gameplay.webp", "/images/bap-ka-rasta-camera.webp", "/images/ekka-chor.webp",
-    "/fonts/dm-sans-latin.woff2", "/fonts/newsreader-latin.woff2", "/fonts/newsreader-latin-italic.woff2",
+    "/fonts/dm-sans-latin.woff2", "/fonts/newsreader-latin.woff2", "/fonts/newsreader-latin-medium.woff2", "/fonts/newsreader-latin-italic.woff2",
     "/brand/vihar-horizontal.svg", "/brand/vihar-emblem.svg", "/brand/vihar-avatar.png",
     "/brand/icon-192.png", "/brand/icon-512.png", "/brand/maskable-512.png",
   ]) {
