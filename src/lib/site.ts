@@ -14,7 +14,7 @@ export const site = {
   url: httpsUrl(process.env.SITE_URL || "https://www.vihar.online", "SITE_URL"),
   email: process.env.SUPPORT_EMAIL || "contact@vihar.online",
   description:
-    "Discover original browser games from Vihar. Explore different worlds, take a little break, and find your next space to play.",
+    "Play original browser games on Vihar. Explore Mumbai in Bap Ka Rasta, an auto-rickshaw driving game, with no account or download needed.",
   gameUrl: httpsUrl(
     process.env.BAP_KA_RASTA_URL || "https://rasta.vihar.online",
     "BAP_KA_RASTA_URL",

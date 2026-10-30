@@ -1,3 +1,4 @@
+import { DiscoveryFaq } from "@/components/discovery-faq";
 import Link from "next/link";
 import { ArrowUpRight, MessageCircle } from "lucide-react";
 import type { ReactNode } from "react";
@@ -22,6 +23,7 @@ export default function HelpPage() {
       <PageIntro eyebrow="A little help along the way" title="Let’s get you playing." description="A few useful answers, so you can get back to the good part." />
       <div className="help-layout">
         <div>
+          <DiscoveryFaq />
           <section className="help-group" aria-labelledby="start-title">
             <h2 id="start-title">Getting started</h2>
             <Faq question="How do I start a game?"><p>Visit <Link href="/games">Games</Link> and choose a title marked Playable now. On its page, select Play now. The game opens in a new tab, so you can return here whenever you like.</p><p>In Bap Ka Rasta, choose “Mera Bap Ka Rasta,” select Mumbai, then “Yahin Chalao.” Choose the auto rickshaw, select “Drive Mumbai,” and then “Chal Chala” to begin.</p></Faq>

@@ -4,6 +4,8 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { StructuredData } from "@/components/structured-data";
 import { isPreview, site } from "@/lib/site";
+import { AdSense } from "@/components/adsense";
+import { adsense } from "@/lib/adsense";
 import "./globals.css";
 
 const dmSans = localFont({
@@ -26,8 +28,10 @@ const newsreader = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: { default: "Vihar — A space to play.", template: "%s | Vihar" },
+  title: { default: "Vihar — Original Browser Games | A space to play.", template: "%s | Vihar" },
   description: site.description,
+  verification: { google: process.env.GOOGLE_SITE_VERIFICATION || undefined },
+  other: adsense.publisherId && !isPreview ? { "google-adsense-account": adsense.publisherId } : {},
   applicationName: site.name,
   authors: [{ name: site.name, url: site.url }],
   creator: site.name,
@@ -43,7 +47,7 @@ export const metadata: Metadata = {
     images: [{ url: "/images/social-vihar.png", width: 1200, height: 630, alt: "Vihar — A space to play. Original games, different worlds." }],
   },
   twitter: { card: "summary_large_image", title: "Vihar — A space to play.", description: site.description, images: ["/images/social-vihar.png"] },
-  icons: { icon: [{ url: "/favicon.ico", sizes: "16x16 32x32 48x48" }, { url: "/icon.svg", type: "image/svg+xml" }], apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }] },
+  icons: { icon: [{ url: "/favicon.ico", sizes: "16x16 32x32 48x48" }, { url: "/brand/favicon-48.png", type: "image/png", sizes: "48x48" }], apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }] },
   manifest: "/manifest.webmanifest",
 };
 
@@ -57,6 +61,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Header />
         <main id="main-content" tabIndex={-1}>{children}</main>
         <Footer />
+        <AdSense />
         <StructuredData data={{ "@context": "https://schema.org", "@type": "Organization", "@id": `${site.url}/#organization`, name: "Vihar", url: site.url, logo: `${site.url}/brand/vihar-avatar.png`, email: site.email }} />
       </body>
     </html>

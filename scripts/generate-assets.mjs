@@ -28,11 +28,11 @@ await writeFile(at("public/brand/vihar-emblem-monochrome.svg"), svg("-8 -5 112 1
 await writeFile(at("public/brand/vihar-emblem-inverse.svg"), svg("-8 -5 112 112", emblem("#FAF9F6", "#C77B53")));
 await writeFile(at("public/brand/vihar-stacked.svg"), svg("0 0 400 340", `<g transform="translate(144 22) scale(1.16)">${emblem()}</g><g transform="translate(90 160) scale(1.53)">${wordmark()}</g><text x="200" y="242" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" letter-spacing="3" fill="#26272C">A space to play.</text>`));
 
-// A simplified, wider-gap small mark remains readable at 16px.
-const smallMark = `<path d="m14 2-9 6v18l4-2V10l5-4V2Zm4 0 9 6v18l-4-2V10l-5-4V2Z" fill="#26272C"/><path d="M9 14h4l3 10 3-10h4l-5 16h-4L9 14Z" fill="#26272C"/><circle cx="16" cy="12" r="2" fill="#A95832"/>`;
-const iconSvg = svg("0 0 40 40", `<rect width="40" height="40" rx="9" fill="#FAF9F6"/><g transform="translate(4 3)">${smallMark}</g>`);
-await writeFile(at("public/icon.svg"), iconSvg);
-const iconPngs = await Promise.all([16, 32, 48].map((size) => sharp(Buffer.from(iconSvg)).resize(size, size).png().toBuffer()));
+// Derive icons from the owner's actual pixels, never a redrawn or stretched mark.
+// The 368px square contains the full central emblem, excluding text and samples.
+const emblemPixels = await sharp(at("logo.png"))
+  .extract({ left: 584, top: 160, width: 368, height: 368 }).png().toBuffer();
+const iconPngs = await Promise.all([16, 32, 48].map((size) => sharp(emblemPixels).resize(size, size, { fit: "contain" }).png().toBuffer()));
 const icoHeader = Buffer.alloc(6 + iconPngs.length * 16);
 icoHeader.writeUInt16LE(1, 2);
 icoHeader.writeUInt16LE(iconPngs.length, 4);
@@ -46,9 +46,10 @@ for (let i = 0; i < iconPngs.length; i++) {
   await writeFile(at(`public/brand/favicon-${[16, 32, 48][i]}.png`), iconPngs[i]);
 }
 await writeFile(at("public/favicon.ico"), Buffer.concat([icoHeader, ...iconPngs]));
-for (const [size, target] of [[180, "apple-touch-icon.png"], [192, "brand/icon-192.png"], [512, "brand/icon-512.png"], [512, "brand/vihar-avatar.png"]]) await sharp(Buffer.from(iconSvg)).resize(size, size).png().toFile(at("public", target));
-const maskable = svg("0 0 512 512", `<rect width="512" height="512" fill="#FAF9F6"/><g transform="translate(120 120) scale(2.82)">${emblem()}</g>`);
-await sharp(Buffer.from(maskable)).resize(512).png().toFile(at("public/brand/maskable-512.png"));
+for (const [size, target] of [[180, "apple-touch-icon.png"], [192, "brand/icon-192.png"], [512, "brand/icon-512.png"], [512, "brand/vihar-avatar.png"]]) {
+  await sharp(emblemPixels).resize(size, size, { fit: "contain" }).png().toFile(at("public", target));
+}
+await sharp(emblemPixels).resize(320, 320).extend({ top: 96, bottom: 96, left: 96, right: 96, background: "#FAF9F6" }).png().toFile(at("public/brand/maskable-512.png"));
 
 const atmosphere = `<defs>
   <radialGradient id="glow"><stop stop-color="#F5AE77" stop-opacity=".65"/><stop offset="1" stop-color="#F8BA84" stop-opacity="0"/></radialGradient>

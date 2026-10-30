@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
 import { createRequire } from "node:module";
@@ -135,10 +136,37 @@ try {
   assert(pages.get("/games/bap-ka-rasta").includes('href="' + gameUrl + '"'), "Game detail must use the configured game URL");
   assert(!pages.get("/games/ekka-chor").includes('href="' + gameUrl + '"'), "Upcoming game must not have a launch link");
   assert(pages.get("/contact").includes('href="mailto:' + email + '"'), "Contact must use the configured mailbox");
+  const publisher = (process.env.ADSENSE_PUBLISHER_ID ?? "ca-pub-6693217545827146").trim();
+  const adScriptExpected = process.env.ADSENSE_ENABLED === "true" && !preview;
+  assert.equal(pages.get("/").includes("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"), adScriptExpected, "Advertising loader must follow its gate");
+  assert(pages.get("/privacy").includes(adScriptExpected ? "This site loads Google AdSense." : "The advertising loader is currently disabled."), "Privacy notice must match advertising mode");
+  const account = attribute(pages.get("/"), "meta", "name", "google-adsense-account");
+  assert.equal(account, publisher && !preview ? publisher : undefined);
+  const adsResponse = await get("/ads.txt");
+  assert.equal(adsResponse.status, 200);
+  const adsText = await adsResponse.text();
+  if (publisher && !preview) assert.equal(adsText.trim(), `google.com, ${publisher.replace("ca-", "")}, DIRECT, f08c47fec0942fa0`);
+  else assert(!adsText.includes("DIRECT"));
+  const llms = await get("/llms.txt");
+  assert.equal(llms.status, 200);
+  assert((await llms.text()).includes(new URL("/help", canonical).href));
+  const help = pages.get("/help");
+  const faq = [...help.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)]
+    .map((match) => JSON.parse(match[1])).find((data) => data["@type"] === "FAQPage");
+  assert(faq && faq.mainEntity.length === 4, "Visible discovery FAQ schema");
+  for (const question of faq.mainEntity) {
+    assert(help.includes(question.name));
+    assert(help.includes(question.acceptedAnswer.text));
+  }
+  // Confirm the favicon is an undistorted resize of the actual source pixels.
+  const original = await sharp(path.join(root, "logo.png")).extract({ left: 584, top: 160, width: 368, height: 368 }).png().toBuffer();
+  const expectedIcon = await sharp(original).resize(48, 48, { fit: "contain" }).raw().toBuffer();
+  const actualIcon = await sharp(await readFile(path.join(root, "public/brand/favicon-48.png"))).raw().toBuffer();
+  assert.deepEqual(actualIcon, expectedIcon, "Favicon must match the original emblem pixels");
   const missing = await get("/this-page-does-not-exist");
   assert.equal(missing.status, 404, "Unknown pages must return HTTP 404");
   assert((await missing.text()).includes("noindex"), "404 page must not be indexed");
-  console.log("PASS: 9 public routes, unique SEO metadata, structured data, internal links, images, fonts, icons, robots, sitemap, game links, contact, headers, and HTTP 404.");
+  console.log("PASS: 9 public routes, unique SEO metadata, structured data, internal links, images, fonts, icons, robots, sitemap, game links, contact, headers, HTTP 404, FAQ parity, original-logo favicon, AdSense gates, ads.txt and llms.txt.");
 } catch (error) {
   console.error(error);
   process.exitCode = 1;

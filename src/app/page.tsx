@@ -9,13 +9,14 @@ import { site } from "@/lib/site";
 export default function Home() {
   return (
     <>
+      <StructuredData data={{ "@context": "https://schema.org", "@type": "WebSite", "@id": `${site.url}/#website`, url: site.url, name: "Vihar", description: site.description, inLanguage: "en", publisher: { "@id": `${site.url}/#organization` } }} />
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero-atmosphere" aria-hidden="true" />
         <div className="container hero-inner">
           <div className="hero-copy">
             <p className="eyebrow"><span className="tiny-spark" aria-hidden="true">✳</span> A little room for wonder</p>
             <h1 id="hero-title">A space<br />to <em>play.</em></h1>
-            <p className="hero-description">Original games. Different worlds.<br />Find your next little escape.</p>
+            <p className="hero-description">Original browser games. Different worlds.<br />No download. Find your next little escape.</p>
             <div className="hero-actions">
               <Link href="/games" className="button button-dark">Explore games <ArrowUpRight size={18} aria-hidden="true" /></Link>
               <a href="#featured" className="hero-scroll" aria-label="Discover our featured game"><ArrowDown size={17} aria-hidden="true" /></a>
