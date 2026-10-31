@@ -16,7 +16,7 @@ export default function ContactPage() {
     <div className="container">
       <Breadcrumbs items={[{ label: "Contact" }]} />
       <PageIntro eyebrow="The door is open" title="A conversation starts here." description="A question, a little feedback, or an idea worth exploring. We’d like to hear it." />
-      <div className="contact-grid">
+      <section className="contact-panel viewport-section" aria-label="Contact options"><div className="contact-grid">
         <section className="contact-primary" aria-labelledby="hello-title">
           <Mail size={28} aria-hidden="true" /><h2 id="hello-title">Say <em>hello.</em></h2>
           <a href={emailLink} className="contact-email">{site.email}<ArrowUpRight size={21} aria-hidden="true" /></a>
@@ -30,7 +30,7 @@ export default function ContactPage() {
           <section className="contact-option"><h2>Just finding your feet?</h2><p>Our help page covers controls, phone support, sound, and the most common bumps in the road.</p><Link href="/help" className="text-link">Visit help &amp; support <ArrowUpRight size={16} aria-hidden="true" /></Link></section>
         </div>
       </div>
-      <aside className="contact-note"><ShieldCheck size={20} aria-hidden="true" /><p>Never send passwords, payment details, or other sensitive information. We use the details you send to handle your message. Read our <Link href="/privacy">privacy notice</Link> for more.</p></aside>
+      <aside className="contact-note"><ShieldCheck size={20} aria-hidden="true" /><p>Never send passwords, payment details, or other sensitive information. We use the details you send to handle your message. Read our <Link href="/privacy">privacy notice</Link> for more.</p></aside></section>
       <BreadcrumbData items={[{ name: "Contact", path: "/contact" }]} />
     </div>
   );

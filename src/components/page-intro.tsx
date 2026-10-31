@@ -1,3 +1,4 @@
+import "@/app/content.css";
 import Link from "@/components/site-link";
 import { ChevronRight } from "lucide-react";
 
@@ -11,7 +12,7 @@ export function Breadcrumbs({ items }: { items: { label: string; href?: string }
 
 export function PageIntro({ eyebrow, title, description }: { eyebrow: string; title: string; description: string }) {
   return (
-    <div className="page-intro">
+    <div className="page-intro page-hero">
       <p className="eyebrow"><span className="tiny-spark" aria-hidden="true">✳</span>{eyebrow}</p>
       <h1>{title}</h1>
       <p className="page-description">{description}</p>

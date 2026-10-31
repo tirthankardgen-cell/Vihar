@@ -47,7 +47,7 @@ export function Header() {
         <nav aria-label="Main navigation" className="desktop-nav">
           <Link href="/games" aria-current={pathname.startsWith("/games") ? "page" : undefined}>Games</Link>
           <Link href="/about" aria-current={pathname === "/about" ? "page" : undefined}>About</Link>
-          <Link href="/#faqs">FAQs</Link>
+          <Link href={pathname === "/" ? "/#faqs" : "/help"}>FAQs</Link>
         </nav>
         <Link href="/games" className="button button-dark header-cta">Explore games <ArrowUpRight size={16} aria-hidden="true" /></Link>
         <button
@@ -66,7 +66,7 @@ export function Header() {
         <Link href="/games" onClick={() => setMenuOpen(false)} aria-current={pathname.startsWith("/games") ? "page" : undefined}>Games <ArrowUpRight size={18} aria-hidden="true" /></Link>
         <Link href="/about" onClick={() => setMenuOpen(false)} aria-current={pathname === "/about" ? "page" : undefined}>About <ArrowUpRight size={18} aria-hidden="true" /></Link>
         <Link href="/help" onClick={() => setMenuOpen(false)}>Help &amp; support <ArrowUpRight size={18} aria-hidden="true" /></Link>
-        <Link href="/#faqs" onClick={() => setMenuOpen(false)}>FAQs <ArrowUpRight size={18} aria-hidden="true" /></Link>
+        <Link href={pathname === "/" ? "/#faqs" : "/help"} onClick={() => setMenuOpen(false)}>FAQs <ArrowUpRight size={18} aria-hidden="true" /></Link>
       </nav>
     </header>
   );

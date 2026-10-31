@@ -31,13 +31,13 @@ export const games: Game[] = [
     playUrl: site.gameUrl,
   },
   {
-    slug: "ekka-chor",
-    title: "Ekka Chor",
+    slug: "gulam-chor",
+    title: "Gulam Chor",
     description:
       "A new game is taking shape. A little mystery, a fresh world, and more to reveal.",
     genre: "In development",
     platform: "Browser",
-    artwork: "/images/ekka-chor.webp",
+    artwork: "/images/gulam-chor.webp",
     artworkAlt: "Original concept illustration of playing cards and a terracotta token on a lavender table",
     status: "upcoming",
     availability: "Coming soon",

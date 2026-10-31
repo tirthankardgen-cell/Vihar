@@ -18,8 +18,9 @@ const gameUrl = process.env.BAP_KA_RASTA_URL || "https://rasta.vihar.online";
 const email = process.env.SUPPORT_EMAIL || "contact@vihar.online";
 const preview = process.env.VERCEL_ENV === "preview";
 const guidePath = "/guides/bap-ka-rasta-first-drive";
-const routes = ["/", "/games", "/games/bap-ka-rasta", "/games/ekka-chor", "/about", "/help", "/contact", "/privacy", "/terms", guidePath];
-const indexableRoutes = routes.filter((route) => route !== "/games/ekka-chor");
+const galleryPath = "/games/bap-ka-rasta/screenshots";
+const routes = ["/", "/games", "/games/bap-ka-rasta", "/games/gulam-chor", "/about", "/help", "/contact", "/privacy", "/terms", guidePath, galleryPath];
+const indexableRoutes = routes.filter((route) => route !== "/games/gulam-chor");
 const server = spawn(process.execPath, [require.resolve("next/dist/bin/next"), "start", "--hostname", "127.0.0.1", "--port", new URL(base).port], {
   cwd: root,
   env: { ...process.env, NODE_ENV: "production" },
@@ -109,9 +110,34 @@ try {
     assert.equal(metadata.width, 1200, asset + " width");
     assert.equal(metadata.height, 630, asset + " height");
   }
+  // Guard the first-load budgets and verify every negotiated hero format.
+  const home = pages.get("/");
+  const heroPicture = home.match(/<picture>([\s\S]*?)<\/picture>/)?.[1];
+  assert(heroPicture, "Homepage needs responsive hero artwork");
+  const heroSources = [...heroPicture.matchAll(/\bsrcSet="([^"]+)"/gi)].flatMap((match) => decode(match[1]).split(",").map((candidate) => candidate.trim().split(/\s+/)));
+  assert.equal(heroSources.length, 6, "Hero needs three sizes in AVIF and WebP");
+  for (const [url, descriptor] of heroSources) {
+    const response = await get(url);
+    assert.equal(response.status, 200, "Missing hero asset: " + url);
+    assert(response.headers.get("cache-control")?.includes("immutable"), "Hashed hero assets must be immutable");
+    const buffer = Buffer.from(await response.arrayBuffer());
+    const metadata = await sharp(buffer).metadata();
+    assert.equal(metadata.width, Number.parseInt(descriptor), "Hero srcset must describe its actual width");
+    assert.equal(metadata.height, metadata.width, "Hero artwork must retain its square aspect ratio");
+    assert.equal(response.headers.get("content-type"), url.endsWith(".avif") ? "image/avif" : "image/webp");
+    if (url.endsWith(".avif") && descriptor === "768w") assert(buffer.length <= 25 * 1024, "Mobile hero must stay within 25 KiB");
+  }
+  const homeStylesheets = [...home.matchAll(/<link\b[^>]*rel="stylesheet"[^>]*href="([^"]+)"[^>]*>/g)].map((match) => decode(match[1]));
+  let homeCssBytes = 0;
+  for (const url of new Set(homeStylesheets)) {
+    const response = await get(url);
+    assert.equal(response.status, 200, "Missing homepage stylesheet: " + url);
+    homeCssBytes += (await response.arrayBuffer()).byteLength;
+  }
+  assert(homeCssBytes > 0 && homeCssBytes <= 32 * 1024, "Homepage CSS must stay within 32 KiB uncompressed");
   for (const asset of [
     "/images/courtyard.webp", "/images/playground.webp", "/images/bap-ka-rasta-cover.webp",
-    "/images/bap-ka-rasta-gameplay.webp", "/images/bap-ka-rasta-camera.webp", "/images/ekka-chor.webp",
+    "/images/bap-ka-rasta-gameplay.webp", "/images/bap-ka-rasta-camera.webp", "/images/gulam-chor.webp",
     "/fonts/dm-sans-latin.woff2", "/fonts/newsreader-latin.woff2", "/fonts/newsreader-latin-medium.woff2", "/fonts/newsreader-latin-italic.woff2",
     "/brand/vihar-horizontal.svg", "/brand/vihar-emblem.svg", "/brand/vihar-avatar.png",
     "/brand/icon-192.png", "/brand/icon-512.png", "/brand/maskable-512.png",
@@ -135,9 +161,38 @@ try {
   const sitemap = await (await get("/sitemap.xml")).text();
   const locations = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => new URL(match[1]).pathname);
   assert.deepEqual([...locations].sort(), [...indexableRoutes].sort(), "Sitemap must contain completed pages, excluding the upcoming announcement");
+  assert(sitemap.includes('xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"'), "Image sitemap namespace");
+  const imageLocations = [...sitemap.matchAll(/<image:loc>(.*?)<\/image:loc>/g)].map((match) => new URL(decode(match[1])));
+  assert(imageLocations.length >= 10, "Relevant pages need image sitemap entries");
+  for (const url of new Map(imageLocations.map((url) => [url.href, url])).values()) {
+    assert.equal(url.origin, canonical.origin, "Images must use the canonical origin");
+    const response = await get(url.pathname);
+    assert.equal(response.status, 200, "Missing sitemap image: " + url.pathname);
+    const info = await sharp(Buffer.from(await response.arrayBuffer())).metadata();
+    assert(info.width > 0 && info.height > 0, "Sitemap image must decode");
+  }
+  const gallery = pages.get(galleryPath);
+  const gallerySchema = [...gallery.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)]
+    .map((match) => JSON.parse(match[1])).find((data) => data["@type"] === "ImageGallery");
+  assert.equal(gallerySchema?.image.length, 4, "Gallery must describe all four images");
+  for (const image of gallerySchema.image) {
+    const imagePath = new URL(image.contentUrl).pathname;
+    assert(gallery.includes(`href="${imagePath}"`), "Every gallery image needs a crawlable full-size link");
+    assert(imageLocations.some((url) => url.href === image.contentUrl), "Every gallery image needs a sitemap entry");
+    const markup = [...gallery.matchAll(/<img\b[^>]*>/g)].map((match) => match[0]);
+    assert(markup.some((tag) => decode(tag).includes(encodeURIComponent(imagePath)) && tag.includes('alt="')), "Gallery image must appear in server HTML");
+  }
+  for (const route of ["/games/bap-ka-rasta", guidePath]) assert(pages.get(route).includes(`href="${galleryPath}"`), "Gallery must be linked from " + route);
   assert(pages.get("/").includes('href="' + gameUrl + '"'), "Homepage must use the configured game URL");
   assert(pages.get("/games/bap-ka-rasta").includes('href="' + gameUrl + '"'), "Game detail must use the configured game URL");
-  assert(!pages.get("/games/ekka-chor").includes('href="' + gameUrl + '"'), "Upcoming game must not have a launch link");
+  assert(!pages.get("/games/gulam-chor").includes('href="' + gameUrl + '"'), "Upcoming game must not have a launch link");
+  for (const [oldPath, newPath] of [["/games/ekka-chor", "/games/gulam-chor"], ["/images/ekka-chor.webp", "/images/gulam-chor.webp"], ["/images/social-ekka-chor.png", "/images/social-gulam-chor.png"]]) {
+    const response = await get(oldPath);
+    assert.equal(response.status, 308, "Renamed content must redirect permanently: " + oldPath);
+    assert.equal(new URL(response.headers.get("location"), base).pathname, newPath);
+    await response.body?.cancel();
+  }
+  for (const [route, html] of pages) assert(!html.includes("Ekka"), "Old game name must not appear on " + route);
   assert(pages.get("/contact").includes('href="mailto:' + email + '"'), "Contact must use the configured mailbox");
   const publisher = (process.env.ADSENSE_PUBLISHER_ID ?? "ca-pub-6693217545827146").trim();
   const adScriptExpected = process.env.ADSENSE_ENABLED === "true" && process.env.ADSENSE_SITE_APPROVED === "true" && process.env.ADSENSE_CONSENT_READY === "true" && !preview;
@@ -208,7 +263,7 @@ try {
   const missingHtml = await missing.text();
   assert(missingHtml.includes("noindex"), "404 page must not be indexed");
   assert(!missingHtml.includes("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"), "404 must never load advertising");
-  console.log("PASS: 10 public routes, SEO metadata, structured data, internal links/assets, robots, completed-page sitemap, game links, contact, headers, ad-free 404s, FAQ parity, original-logo favicon, approval/consent/preview gates, guide-only ads, privacy disclosures, ads.txt and llms.txt.");
+  console.log(`PASS: ${routes.length} public routes, SEO metadata, structured data, internal links/assets, responsive hero formats/cache/byte budget, homepage CSS budget, robots, image gallery and completed-page sitemap, game links, contact, headers, ad-free 404s, FAQ parity, original-logo favicon, approval/consent/preview gates, guide-only ads, privacy disclosures, ads.txt and llms.txt.`);
 } catch (error) {
   console.error(error);
   process.exitCode = 1;

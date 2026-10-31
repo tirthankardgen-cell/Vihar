@@ -31,7 +31,7 @@ test("publisher declaration can be removed but cannot be malformed or absent whe
 test("only the finished guide can contain the advertising loader", () => {
   assert.equal(isAdContentPath("/guides/bap-ka-rasta-first-drive"), true);
   assert.equal(isAdContentPath("/guides/bap-ka-rasta-first-drive/"), true);
-  for (const path of ["/", "/games", "/games/bap-ka-rasta", "/games/ekka-chor", "/about", "/help", "/contact", "/privacy", "/terms", "/missing", "/guides/bap-ka-rasta-first-drive/missing"]) {
+  for (const path of ["/", "/games", "/games/bap-ka-rasta", "/games/gulam-chor", "/about", "/help", "/contact", "/privacy", "/terms", "/missing", "/guides/bap-ka-rasta-first-drive/missing"]) {
     assert.equal(isAdContentPath(path), false, path);
   }
 });

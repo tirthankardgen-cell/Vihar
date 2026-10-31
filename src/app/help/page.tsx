@@ -24,19 +24,19 @@ export default function HelpPage() {
       <div className="help-layout">
         <div>
           <DiscoveryFaq />
-          <section className="help-group" aria-labelledby="start-title">
+          <section className="help-group viewport-section" aria-labelledby="start-title">
             <h2 id="start-title">Getting started</h2>
             <Faq question="How do I start a game?"><p>Visit <Link href="/games">Games</Link> and choose a title marked Playable now. On its page, select Play now. The game opens in a new tab, so you can return here whenever you like.</p><p>In Bap Ka Rasta, choose “Mera Bap Ka Rasta,” select Mumbai, then “Yahin Chalao.” Choose the auto rickshaw, select “Drive Mumbai,” and then “Chal Chala” to begin.</p></Faq>
             <Faq question="Do I need an account or a download?"><p>No account is needed to browse Vihar or play the current Bap Ka Rasta build. It runs in your browser. We don’t currently offer a downloadable release.</p></Faq>
-            <Faq question="Which games can I play right now?"><p>Bap Ka Rasta is available as an early playable build. Mumbai and the auto rickshaw are its current playable combination. Ekka Chor is in development, with no announced release date. Upcoming titles don’t have a Play action.</p></Faq>
+            <Faq question="Which games can I play right now?"><p>Bap Ka Rasta is available as an early playable build. Mumbai and the auto rickshaw are its current playable combination. Gulam Chor is in development, with no announced release date. Upcoming titles don’t have a Play action.</p></Faq>
           </section>
-          <section className="help-group" aria-labelledby="device-title">
+          <section className="help-group viewport-section" aria-labelledby="device-title">
             <h2 id="device-title">Your screen, your space</h2>
             <Faq question="Which browser should I use?"><p>Start with an up-to-date browser with WebGL 2 and hardware acceleration enabled. Chrome has been used for our browser checks. Performance and support can vary between devices; broad physical-phone and Safari testing is still in progress.</p></Faq>
             <Faq question="Can I play on my phone?"><p>Bap Ka Rasta includes touch controls and a landscape play area. Turning your phone sideways gives you more room. The Vihar catalogue works in either orientation.</p><p>If driving feels slow, select Low graphics in the game’s pause menu. Touch support doesn’t guarantee the same performance on every phone.</p></Faq>
             <Faq question="Where can I find the controls?"><p>The <Link href="/games/bap-ka-rasta#controls-title">Bap Ka Rasta page</Link> lists all keyboard controls. Use W / ↑ to accelerate, S / ↓ to brake and then reverse, and A D / ← → to steer. Phones have on-screen steering and pedals.</p><p>Press C to change camera, R to reset to a safe road position, and Esc or P to pause. Keep holding brake after stopping to engage reverse.</p></Faq>
           </section>
-          <section className="help-group" aria-labelledby="troubleshooting-title">
+          <section className="help-group viewport-section" aria-labelledby="troubleshooting-title">
             <h2 id="troubleshooting-title">A bump in the road?</h2>
             <Faq question="The game won’t load. What should I try?"><p>Check your connection, refresh the game tab, and make sure your browser is up to date. Enable hardware acceleration in your browser settings, then restart the browser if prompted.</p><p>If you see a graphics-context error, use the game’s retry action. If it keeps happening, close other graphics-heavy tabs and try again. <Link href="/contact">Tell us what happened</Link> if you’re still stuck.</p></Faq>
             <Faq question="Why is the game running slowly?"><p>Open the pause menu and switch from Standard to Low graphics. Close other demanding apps or tabs. A keyboard and a larger screen are a good starting point for this early build, though a device’s graphics capability matters more than screen size.</p></Faq>

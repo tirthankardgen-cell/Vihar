@@ -5,7 +5,7 @@ import { site } from "@/lib/site";
 import { StructuredData } from "@/components/structured-data";
 
 export function DiscoveryFaq({ featured = false }: { featured?: boolean }) {
-  return <section id="faqs" className={featured ? "homepage-faq" : "help-group"} aria-labelledby="faq-title">
+  return <section id="faqs" className={featured ? "homepage-faq" : "help-group viewport-section"} aria-labelledby="faq-title">
     <div className="faq-intro">
       {featured && <p className="eyebrow">A few answers before you play</p>}
       <h2 id="faq-title">Frequently asked questions</h2>

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { RouteScrollReset } from "@/components/route-scroll-reset";
 import { StructuredData } from "@/components/structured-data";
 import { isPreview, site } from "@/lib/site";
 import { adsense } from "@/lib/adsense";
@@ -22,7 +23,7 @@ const newsreader = localFont({
   ],
   variable: "--font-newsreader",
   display: "swap",
-  preload: false,
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -54,8 +55,9 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, them
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${newsreader.variable}`}>
+    <html lang="en" data-scroll-behavior="smooth" className={`${dmSans.variable} ${newsreader.variable}`}>
       <body>
+        <RouteScrollReset />
         <a href="#main-content" className="skip-link">Skip to content</a>
         <Header />
         <main id="main-content" tabIndex={-1}>{children}</main>
