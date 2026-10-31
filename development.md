@@ -7,13 +7,20 @@ This is the single developer handoff, operational guide, asset register and chan
 - Canonical site: https://www.vihar.online; preserve the apex-to-www redirect in Vercel.
 - Node.js 22.x; npm ci; npm run check; npm run verify. Build before verify.
 - AdSense publisher: ca-pub-6693217545827146, explicitly supplied by the owner. This is a public identifier, not a secret.
-- Default mode: review only. The account meta tag and /ads.txt are present; no third-party ad script runs. ADSENSE_ENABLED=true enables the standard asynchronous Google loader on non-preview deployments. Before enabling, obtain AdSense approval and configure Google's certified consent message/CMP for applicable visitors in AdSense Privacy & messaging. Configure restrained placements in AdSense; keep overlays, anchor/vignette formats and ads near Play controls off. Verify the resulting placements and privacy choices on the deployed site. No ad-unit IDs were supplied; this change does not invent them.
-- ADSENSE_PUBLISHER_ID overrides the default; explicitly empty disables account metadata/declaration. Invalid IDs fail the build. Preview builds omit the publisher declaration and loader.
+- Default mode: the owner's supplied async AdSense loader is rendered once in the shared head on every production page, using ca-pub-6693217545827146. ADSENSE_ENABLED=false pauses it; Vercel previews always exclude it. The account verification meta tag and /ads.txt remain available in production. Google controls approval, ad availability and Auto ads placements; configure Privacy & messaging and the applicable certified consent message in AdSense. Script installation does not prove consent setup or approval. No ad-unit IDs are needed for this Auto ads snippet. This current configuration supersedes historical review-only instructions below.
+- ADSENSE_PUBLISHER_ID overrides the default; explicitly empty with ADSENSE_ENABLED=false disables account metadata/declaration. Invalid IDs fail the build. Preview builds omit the publisher declaration and loader.
 - GOOGLE_SITE_VERIFICATION optionally adds the Search Console HTML verification tag. The owner has not supplied a token. DNS verification can be used instead.
 - Submit https://www.vihar.online/sitemap.xml to Search Console after deployment. Review robots.txt, manifest.webmanifest, ads.txt and llms.txt. Search Console submission and AdSense review remain account-side actions; code does not guarantee approval, indexing or ranking.
 - Sitemap and robots already existed and are retained as Next.js metadata routes, avoiding duplicate static files. llms.txt is an optional factual discovery aid, not a recognized ranking guarantee. Visible FAQ answers and FAQPage JSON-LD share one source; Google generally restricts FAQ rich results to eligible government/health sites. Do not promise them for this game catalogue. Use accurate prose instead of keyword stuffing, fake reviews or fabricated ratings.
 
 ## Change history
+
+### Install the supplied AdSense Auto ads head snippet — 2026-10-31 10:37:41 IST (UTC+05:30)
+
+Author: Codex. The owner supplied Google's async script and requested placing it between head tags across the site. Enabled the loader by default and moved it from a deferred Next Script in the body to a native async script in the shared root head. Publisher ID and crossorigin=anonymous match the provided snippet. Previews still omit the script; ADSENSE_ENABLED=false remains an explicit off switch. Privacy disclosures already adapt to enabled mode. Updated configuration examples and verification to require exactly one matching async head script on each of the nine public routes, plus absence in preview/disabled mode. No Google account configuration or approval status is changed by this code.
+
+Validation: npm run check passed (lint, TypeScript and production build). Production HTTP verification passed in default enabled mode, VERCEL_ENV=preview, and ADSENSE_ENABLED=false; each build was tested with matching environment values. Restored and verified the default enabled production build last. Checks cover one async head script on all nine pages, publisher/crossorigin attributes, preview/off suppression, matching privacy text, ads.txt and the existing site checks. git diff --check passed. Push to main continues the owner's authorized GitHub delivery workflow. Live ad delivery and AdSense approval remain Google-controlled and were not verified.
+
 
 ### Make FAQs visible on the homepage — 2026-10-31 03:23:01 IST (UTC+05:30)
 

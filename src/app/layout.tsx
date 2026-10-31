@@ -56,12 +56,12 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, them
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${dmSans.variable} ${newsreader.variable}`}>
+      <head><AdSense /></head>
       <body>
         <a href="#main-content" className="skip-link">Skip to content</a>
         <Header />
         <main id="main-content" tabIndex={-1}>{children}</main>
         <Footer />
-        <AdSense />
         <StructuredData data={{ "@context": "https://schema.org", "@type": "Organization", "@id": `${site.url}/#organization`, name: "Vihar", url: site.url, logo: `${site.url}/brand/vihar-avatar.png`, email: site.email }} />
       </body>
     </html>

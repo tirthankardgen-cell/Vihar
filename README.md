@@ -18,7 +18,7 @@ Use `npm run assets` to reproduce artwork, icons and fonts. Committed public ass
 
 See [development.md](development.md) for the single change history, configuration guide, asset provenance, validation evidence and agent handoff. The original design requirements remain in [website-brief.md](website-brief.md).
 
-AdSense review metadata and ads.txt use the owner's public publisher ID. Serving ads is disabled by default; see development.md before enabling it. Optional public configuration is in [.env.example](.env.example).
+AdSense review metadata and ads.txt use the owner's public publisher ID. The async AdSense script loads in every production page head by default; previews exclude it. Set ADSENSE_ENABLED=false to pause it. See development.md for account-side settings. Optional public configuration is in [.env.example](.env.example).
 
 ## Repository layout
 

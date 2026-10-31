@@ -137,8 +137,18 @@ try {
   assert(!pages.get("/games/ekka-chor").includes('href="' + gameUrl + '"'), "Upcoming game must not have a launch link");
   assert(pages.get("/contact").includes('href="mailto:' + email + '"'), "Contact must use the configured mailbox");
   const publisher = (process.env.ADSENSE_PUBLISHER_ID ?? "ca-pub-6693217545827146").trim();
-  const adScriptExpected = process.env.ADSENSE_ENABLED === "true" && !preview;
-  assert.equal(pages.get("/").includes("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"), adScriptExpected, "Advertising loader must follow its gate");
+  const adScriptExpected = (process.env.ADSENSE_ENABLED ?? "true") === "true" && !preview;
+  for (const [route, html] of pages) {
+    const head = html.match(/<head>([\s\S]*?)<\/head>/)?.[1];
+    assert(head, route + " must contain a head");
+    const scripts = [...head.matchAll(/<script\b[^>]*src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js[^"\s]*"[^>]*>/g)];
+    assert.equal(scripts.length, adScriptExpected ? 1 : 0, route + " AdSense script count in head");
+    if (adScriptExpected) {
+      assert(scripts[0][0].includes(`client=${publisher}`), route + " AdSense publisher");
+      assert(/\basync(?:=""|(?=\s|>))/.test(scripts[0][0]), route + " async script");
+      assert(/crossorigin="anonymous"/i.test(scripts[0][0]), route + " cross-origin mode");
+    } else assert(!html.includes("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"));
+  }
   assert(pages.get("/privacy").includes(adScriptExpected ? "This site loads Google AdSense." : "The advertising loader is currently disabled."), "Privacy notice must match advertising mode");
   const account = attribute(pages.get("/"), "meta", "name", "google-adsense-account");
   assert.equal(account, publisher && !preview ? publisher : undefined);
