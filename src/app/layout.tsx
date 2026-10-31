@@ -4,7 +4,6 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { StructuredData } from "@/components/structured-data";
 import { isPreview, site } from "@/lib/site";
-import { AdSense } from "@/components/adsense";
 import { adsense } from "@/lib/adsense";
 import "./globals.css";
 
@@ -56,7 +55,6 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, them
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${dmSans.variable} ${newsreader.variable}`}>
-      <head><AdSense /></head>
       <body>
         <a href="#main-content" className="skip-link">Skip to content</a>
         <Header />

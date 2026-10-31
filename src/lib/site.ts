@@ -29,8 +29,12 @@ if (canonical.pathname !== "/" || canonical.search || canonical.hash) {
 export const isPreview = process.env.VERCEL_ENV === "preview";
 export const publicRoutes = [
   "/", "/games", "/games/bap-ka-rasta", "/games/ekka-chor",
-  "/about", "/help", "/contact", "/privacy", "/terms",
+  "/about", "/help", "/contact", "/privacy", "/terms", "/guides/bap-ka-rasta-first-drive",
 ] as const;
+
+// The announcement remains accessible and honestly labelled, but is not a
+// finished content page to submit for indexing.
+export const indexableRoutes = publicRoutes.filter((path) => path !== "/games/ekka-chor");
 
 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(site.email)) {
   throw new Error("SUPPORT_EMAIL must be a valid email address.");

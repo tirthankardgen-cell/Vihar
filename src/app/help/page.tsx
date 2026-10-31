@@ -1,5 +1,5 @@
 import { DiscoveryFaq } from "@/components/discovery-faq";
-import Link from "next/link";
+import Link from "@/components/site-link";
 import { ArrowUpRight, MessageCircle } from "lucide-react";
 import type { ReactNode } from "react";
 import { Breadcrumbs, PageIntro } from "@/components/page-intro";

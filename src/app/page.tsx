@@ -1,6 +1,6 @@
 import { DiscoveryFaq } from "@/components/discovery-faq";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/site-link";
 import { ArrowDown, ArrowRight, ArrowUpRight, Compass, Monitor, Play, Sparkles } from "lucide-react";
 import { GameCard } from "@/components/game-card";
 import { StructuredData } from "@/components/structured-data";
@@ -67,6 +67,8 @@ export default function Home() {
           <div className="world-copy"><p className="eyebrow"><span className="section-number">03 /</span> The world of Vihar</p><h2 id="world-title">A little wandering.<br /><em>A lot of possibility.</em></h2><p>Remember playing just for the joy of it? No grand plan. No perfect score. Just one more turn before heading home.</p><p>That’s the feeling we’re making room for. Vihar is a home for original games, familiar little details, and worlds worth getting a little lost in.</p><Link href="/about" className="text-link">A little about us <ArrowUpRight size={18} aria-hidden="true" /></Link></div>
         </div>
       </section>
+
+      <section className="section container" aria-labelledby="play-guide-title"><div className="section-title-row"><div><p className="eyebrow">Before your first turn</p><h2 id="play-guide-title">A little guide<br />to the <em>streets.</em></h2></div><Link href="/guides/bap-ka-rasta-first-drive" className="text-link">Read the first-drive guide <ArrowRight size={16} aria-hidden="true" /></Link></div><p className="page-description">Start with a low gear, learn the two cameras, and find your way from an open avenue into a smaller lane. Our Bap Ka Rasta guide covers a first drive, recovering from collisions, and adjusting the game for your device.</p></section>
 
       <div className="section container"><DiscoveryFaq featured /></div>
 

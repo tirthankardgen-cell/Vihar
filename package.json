@@ -10,7 +10,8 @@
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "next typegen && tsc --noEmit",
-    "check": "npm run lint && npm run typecheck && npm run build",
+    "test:adsense": "node --experimental-strip-types --test scripts/adsense-config.test.mjs",
+    "check": "npm run lint && npm run test:adsense && npm run typecheck && npm run build",
     "assets": "node scripts/generate-assets.mjs",
     "verify": "node scripts/verify-site.mjs"
   },

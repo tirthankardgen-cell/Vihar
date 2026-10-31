@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/site-link";
 import { ArrowUpRight, Compass, Heart, Sparkles } from "lucide-react";
 import { Emblem } from "@/components/brand";
 import { Breadcrumbs } from "@/components/page-intro";

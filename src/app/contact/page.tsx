@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/site-link";
 import { ArrowUpRight, Mail, ShieldCheck } from "lucide-react";
 import { Breadcrumbs, PageIntro } from "@/components/page-intro";
 import { BreadcrumbData } from "@/components/structured-data";

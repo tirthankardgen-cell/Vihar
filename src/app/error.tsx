@@ -1,9 +1,15 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/site-link";
 import { Compass, RotateCcw } from "lucide-react";
+import { useEffect } from "react";
 
 export default function ErrorPage({ reset }: { reset: () => void }) {
+  useEffect(() => {
+    // A third-party script cannot be unloaded by removing its tag. Leave the
+    // whole document if an already monetized page fails during hydration.
+    if (document.getElementById("google-adsense")) window.location.replace("/help");
+  }, []);
   return (
     <div className="container not-found">
       <Compass aria-hidden="true" />

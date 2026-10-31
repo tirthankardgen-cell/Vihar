@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/site-link";
 import { LegalPage } from "@/components/legal-page";
 import { pageMetadata, site } from "@/lib/site";
 

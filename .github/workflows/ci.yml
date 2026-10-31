@@ -10,8 +10,17 @@ permissions:
 
 jobs:
   check:
+    name: Website checks (${{ matrix.ads }})
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    strategy:
+      matrix:
+        ads: [review, enabled, preview]
+    env:
+      ADSENSE_ENABLED: ${{ matrix.ads != 'review' && 'true' || 'false' }}
+      ADSENSE_SITE_APPROVED: ${{ matrix.ads != 'review' && 'true' || 'false' }}
+      ADSENSE_CONSENT_READY: ${{ matrix.ads != 'review' && 'true' || 'false' }}
+      VERCEL_ENV: ${{ matrix.ads == 'preview' && 'preview' || 'production' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

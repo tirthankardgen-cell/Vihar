@@ -514,6 +514,16 @@ ol, ul { margin: 0; padding: 0; }
   .button, .status-badge, .menu-toggle, .filter-group button { border: 1px solid ButtonText; }
   .hero-atmosphere { display: none; }
 }
+.guide-figure { margin: 28px 0; }
+.guide-figure img { width: 100%; height: auto; border-radius: 12px; }
+.guide-figure figcaption { margin-top: 10px; font-size: 12px; color: var(--muted); line-height: 1.7; }
+.guide-page .legal-copy section { scroll-margin-top: 110px; }
+.privacy-choices { border-top: 1px solid var(--line); padding: 28px 0 40px; scroll-margin-top: 110px; }
+.privacy-choices h2 { font-size: 28px; margin-bottom: 18px; }
+.privacy-choices p { color: var(--muted); font-size: 12px; margin-top: 12px; max-width: 700px; }
+.privacy-choices a { text-decoration: underline; text-underline-offset: 3px; }
+.privacy-choices button:disabled { cursor: default; opacity: .6; }
+
 @media print {
   .site-header, .site-footer, .skip-link, .hero-actions, .game-launch, .game-end-cta, .legal-toc { display: none; }
   body { background: #fff; font-size: 11pt; }

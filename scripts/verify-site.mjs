@@ -17,7 +17,9 @@ const canonical = new URL(process.env.SITE_URL || "https://www.vihar.online");
 const gameUrl = process.env.BAP_KA_RASTA_URL || "https://rasta.vihar.online";
 const email = process.env.SUPPORT_EMAIL || "contact@vihar.online";
 const preview = process.env.VERCEL_ENV === "preview";
-const routes = ["/", "/games", "/games/bap-ka-rasta", "/games/ekka-chor", "/about", "/help", "/contact", "/privacy", "/terms"];
+const guidePath = "/guides/bap-ka-rasta-first-drive";
+const routes = ["/", "/games", "/games/bap-ka-rasta", "/games/ekka-chor", "/about", "/help", "/contact", "/privacy", "/terms", guidePath];
+const indexableRoutes = routes.filter((route) => route !== "/games/ekka-chor");
 const server = spawn(process.execPath, [require.resolve("next/dist/bin/next"), "start", "--hostname", "127.0.0.1", "--port", new URL(base).port], {
   cwd: root,
   env: { ...process.env, NODE_ENV: "production" },
@@ -71,8 +73,9 @@ try {
     assert(pageCanonical, route + " needs a canonical URL");
     assert.equal(new URL(decode(pageCanonical)).href, new URL(route, canonical).href, route + " canonical");
     const robots = attribute(html, "meta", "name", "robots");
-    assert(robots && robots.includes(preview ? "noindex" : "index"), route + " robots");
-    if (!preview) assert(!robots.includes("noindex"), route + " must be indexable");
+    const noindex = preview || !indexableRoutes.includes(route);
+    assert(robots && robots.includes(noindex ? "noindex" : "index"), route + " robots");
+    if (!noindex) assert(!robots.includes("noindex"), route + " must be indexable");
     const social = attribute(html, "meta", "property", "og:image");
     assert(social, route + " sharing image");
     assert.equal(attribute(html, "meta", "property", "og:image:width"), "1200");
@@ -131,25 +134,45 @@ try {
   if (!preview) assert(robots.includes(new URL("/sitemap.xml", canonical).href));
   const sitemap = await (await get("/sitemap.xml")).text();
   const locations = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => new URL(match[1]).pathname);
-  assert.deepEqual([...locations].sort(), [...routes].sort(), "Sitemap must contain exactly the public pages");
+  assert.deepEqual([...locations].sort(), [...indexableRoutes].sort(), "Sitemap must contain completed pages, excluding the upcoming announcement");
   assert(pages.get("/").includes('href="' + gameUrl + '"'), "Homepage must use the configured game URL");
   assert(pages.get("/games/bap-ka-rasta").includes('href="' + gameUrl + '"'), "Game detail must use the configured game URL");
   assert(!pages.get("/games/ekka-chor").includes('href="' + gameUrl + '"'), "Upcoming game must not have a launch link");
   assert(pages.get("/contact").includes('href="mailto:' + email + '"'), "Contact must use the configured mailbox");
   const publisher = (process.env.ADSENSE_PUBLISHER_ID ?? "ca-pub-6693217545827146").trim();
-  const adScriptExpected = (process.env.ADSENSE_ENABLED ?? "true") === "true" && !preview;
+  const adScriptExpected = process.env.ADSENSE_ENABLED === "true" && process.env.ADSENSE_SITE_APPROVED === "true" && process.env.ADSENSE_CONSENT_READY === "true" && !preview;
   for (const [route, html] of pages) {
     const head = html.match(/<head>([\s\S]*?)<\/head>/)?.[1];
     assert(head, route + " must contain a head");
     const scripts = [...head.matchAll(/<script\b[^>]*src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js[^"\s]*"[^>]*>/g)];
-    assert.equal(scripts.length, adScriptExpected ? 1 : 0, route + " AdSense script count in head");
-    if (adScriptExpected) {
+    const allowed = adScriptExpected && route === guidePath;
+    assert.equal(scripts.length, allowed ? 1 : 0, route + " AdSense script count in head");
+    assert.equal([...html.matchAll(/<script\b[^>]*src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js[^"\s]*"[^>]*>/g)].length, allowed ? 1 : 0, route + " must not duplicate the loader outside the head");
+    if (allowed) {
       assert(scripts[0][0].includes(`client=${publisher}`), route + " AdSense publisher");
       assert(/\basync(?:=""|(?=\s|>))/.test(scripts[0][0]), route + " async script");
       assert(/crossorigin="anonymous"/i.test(scripts[0][0]), route + " cross-origin mode");
     } else assert(!html.includes("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"));
   }
-  assert(pages.get("/privacy").includes(adScriptExpected ? "This site loads Google AdSense." : "The advertising loader is currently disabled."), "Privacy notice must match advertising mode");
+  assert(pages.get("/privacy").includes(adScriptExpected ? "This site loads Google AdSense on the first-drive guide." : "The advertising loader is currently disabled."), "Privacy notice must match advertising mode");
+  assert.equal(pages.get(guidePath).includes('id="privacy-choices"'), adScriptExpected, "Consent choices must accompany the advertising loader");
+  assert(pages.get("/privacy").includes("prior visits to this website or other websites"), "Privacy must disclose cross-site advertising cookies");
+  assert(pages.get("/privacy").includes("https://optout.aboutads.info/"), "Privacy must explain other vendor choices");
+  const guide = pages.get(guidePath);
+  assert(guide.includes("<article"), "The guide must contain server-rendered publisher content");
+  for (const id of ["start", "handling", "explore", "camera", "recover", "devices", "scope"]) {
+    assert(guide.includes(`id="${id}"`), "Missing guide section: " + id);
+  }
+  for (const route of ["/", "/games/bap-ka-rasta"]) assert(pages.get(route).includes(`href="${guidePath}"`), route + " must expose the guide");
+  // A query must not change the ad/content policy, and nested missing pages
+  // must never inherit the successful article's loader.
+  const guideWithQuery = await (await get(guidePath + "?from=home")).text();
+  assert.equal(guideWithQuery.includes('id="google-adsense"'), adScriptExpected);
+  for (const route of [guidePath + "/missing", "/games/missing"]) {
+    const response = await get(route);
+    assert.equal(response.status, 404, route);
+    assert(!(await response.text()).includes("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"), route + " must not load ads");
+  }
   const account = attribute(pages.get("/"), "meta", "name", "google-adsense-account");
   assert.equal(account, publisher && !preview ? publisher : undefined);
   const adsResponse = await get("/ads.txt");
@@ -182,8 +205,10 @@ try {
   assert.deepEqual(actualIcon, expectedIcon, "Favicon must match the original emblem pixels");
   const missing = await get("/this-page-does-not-exist");
   assert.equal(missing.status, 404, "Unknown pages must return HTTP 404");
-  assert((await missing.text()).includes("noindex"), "404 page must not be indexed");
-  console.log("PASS: 9 public routes, unique SEO metadata, structured data, internal links, images, fonts, icons, robots, sitemap, game links, contact, headers, HTTP 404, FAQ parity, original-logo favicon, AdSense gates, ads.txt and llms.txt.");
+  const missingHtml = await missing.text();
+  assert(missingHtml.includes("noindex"), "404 page must not be indexed");
+  assert(!missingHtml.includes("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"), "404 must never load advertising");
+  console.log("PASS: 10 public routes, SEO metadata, structured data, internal links/assets, robots, completed-page sitemap, game links, contact, headers, ad-free 404s, FAQ parity, original-logo favicon, approval/consent/preview gates, guide-only ads, privacy disclosures, ads.txt and llms.txt.");
 } catch (error) {
   console.error(error);
   process.exitCode = 1;

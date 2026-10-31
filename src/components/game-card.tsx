@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/site-link";
 import { ArrowUpRight, Monitor } from "lucide-react";
 import type { Game } from "@/lib/games";
 
