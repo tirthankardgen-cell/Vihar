@@ -4,17 +4,19 @@ import { BreadcrumbData } from "@/components/structured-data";
 
 type LegalSection = { id: string; title: string; content: ReactNode };
 
-export function LegalPage({ title, path, description, summary, sections }: {
+export function LegalPage({ title, path, description, summary, sections, updatedIso = "2026-10-31", updatedLabel = "31 October 2026" }: {
   title: string;
   path: string;
   description: string;
   summary: string;
   sections: LegalSection[];
+  updatedIso?: string;
+  updatedLabel?: string;
 }) {
   return (
     <div className="container">
       <PageIntro eyebrow="The useful details" title={title} description={description} />
-      <p className="policy-date">Last updated: <time dateTime="2026-10-31">31 October 2026</time></p>
+      <p className="policy-date">Last updated: <time dateTime={updatedIso}>{updatedLabel}</time></p>
       <div className="legal-layout">
         <aside className="legal-toc"><p className="eyebrow">On this page</p><nav aria-label={title + " contents"}>{sections.map((section) => <a key={section.id} href={"#" + section.id}>{section.title}</a>)}</nav></aside>
         <div className="legal-copy"><p className="legal-summary">{summary}</p>{sections.map((section) => <section className="viewport-section" key={section.id} id={section.id} aria-labelledby={section.id + "-title"}><h2 id={section.id + "-title"}>{section.title}</h2>{section.content}</section>)}</div>

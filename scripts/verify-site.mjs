@@ -263,7 +263,27 @@ try {
   const missingHtml = await missing.text();
   assert(missingHtml.includes("noindex"), "404 page must not be indexed");
   assert(!missingHtml.includes("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"), "404 must never load advertising");
-  console.log(`PASS: ${routes.length} public routes, SEO metadata, structured data, internal links/assets, responsive hero formats/cache/byte budget, homepage CSS budget, robots, image gallery and completed-page sitemap, game links, contact, headers, ad-free 404s, FAQ parity, original-logo favicon, approval/consent/preview gates, guide-only ads, privacy disclosures, ads.txt and llms.txt.`);
+  const accountRoutes = ["/login", "/signup", "/forgot-password", "/auth/action", "/dashboard", "/dashboard/games", "/dashboard/friends", "/dashboard/settings", "/u/sample_player"];
+  for (const route of accountRoutes) {
+    const response = await get(route);
+    assert.equal(response.status, 200, route + " must be reachable");
+    const html = await response.text();
+    assert(attribute(html, "meta", "name", "robots")?.includes("noindex"), route + " must not be indexed");
+    assert(!html.includes("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"), route + " must not load advertising");
+    assert(!locations.includes(route), route + " must stay out of the public sitemap");
+    assert.equal(response.headers.get("cross-origin-opener-policy"), "same-origin-allow-popups", "Google sign-in popup must be supported");
+    if (route === "/auth/action") {
+      assert.equal(response.headers.get("referrer-policy"), "no-referrer");
+      assert.equal(attribute(html, "meta", "name", "referrer"), "no-referrer", "Email action codes must not leak through referrers");
+    }
+  }
+  for (const id of ["sun", "moon", "tiger", "frog", "kite", "planet"]) {
+    const response = await get(`/avatars/${id}.svg`);
+    assert.equal(response.status, 200, "Missing avatar: " + id);
+    const metadata = await sharp(Buffer.from(await response.arrayBuffer())).metadata();
+    assert.equal(metadata.width, metadata.height, "Avatars must retain a square aspect ratio");
+  }
+  console.log(`PASS: ${routes.length} public routes, ${accountRoutes.length} ad-free/noindex account routes, six avatar assets, SEO metadata, structured data, internal links/assets, responsive hero formats/cache/byte budget, homepage CSS budget, robots, image gallery and completed-page sitemap, game links, contact, headers, ad-free 404s, FAQ parity, original-logo favicon, approval/consent/preview gates, guide-only ads, privacy disclosures, ads.txt and llms.txt.`);
 } catch (error) {
   console.error(error);
   process.exitCode = 1;

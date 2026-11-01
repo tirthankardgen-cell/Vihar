@@ -20,6 +20,8 @@ Bap Ka Rasta has a visual game page with a six-ride garage and a 27-image galler
 
 See [development.md](development.md) for the single change history, configuration guide, asset provenance, validation evidence and agent handoff. The original design requirements remain in [website-brief.md](website-brief.md).
 
+Vihar ID adds Google/email accounts, unique usernames, six gamer avatars, public profiles, friends and a personal dashboard. Configure the public Firebase variables in Vercel and publish the tested rules before using accounts in production; see [Vihar ID setup](development.md#vihar-id-configuration-and-operations). Run `npm run test:rules` with Java 21 for authorization checks, and `npm run assets:avatars` to reproduce the portraits. Existing game apps remain independent until their account/stat integrations are implemented.
+
 AdSense ownership metadata and ads.txt remain available while advertising is paused for review. Ads require explicit serving, site-approval, and consent-readiness settings, and can load only on the completed first-drive guide. Preview, game launch, upcoming, navigation, support, legal and missing pages have no ad loader. See [development.md](development.md#adsense-review-and-account-setup) for the policy audit and account setup; settings are in [.env.example](.env.example). Google approval is still required.
 
 ## Repository layout

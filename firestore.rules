@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function owner(uid) { return signedIn() && request.auth.uid == uid; }
+    function verified() { return signedIn() && request.auth.token.email_verified == true; }
+    function validUsername(name) {
+      return name is string && name.matches('^[a-z][a-z0-9_]{2,19}$')
+        && !(name in ['admin', 'administrator', 'vihar', 'support', 'system', 'moderator', 'official', 'help', 'account', 'deleted']);
+    }
+    function validProfile(data, uid) {
+      return data.keys().hasAll(['uid', 'username', 'displayName', 'bio', 'avatarId', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['uid', 'username', 'displayName', 'bio', 'avatarId', 'createdAt', 'updatedAt'])
+        && data.uid == uid && validUsername(data.username)
+        && data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 32
+        && data.bio is string && data.bio.size() <= 160
+        && data.avatarId in ['sun', 'moon', 'tiger', 'frog', 'kite', 'planet']
+        && data.createdAt is timestamp && data.updatedAt == request.time;
+    }
+
+    // Public identity contains no email, tokens or private account settings.
+    // Exact profile links are readable; bulk profile/username enumeration is not.
+    match /profiles/{uid} {
+      allow get: if true;
+      allow list: if false;
+      allow create: if owner(uid) && validProfile(request.resource.data, uid)
+        && request.resource.data.createdAt == request.time
+        && getAfter(/databases/$(database)/documents/usernames/$(request.resource.data.username)).data.uid == uid;
+      allow update: if owner(uid) && validProfile(request.resource.data, uid)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName', 'bio', 'avatarId', 'updatedAt']);
+      allow delete: if false;
+
+      // Future trusted game backends publish stats here with the Admin SDK.
+      // A browser cannot award itself scores, play time or achievements.
+      match /stats/{gameId} {
+        allow read: if true;
+        allow write: if false;
+      }
+    }
+    match /usernames/{username} {
+      allow get: if true;
+      allow list: if false;
+      allow create: if signedIn() && validUsername(username)
+        && request.resource.data.keys().hasOnly(['uid'])
+        && request.resource.data.uid == request.auth.uid
+        && !exists(/databases/$(database)/documents/profiles/$(request.auth.uid))
+        && getAfter(/databases/$(database)/documents/profiles/$(request.auth.uid)).data.username == username;
+      allow update, delete: if false;
+    }
+    match /players/{uid}/favorites/{gameId} {
+      allow read: if owner(uid);
+      allow create: if owner(uid) && gameId in ['bap-ka-rasta', 'gulam-chor']
+        && request.resource.data.keys().hasOnly(['addedAt']) && request.resource.data.addedAt == request.time;
+      allow delete: if owner(uid);
+      allow update: if false;
+    }
+    match /friendships/{id} {
+      function participant() { return signedIn() && request.auth.uid in resource.data.members; }
+      // Missing documents must be readable for atomic reciprocal-request checks.
+      allow get: if signedIn() && (resource == null || participant());
+      allow list: if participant();
+      allow create: if verified()
+        && request.resource.data.keys().hasOnly(['from', 'to', 'members', 'status', 'createdAt', 'updatedAt'])
+        && request.resource.data.from == request.auth.uid
+        && request.resource.data.to is string && request.resource.data.to != request.auth.uid
+        && request.resource.data.members == [request.auth.uid, request.resource.data.to]
+        && id == request.auth.uid + '__' + request.resource.data.to
+        && request.resource.data.status == 'pending'
+        && request.resource.data.createdAt == request.time && request.resource.data.updatedAt == request.time
+        && exists(/databases/$(database)/documents/profiles/$(request.auth.uid))
+        && exists(/databases/$(database)/documents/profiles/$(request.resource.data.to))
+        && !existsAfter(/databases/$(database)/documents/friendships/$(request.resource.data.to + '__' + request.auth.uid));
+      allow update: if verified() && request.auth.uid == resource.data.to
+        && resource.data.status == 'pending' && request.resource.data.status == 'accepted'
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt']);
+      allow delete: if participant();
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

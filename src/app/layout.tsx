@@ -6,6 +6,7 @@ import { RouteScrollReset } from "@/components/route-scroll-reset";
 import { StructuredData } from "@/components/structured-data";
 import { isPreview, site } from "@/lib/site";
 import { adsense } from "@/lib/adsense";
+import { AuthProvider } from "@/components/account/auth-provider";
 import "./globals.css";
 
 const dmSans = localFont({
@@ -57,11 +58,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" data-scroll-behavior="smooth" className={`${dmSans.variable} ${newsreader.variable}`}>
       <body>
+        <AuthProvider>
         <RouteScrollReset />
         <a href="#main-content" className="skip-link">Skip to content</a>
         <Header />
         <main id="main-content" tabIndex={-1}>{children}</main>
         <Footer />
+        </AuthProvider>
         <StructuredData data={{ "@context": "https://schema.org", "@type": "Organization", "@id": `${site.url}/#organization`, name: "Vihar", url: site.url, logo: `${site.url}/brand/vihar-avatar.png`, email: site.email }} />
       </body>
     </html>

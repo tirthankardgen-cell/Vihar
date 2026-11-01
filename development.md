@@ -46,7 +46,80 @@ Retrieved directly from Google on 31 October 2026:
 - [Google consent management requirements](https://support.google.com/adsense/answer/13554116?hl=en): certified CMP and TCF requirements for personalized ads in the EEA, UK and Switzerland; EU consent policy still applies.
 - [Privacy & messaging JavaScript API](https://developers.google.com/funding-choices/fc-api-docs): CONSENT_API_READY callback and showRevocationMessage.
 
+## Vihar ID configuration and operations
+
+Vihar ID uses Firebase Authentication and Cloud Firestore in project `vihar-27`. It is an optional account layer on this website. The independent game applications have not been modified, so they still launch as guests and do not yet submit statistics or share a browser session. Do not describe the current release as automatic cross-domain single sign-on.
+
+### Deployment
+
+1. Use Node.js 22.x and the existing Vercel Next.js preset. Set the seven `NEXT_PUBLIC_FIREBASE_*` web configuration values listed in `.env.example` from Firebase Project settings → Your apps. Set `NEXT_PUBLIC_FIREBASE_EMULATORS=false` on deployments. Public variables are embedded at build time; save them before the deployment or rebuild after changing them. Local values belong in ignored `.env.local`. Never put Firebase Admin credentials, service-account JSON, private keys or login tokens in public variables.
+2. Enable Email/Password and Google in Firebase Authentication. Add `www.vihar.online` and `vihar.online` to Authorized domains, and add a specific preview domain if testing Google sign-in there. The owner confirmed both providers and the production domains; the domains were also checked through the public Firebase configuration endpoint. Keep the supplied `vihar-27.firebaseapp.com` auth domain unless the Firebase auth-handler setup is deliberately changed.
+3. Create the default Cloud Firestore database if necessary. Publish the exact contents of `firestore.rules` under Firestore Database → Rules. These are rules for this account schema; do not use blanket test-mode access. `firestore.indexes.json` uses the standard single-field indexes, including the membership array used to query friend connections.
+4. With an authorized Firebase CLI login, the equivalent command is `npx firebase deploy --project vihar-27 --only firestore:rules,firestore:indexes`. The saved login on this workstation returned 403 for this project. The owner published the rules through Firebase Console on 1 November 2026. Subsequent live read-only checks confirmed a missing public username returns `NOT_FOUND`, while bulk profile listing and private favorites return `PERMISSION_DENIED`. Future rule deployments still need project-owner access; do not mistake passing emulator tests for live deployment.
+5. Avatars ship as local SVG assets, so Cloud Storage is not required. If a bucket is enabled, publish `storage.rules` or run `npx firebase deploy --project vihar-27 --only storage`. The rules deny all uploads and downloads because this release has no user-upload feature. This does not affect bundled website assets.
+6. Firebase's default hosted verification/reset links work. For the matching Vihar email screens, set the action URL in Authentication → Templates for email verification and password reset to `https://www.vihar.online/auth/action`. Leave Firebase's generated `mode` and `oobCode` query parameters intact. The page consumes the code, waits for persisted authentication, and refreshes the verified token before returning to the dashboard. Its HTTP and HTML referrer policy is `no-referrer`.
+7. Configure the Firebase password policy to match the UI: at least 8 characters, an alphabetic character and a number. Firebase enforces its own account-side policy; client validation alone is not a server policy. Email enumeration protection is compatible with the generic sign-in/reset responses. Complete a real Google and email sign-in, verification, username claim and friend request after deploying the environment and rules.
+
+Web API keys identify a Firebase application; they are not a substitute for authorization. The implementation intentionally does not initialize Analytics even when a measurement ID is supplied. Authentication and Firestore are loaded when an account route is visited, or when a returning player's local hint indicates a prior sign-in. The hint only controls loading and never authorizes access. Google uses a popup so a blocked or dismissed popup produces a recoverable message; the site sends `Cross-Origin-Opener-Policy: same-origin-allow-popups`.
+
+### Account routes and data
+
+- `/signup`, `/login`, `/forgot-password`, `/auth/action`: Google/email sign-in, registration, email verification and password recovery.
+- `/dashboard`, `/dashboard/games`, `/dashboard/friends`, `/dashboard/settings`: account onboarding, overview, saved games, friend requests, profile editing, provider linking and JSON data export. Unauthenticated visits return to login with an allowlisted local destination. Changing UID clears the previous account's profile and subscriptions.
+- `/u/{username}`: a public profile link with avatar, display name, bio and published game statistics. Email stays in Firebase Authentication. Sharing uses the native share sheet where available, then clipboard, then a selectable link fallback. All account/profile routes are noindex, absent from the sitemap and advertising-free.
+
+| Path | Visibility and allowed writes |
+| --- | --- |
+| `profiles/{uid}` | Public exact reads. Owner can atomically create a profile with a username claim, then edit only display name, bio and avatar. No public/private email field is allowed. Listing profiles and client deletion are denied. |
+| `usernames/{username}` | Public exact lookup. A claim is created atomically with its owner's first profile and is immutable. Collection listing is denied. |
+| `profiles/{uid}/stats/{gameId}` | Public game statistics. Every client write is denied; only a trusted backend can publish validated results. |
+| `players/{uid}/favorites/{gameId}` | Private to the owner. Known game IDs only; creation uses a server timestamp and deletion removes the favorite. |
+| `friendships/{from}__{to}` | Participants only. Verified senders create pending requests; verified recipients accept; either participant can cancel, decline or remove. Reciprocal duplicates and other field changes are denied. |
+
+Usernames are canonical lowercase, 3–20 characters, start with a letter, and contain only letters, digits or underscores. Reserved administrative names are rejected by both the UI and rules. The availability check is advisory; a transaction and `getAfter` rule checks prevent two simultaneous registrations from claiming the same name. Existing usernames remain permanent. Exact public lookup does not prevent someone guessing individual usernames; the rules deny bulk collection enumeration rather than making public profiles secret.
+
+Profiles contain `uid`, `username`, `displayName` (1–32 characters), `bio` (up to 160), `avatarId`, `createdAt`, and `updatedAt`. Friends contain `from`, `to`, ordered `members`, `status`, and timestamps. Signed-in clients can read a missing friend document to perform the atomic reciprocal-request check, but cannot read an existing connection unless they participate. Email verification changes must reach the Firebase ID token as well as the local user object before verified-only writes; friend creation/acceptance refreshes the token before Firestore applies its rules.
+
+Players can link Google to an email account, or set a password on their Google account, retaining the same UID, username and profile. Sensitive Firebase operations can require a recent sign-in. The app never stores passwords. Data export includes the current account's profile, statistics, favorites and connections, excluding tokens. Account deletion is currently handled through the published support mailbox; an authorized backend/operator must remove Auth and related Firestore data together. A bare client-side Auth deletion would strand an immutable username, so it is not offered.
+
+### Future game integrations
+
+Use Firebase project `vihar-27` to authenticate future games and use the Firebase UID as the permanent account key. Usernames are a public display/lookup layer. Firebase browser persistence is origin-scoped: using the same project across game domains preserves identity, but does not itself transfer a signed-in browser session. An explicit future cross-domain handoff needs a trusted server with a short-lived, single-use exchange, a fixed destination allowlist, and server-side token verification. Never pass Firebase ID/refresh tokens in profile links or query strings.
+
+The stats document contract is `{ sessions, playSeconds, bestScore?, distanceMeters?, lastPlayedAt }`, keyed by the known game slug. Counts and durations must be nonnegative and validated by the game backend. The dashboard summarizes games with sessions, elapsed time, session count, recent activity and milestone states; empty accounts show honest zero/empty states. Client requests must not directly award scores or increment play time. A future backend must verify Firebase ID tokens, bind results to the authenticated UID, validate the actual game result, deduplicate submissions, then write with the Admin SDK. Publishing additional private stats into the currently public `stats` collection would require a schema/rules change. Add new favorite game IDs to the rules along with their catalogue entries.
+
+### Avatar assets and reproduction
+
+The six avatars are original, code-authored vector gamer portraits with faceted shapes, dark materials and restrained accent colors. They contain no third-party characters, external requests, uploads or generative-image dependency. Rebuild them with `npm run assets:avatars` (`scripts/generate-avatars.mjs`). Stable storage IDs are retained independently of the visible names:
+
+| ID / file | Name |
+| --- | --- |
+| `sun.svg` | Vanguard |
+| `moon.svg` | Phantom |
+| `tiger.svg` | Ronin |
+| `frog.svg` | Vector |
+| `kite.svg` | Nomad |
+| `planet.svg` | Orbit |
+
+### Local Firebase testing
+
+Use Node 22 and Java 21 or newer. Run `npm ci`, then `npm run test:rules` for the isolated Firestore rule suite. CI installs both runtimes. For manual account tests, run `npm run emulators`, then start Next with `NEXT_PUBLIC_FIREBASE_EMULATORS=true`. In PowerShell: `$env:NEXT_PUBLIC_FIREBASE_EMULATORS='true'; npm run dev`. Remove that shell override before a production build. The emulator mode uses project `demo-vihar`, a fake API key and a separate local Auth persistence key; it rejects non-localhost deployment origins and never points at production data.
+
+Auth listens on `127.0.0.1:9099`, Firestore on `127.0.0.1:8080`. Emulator verification/reset messages are available in terminal output. Do not run the rules suite while relying on a manual emulator session: it clears the demo Firestore database between tests. Browser QA scripts, synthetic account details, screenshots and Java runtime downloads live under ignored `output/`; `.env.local`, `.firebase` and emulator logs must remain ignored.
+
 ## Change history
+
+### Vihar ID accounts, profiles and friends — 2026-11-01
+
+Author: Codex, at the owner's request. Added an optional Firebase account layer with Google/email sign-in, unique atomic username claims, six selectable avatars, public shareable profiles, private saved games, mutual friend requests, dashboard statistics, profile settings, email verification, password recovery, provider linking and data export. The owner requested a more mature gaming identity during review; the final assets are the six geometric gamer portraits documented above, with graphite player cards and more direct account copy. Public pages retain the existing Vihar design. Independent game repositories were not changed, and game statistics remain explicitly pending their future integration.
+
+Added the account routes/components, lazy Firebase client, typed data access, restrictive Firestore/Storage rules, emulator tests, Java 21 rules CI, public environment template, updated privacy/terms/FAQ, header/footer/home account links, and HTTP checks for all new routes and assets. Private service-account credentials are not required for this release and are not committed. Firebase configuration is supplied through ignored local settings and Vercel build variables; Analytics remains off. Security rules keep email out of public profiles, isolate favorites and friend relationships, make usernames immutable and deny all client score writes. The auth state preserves forms on token refresh and clears account state when the UID changes.
+
+Validation on Node 22: `npm run check` passed strict lint, eight configuration/model tests, type checking and the production build. `npm run test:rules` passed all 14 authorization tests using Firestore Emulator and Java 21, including simultaneous username claims and reciprocal friendship writes. `npm run verify` passed all 11 existing public routes, nine noindex/ad-free account/profile routes, six avatar assets, existing metadata/link/image checks and homepage budgets. `npm audit --omit=dev` reported zero vulnerabilities. Existing AVIF passthrough and Node test-module notices remain non-failing.
+
+Real-browser QA used isolated Firebase emulators and synthetic accounts. Passing flows include Google popup sign-in, email registration, reserved/taken usernames, profile/avatar edits, reload persistence, private favorites, public sharing and email privacy, email verification on a fresh full-page load, friend send/accept/cancel/decline/remove, password creation on a Google account with the same UID, password reset, account export without tokens, and sign-out/account isolation. Final accessibility/responsive checks passed 37 page/viewport cases across 1440×900, 390×844, 320×740 and 844×390, with no horizontal overflow and no axe violations in main content. Login, onboarding, dashboard and phone profiles were visually reviewed. Evidence is in ignored `output/playwright/vihar-id-*`; test accounts were confined to `demo-vihar`.
+
+The owner confirmed Google/email providers, production authorized domains and Firestore rule publication. Live read-only probes confirmed the domains and expected public/private Firestore access behavior. A GitHub push was explicitly requested. Vercel environment configuration and the resulting hosting deployment must be verified independently of local tests.
 
 ### Remove section scrollbars and visible breadcrumbs — 2026-11-01
 

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Vanguard avatar">
+    <defs>
+      <clipPath id="circle"><circle cx="128" cy="128" r="128"/></clipPath>
+      <radialGradient id="background" cx=".3" cy=".2" r=".95"><stop stop-color="#55402d"/><stop offset="1" stop-color="#101923"/></radialGradient>
+      <linearGradient id="armor" x2=".8" y2="1"><stop stop-color="#56606a"/><stop offset=".55" stop-color="#343e4a"/><stop offset="1" stop-color="#202631"/></linearGradient>
+      <linearGradient id="accent" x2=".9" y2="1"><stop stop-color="#fff0bd"/><stop offset=".4" stop-color="#efb45c"/><stop offset="1" stop-color="#9b602e"/></linearGradient>
+      <linearGradient id="skin" x2="1" y2="1"><stop stop-color="#e2b28a"/><stop offset="1" stop-color="#c18c67"/></linearGradient>
+      <linearGradient id="glass" x2=".9" y2="1"><stop stop-color="#304d71"/><stop offset=".55" stop-color="#112a44"/><stop offset="1" stop-color="#081722"/></linearGradient>
+    </defs>
+    <g clip-path="url(#circle)">
+      <path fill="url(#background)" d="M0 0h256v256H0Z"/>
+      <circle cx="128" cy="117" r="95" fill="none" stroke="#efb45c" stroke-opacity=".14"/>
+      <path d="m-20 182 139-210M96 280 276 16" stroke="#efb45c" stroke-opacity=".07" stroke-width="24"/>
+      <path d="M35 68V51h17m152 0h17v17M26 134h13m178 0h13" fill="none" stroke="#efb45c" stroke-opacity=".5" stroke-width="2"/>
+      <path d="m26 256 9-53 52-27h82l52 27 9 53" fill="#171c23"/>
+    <path d="m34 207 44-25 21 22-14 52H26m196-49-44-25-21 22 14 52h59" fill="url(#armor)"/>
+    <path d="m76 195 18 19-7 27-30-18m123-28-18 19 7 27 30-18" fill="#bd8744"/>
+    <path d="m97 165-7 31 38 30 38-30-7-31" fill="#0b1016"/>
+    <path d="M70 82 90 52l38-12 38 12 20 30 5 54-27 42-36 15-36-15-27-42Z" fill="url(#armor)" stroke="#738087" stroke-width="2"/>
+    <path d="m90 52 14 26-8 23-26-19m96-30-14 26 8 23 26-19" fill="#d7a154"/>
+    <path d="m119 43 9-3 9 3 7 42-16 9-16-9Z" fill="#b9c1c4"/>
+    <path d="m73 88 32-8h46l32 8-8 38-29 13h-36l-29-13Z" fill="#0a1118" stroke="#899295" stroke-width="2"/>
+    <path d="m81 94 28-6h39l26 6-6 22-24 10h-33l-24-10Z" fill="url(#accent)"/>
+    <path d="m94 95 21-4h29l-31 23H91Z" fill="#fff3d1" opacity=".52"/>
+    <path d="m79 133 26 14 7 31-19-9Zm98 0-26 14-7 31 19-9Z" fill="#6b7378"/>
+    <path d="m105 140 23 9 23-9-7 38-16 9-16-9Z" fill="#202832"/>
+    <path d="M116 158h24m-22 8h20" stroke="#a5afb5" stroke-width="3"/>
+    <path d="m114 226 14 10 14-10-4 30h-20" fill="#353e47"/>
+    <path d="M49 215v18m158-18v18" stroke="#efb45c" stroke-width="3"/>
+      <circle cx="128" cy="128" r="125" fill="none" stroke="#efb45c" stroke-opacity=".23"/>
+    </g>
+  </svg>

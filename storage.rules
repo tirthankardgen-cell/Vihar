@@ -1,0 +1,7 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // The six curated avatars ship with the website. No user uploads needed.
+    match /{allPaths=**} { allow read, write: if false; }
+  }
+}

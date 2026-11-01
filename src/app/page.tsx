@@ -35,7 +35,7 @@ export default function Home() {
               <Link href="/games" className="button button-dark">Explore games <ArrowUpRight size={18} aria-hidden="true" /></Link>
               <a href="#featured" className="hero-scroll" aria-label="Discover our featured game"><ArrowDown size={17} aria-hidden="true" /></a>
             </div>
-            <p className="hero-footnote"><span aria-hidden="true" />No sign-up. Just show up and play.</p>
+            <p className="hero-footnote"><span aria-hidden="true" />Play freely. Make it yours with a <Link href="/signup">Vihar ID ↗</Link></p>
           </div>
           <div className="hero-art">
             <picture>

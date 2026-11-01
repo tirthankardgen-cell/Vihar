@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Phantom avatar">
+    <defs>
+      <clipPath id="circle"><circle cx="128" cy="128" r="128"/></clipPath>
+      <radialGradient id="background" cx=".3" cy=".2" r=".95"><stop stop-color="#403557"/><stop offset="1" stop-color="#101923"/></radialGradient>
+      <linearGradient id="armor" x2=".8" y2="1"><stop stop-color="#666379"/><stop offset=".55" stop-color="#343e4a"/><stop offset="1" stop-color="#202631"/></linearGradient>
+      <linearGradient id="accent" x2=".9" y2="1"><stop stop-color="#fff0bd"/><stop offset=".4" stop-color="#b2a0ef"/><stop offset="1" stop-color="#9b602e"/></linearGradient>
+      <linearGradient id="skin" x2="1" y2="1"><stop stop-color="#e2b28a"/><stop offset="1" stop-color="#c18c67"/></linearGradient>
+      <linearGradient id="glass" x2=".9" y2="1"><stop stop-color="#304d71"/><stop offset=".55" stop-color="#112a44"/><stop offset="1" stop-color="#081722"/></linearGradient>
+    </defs>
+    <g clip-path="url(#circle)">
+      <path fill="url(#background)" d="M0 0h256v256H0Z"/>
+      <circle cx="128" cy="117" r="95" fill="none" stroke="#b2a0ef" stroke-opacity=".14"/>
+      <path d="m-20 182 139-210M96 280 276 16" stroke="#b2a0ef" stroke-opacity=".07" stroke-width="24"/>
+      <path d="M35 68V51h17m152 0h17v17M26 134h13m178 0h13" fill="none" stroke="#b2a0ef" stroke-opacity=".5" stroke-width="2"/>
+      <path d="m22 256 12-47 49-38h90l49 38 12 47" fill="#14151e"/>
+    <path d="m44 213 49-28 35 25 35-25 49 28 12 43H32Z" fill="url(#armor)"/>
+    <path d="M53 162 62 95 88 52l40-21 40 21 26 43 9 67-39 39-36-7-36 7Z" fill="#32333f"/>
+    <path d="m128 31-14 39-21 25-10 51 9 55-39-39 9-67 26-43Z" fill="url(#armor)"/>
+    <path d="m128 31 40 21 26 43 9 67-39 39 9-55-10-51-21-25Z" fill="#232530"/>
+    <path d="m128 61 32 34 14 49-15 39-31 15-31-15-15-39 14-49Z" fill="#0c101b"/>
+    <path d="m96 111 23 6-5 7-19-5m65-8-23 6 5 7 19-5" fill="#c6b9ff"/>
+    <path d="m96 134 32 12 32-12-7 44-25 17-25-17Z" fill="#444354"/>
+    <path d="m96 134 16 28 16-16 16 16 16-28m-48 28 16 17 16-17" fill="none" stroke="#737085" stroke-width="2"/>
+    <path d="m76 102 12-31 18-17m78 82 8 24-27 26" fill="none" stroke="#8f83b3" stroke-width="3"/>
+    <path d="m73 203 34 24-19 29H47m136-53-34 24 19 29h41" fill="#242734"/>
+    <path d="m112 212 16 11 16-11-6 44h-20" fill="#080e18"/>
+    <path d="M64 227h12m104 0h12" stroke="#b2a0ef" stroke-width="3"/>
+      <circle cx="128" cy="128" r="125" fill="none" stroke="#b2a0ef" stroke-opacity=".23"/>
+    </g>
+  </svg>

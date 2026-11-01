@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Ronin avatar">
+    <defs>
+      <clipPath id="circle"><circle cx="128" cy="128" r="128"/></clipPath>
+      <radialGradient id="background" cx=".3" cy=".2" r=".95"><stop stop-color="#56332e"/><stop offset="1" stop-color="#101923"/></radialGradient>
+      <linearGradient id="armor" x2=".8" y2="1"><stop stop-color="#81716b"/><stop offset=".55" stop-color="#343e4a"/><stop offset="1" stop-color="#202631"/></linearGradient>
+      <linearGradient id="accent" x2=".9" y2="1"><stop stop-color="#fff0bd"/><stop offset=".4" stop-color="#ec826d"/><stop offset="1" stop-color="#9b602e"/></linearGradient>
+      <linearGradient id="skin" x2="1" y2="1"><stop stop-color="#e2b28a"/><stop offset="1" stop-color="#c18c67"/></linearGradient>
+      <linearGradient id="glass" x2=".9" y2="1"><stop stop-color="#304d71"/><stop offset=".55" stop-color="#112a44"/><stop offset="1" stop-color="#081722"/></linearGradient>
+    </defs>
+    <g clip-path="url(#circle)">
+      <path fill="url(#background)" d="M0 0h256v256H0Z"/>
+      <circle cx="128" cy="117" r="95" fill="none" stroke="#ec826d" stroke-opacity=".14"/>
+      <path d="m-20 182 139-210M96 280 276 16" stroke="#ec826d" stroke-opacity=".07" stroke-width="24"/>
+      <path d="M35 68V51h17m152 0h17v17M26 134h13m178 0h13" fill="none" stroke="#ec826d" stroke-opacity=".5" stroke-width="2"/>
+      <path d="m22 256 6-50 54-30h92l54 30 6 50" fill="#17171b"/>
+    <path d="m26 207 58-26 20 31-31 20-43 1m200-26-58-26-20 31 31 20 43 1" fill="#693f3b"/>
+    <path d="m29 222 45 1 22-16m131 15-45 1-22-16" fill="none" stroke="#dc7e69" stroke-width="3"/>
+    <path d="m96 167-5 31 37 28 37-28-5-31" fill="#090f16"/>
+    <path d="m62 99 16-34 50-24 50 24 16 34-12 53-30 38h-48l-30-38Z" fill="url(#armor)" stroke="#ad9790" stroke-width="2"/>
+    <path d="m62 99-10-41 38 31 38-14 38 14 38-31-10 41-26 25H88Z" fill="#813f39"/>
+    <path d="m56 61 32 28 40-14 40 14 32-28-12 29-25 9-35-15-35 15-25-9Z" fill="#e59a83"/>
+    <path d="m81 106 47-12 47 12-9 22h-76Z" fill="#090f16"/>
+    <path d="m88 110 29 1-5 7H91m77-8-29 1 5 7h21" fill="#ffb7a0"/>
+    <path d="m80 134 29 2 19-9 19 9 29-2-14 29-34 23-34-23Z" fill="#37363c"/>
+    <path d="m86 139 21 11-8 13m71-24-21 11 8 13" fill="none" stroke="#a2918d" stroke-width="3"/>
+    <path d="m120 141 8-9 8 9 7 27-15 10-15-10Z" fill="#a36556"/>
+    <path d="M121 157h14m-12 7h10" stroke="#151923" stroke-width="3"/>
+    <path d="m128 40 8 15-8 19-8-19Z" fill="#f0a087"/>
+    <path d="m98 218 30 14 30-14-9 38h-42" fill="#34323b"/>
+      <circle cx="128" cy="128" r="125" fill="none" stroke="#ec826d" stroke-opacity=".23"/>
+    </g>
+  </svg>

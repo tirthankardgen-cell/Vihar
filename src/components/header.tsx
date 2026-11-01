@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Brand } from "@/components/brand";
+import { AccountLink } from "@/components/account/account-link";
 
 export function Header() {
   const pathname = usePathname();
@@ -49,7 +50,7 @@ export function Header() {
           <Link href="/about" aria-current={pathname === "/about" ? "page" : undefined}>About</Link>
           <Link href={pathname === "/" ? "/#faqs" : "/help"}>FAQs</Link>
         </nav>
-        <Link href="/games" className="button button-dark header-cta">Explore games <ArrowUpRight size={16} aria-hidden="true" /></Link>
+        <AccountLink />
         <button
           type="button"
           className="menu-toggle"
@@ -63,6 +64,7 @@ export function Header() {
         </button>
       </div>
       <nav id="mobile-navigation" aria-label="Mobile navigation" className="mobile-nav" hidden={!menuOpen}>
+        <AccountLink mobile onClick={() => setMenuOpen(false)} />
         <Link href="/games" onClick={() => setMenuOpen(false)} aria-current={pathname.startsWith("/games") ? "page" : undefined}>Games <ArrowUpRight size={18} aria-hidden="true" /></Link>
         <Link href="/about" onClick={() => setMenuOpen(false)} aria-current={pathname === "/about" ? "page" : undefined}>About <ArrowUpRight size={18} aria-hidden="true" /></Link>
         <Link href="/help" onClick={() => setMenuOpen(false)}>Help &amp; support <ArrowUpRight size={18} aria-hidden="true" /></Link>
