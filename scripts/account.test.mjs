@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { accountError, avatars, normalizeUsername, playTime, safeReturnPath, usernameError } from "../src/lib/account/model.ts";
+import { buildPlayActivity } from "../src/lib/account/activity.ts";
 
 test("usernames have one canonical, reserved-aware identity", () => {
   assert.equal(normalizeUsername(" @Sunny_Road "), "sunny_road");
@@ -19,4 +20,33 @@ test("auth errors do not reveal whether a sign-in email exists", () => {
 test("personal stats use elapsed time and the avatar catalogue is fixed", () => {
   assert.equal(playTime(0), "0m"); assert.equal(playTime(59), "0m"); assert.equal(playTime(3660), "1h 1m");
   assert.equal(new Set(avatars.map((item) => item.id)).size, 6);
+});
+
+test("activity sums daily game records across leap days without inventing a history from totals", () => {
+  const stats = [
+    { sessions: 99, lastPlayedAt: { toMillis: () => Date.parse("2024-03-01") } },
+    { dailySessions: { "2024-02-28": 1, "2024-02-29": 2, "2024-03-01": 3 } },
+    { dailySessions: { "2024-02-29": 4 } },
+  ];
+  const result = buildPlayActivity(stats, "2024-03-01", 90);
+  assert.equal(result.days.length, 90);
+  assert.deepEqual(result.days.slice(-3), [{ date: "2024-02-28", count: 1 }, { date: "2024-02-29", count: 6 }, { date: "2024-03-01", count: 3 }]);
+  assert.equal(result.days.reduce((sum, day) => sum + day.count, 0), 10);
+  assert.equal(result.hasDailyData, true);
+  const legacy = buildPlayActivity([stats[0]], "2024-03-01", 365);
+  assert.equal(legacy.hasDailyData, false);
+  assert(legacy.days.every((day) => day.count === 0));
+});
+
+test("activity ignores future, out-of-range and malformed records", () => {
+  const result = buildPlayActivity([{ dailySessions: {
+    "2025-01-01": 1, "2025-01-02": 10, "2023-12-31": 20,
+    "2024-02-30": 30, "2024-06-01": -1, "2024-06-02": NaN,
+    "2024-06-03": Infinity, "2024-06-04": 1.5, "2024-06-05": "2",
+    "2024-06-06": 0, "not-a-date": 3,
+  } }], "2025-01-01", 365);
+  assert.equal(result.days[0].date, "2024-01-03");
+  assert.equal(result.days.at(-1).date, "2025-01-01");
+  assert.equal(result.days.reduce((sum, day) => sum + day.count, 0), 1);
+  assert.throws(() => buildPlayActivity([], "2025-02-30", 90), RangeError);
 });

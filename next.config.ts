@@ -3,6 +3,9 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: { formats: ["image/avif", "image/webp"] },
+  outputFileTracingIncludes: {
+    "/u/*/card": ["./public/avatars/*.svg", "./public/brand/vihar-emblem-inverse.svg"],
+  },
   async redirects() {
     return [
       { source: "/games/ekka-chor", destination: "/games/gulam-chor", permanent: true },

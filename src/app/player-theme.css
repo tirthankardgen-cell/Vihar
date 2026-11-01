@@ -1,0 +1,187 @@
+/* The server-rendered marker covers loading, onboarding and profile states.
+   Next retains route CSS on navigation; these colors only apply while a
+   player screen is present, including its shared header and footer. */
+html:has(.player-theme) {
+  color-scheme: dark;
+  --canvas: #111111;
+  --surface: #191919;
+  --ink: #f2f0eb;
+  --muted: #aaa69f;
+  --line: #34322e;
+  --terra: #e5b47c;
+  --lavender: #2a251e;
+  --player-surface: #191919;
+  --player-raised: #222222;
+  --player-inset: #131313;
+  --player-accent: #e5b47c;
+  --player-accent-surface: #2a251e;
+  scrollbar-color: #5a5650 var(--canvas);
+}
+
+body:has(.player-theme) { background: var(--canvas); }
+body:has(.player-theme) ::selection { background: #725332; color: #fff5e7; }
+body:has(.player-theme) :focus-visible { outline-color: var(--player-accent); }
+body:has(.player-theme) .site-header { background: #111111f5; border-color: var(--line); }
+body:has(.player-theme) .header-cta { background: var(--player-raised); border-color: #46413b; color: var(--ink); }
+body:has(.player-theme) .header-cta:hover { background: #302b25; border-color: var(--player-accent); }
+body:has(.player-theme) .site-footer { background: var(--player-inset); }
+body:has(.player-theme) .skip-link { background: var(--player-accent); color: #1c1711; }
+
+.player-theme { min-height: calc(100svh - var(--header-height)); }
+.player-theme :is(h1, h2, h3) { font-family: var(--font-dm-sans), Arial, sans-serif; font-weight: 650; line-height: 1.18; letter-spacing: -.035em; }
+.player-theme em { font-family: inherit; font-style: normal; font-weight: inherit; }
+.player-theme .dashboard-heading h1 { font-size: clamp(32px, 3.6vw, 46px); }
+.player-theme .dashboard-heading h1 em { color: var(--ink); }
+.player-theme .dashboard-heading .eyebrow { color: var(--player-accent); }
+.player-theme :is(.account-section-heading h2, .account-panel h2) { font-size: 21px; letter-spacing: -.025em; }
+.player-theme .account-game-copy h3 { font-size: 25px; }
+.player-theme .account-empty h2 { font-size: 24px; }
+.player-theme .public-profile-identity h1 { font-size: clamp(32px, 4.5vw, 52px); }
+
+.player-theme :is(
+  .account-fine-print,
+  .account-field small,
+  .account-checkbox,
+  .sidebar-profile > span > span,
+  .sidebar-label,
+  .account-stat > div,
+  .account-stat > span,
+  .stats-note,
+  .account-game-copy > p:not(.eyebrow),
+  .account-game-bottom > span,
+  .activity-empty p,
+  .activity-list span,
+  .milestone p,
+  .account-empty p,
+  .friend-search-result > a > span,
+  .friend-row-name a > span,
+  .settings-save p,
+  .settings-account-email .eyebrow,
+  .connected-provider span,
+  .public-bio,
+  .public-member,
+  .public-profile-bottom,
+  .public-profile-footnote
+) { color: var(--muted); }
+
+.player-theme :is(
+  .account-section-heading > svg,
+  .account-stat > div svg,
+  .account-game-copy .eyebrow,
+  .activity-empty > span,
+  .account-empty > svg,
+  .connected-provider > svg,
+  .public-profile-identity .eyebrow,
+  .public-username,
+  .public-profile-bottom > a,
+  .settings-data .text-link,
+  .account-loading-spark
+) { color: var(--player-accent); }
+
+.player-theme .button { border-radius: 9px; font-weight: 600; }
+.player-theme .button-dark { color: #1c1711; background: var(--player-accent); border-color: var(--player-accent); }
+.player-theme .button-dark:hover { background: #f1c793; border-color: #f1c793; }
+.player-theme .button-outline { background: transparent; color: var(--ink); border-color: #625b50; }
+.player-theme .button-outline:hover { background: var(--player-raised); border-color: var(--player-accent); }
+.player-theme .text-link { color: var(--player-accent); }
+.player-theme .quiet-button { color: #c6bfb5; }
+
+.player-theme .dashboard-sidebar { border-color: var(--line); }
+.player-theme .dashboard-sidebar nav a { color: var(--muted); border-radius: 8px; }
+.player-theme .dashboard-sidebar nav a:hover { background: var(--player-raised); color: var(--ink); }
+.player-theme .dashboard-sidebar nav a[aria-current] { background: var(--player-accent-surface); color: #f0c995; box-shadow: inset 2px 0 0 var(--player-accent); }
+.player-theme .friend-count { background: var(--player-accent); color: #1c1711; }
+.player-theme .sidebar-bottom > a, .player-theme .sidebar-bottom > button { color: var(--muted); }
+.player-theme .sidebar-bottom > a:hover, .player-theme .sidebar-bottom > button:hover { color: var(--ink); }
+.player-theme .sidebar-profile .player-avatar { outline: 1px solid #49443e; outline-offset: 3px; }
+
+.player-theme .dashboard-welcome { background: var(--player-surface); border-color: #484034; border-left: 3px solid var(--player-accent); border-radius: 14px; }
+.player-theme .dashboard-welcome .eyebrow { color: var(--player-accent); }
+.player-theme .dashboard-welcome h2 { font-size: clamp(30px, 3.3vw, 42px); line-height: 1.15; }
+.player-theme .dashboard-welcome h2 em { color: var(--player-accent); }
+.player-theme .dashboard-welcome p:not(.eyebrow) { color: var(--muted); }
+.player-theme .dashboard-id-card { background: #22211f; border-color: #5d5140; color: var(--ink); box-shadow: none; border-radius: 10px; }
+.player-theme .dashboard-id-card:hover { border-color: var(--player-accent); }
+.player-theme .dashboard-id-card b { color: var(--player-accent); }
+.player-theme .dashboard-id-card > span, .player-theme .dashboard-id-card small { color: #c6bfb5; }
+.player-theme .dashboard-id-card > span:first-child { color: var(--player-accent); }
+.player-theme .dashboard-id-card small { border-color: #4a4339; }
+
+.player-theme :is(.account-stat, .account-panel, .account-game-card, .friend-row, .onboarding-card, .public-profile-card) { background: var(--player-surface); border-color: var(--line); }
+.player-theme .account-stat { border-radius: 11px; }
+.player-theme .account-stat > strong { font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: -.04em; }
+.player-theme .account-game-card { border-radius: 13px; }
+.player-theme .account-game-art { background: var(--player-inset); }
+.player-theme .favorite-button { color: #e2d9ca; background: #171717eb; border-color: #686057; }
+.player-theme .favorite-button:hover { border-color: var(--player-accent); }
+.player-theme .favorite-button[aria-pressed='true'] { color: #ffc5ae; background: #422a22; border-color: #a16d53; }
+.player-theme .status-available { color: #c6dfbc; background: #253022; border-color: #506245; }
+.player-theme .status-upcoming { color: #eed1a9; background: #30291f; border-color: #645238; }
+.player-theme .milestone-icon { color: var(--player-accent); background: #342a1d; border-radius: 10px; }
+.player-theme .milestone > svg { color: #bfd4b5; }
+.player-theme .milestone-locked .milestone-icon { color: var(--muted); background: var(--player-raised); }
+.player-theme .milestone-locked > svg { color: var(--muted); }
+.player-theme .dashboard-friends-link { border-color: var(--line); color: #d4c2aa; }
+.player-theme .account-empty { background: #1b1a18; border-color: #51483a; }
+.player-theme .friend-search-result { border-color: var(--line); }
+.player-theme .count-label { font-family: var(--font-dm-sans), Arial, sans-serif; background: var(--player-accent-surface); color: var(--player-accent); }
+
+.player-theme .account-field input,
+.player-theme .account-field textarea,
+.player-theme .share-fallback input { background: var(--player-inset); color: var(--ink); border-color: #686158; caret-color: var(--player-accent); }
+.player-theme .account-field input::placeholder, .player-theme .account-field textarea::placeholder { color: #aaa49b; }
+.player-theme .account-field input[readonly] { color: #b7b1a7; background: #242321; border-color: #524c43; }
+.player-theme .account-field input:is(:autofill, :-webkit-autofill) { box-shadow: 0 0 0 1000px var(--player-inset) inset; -webkit-text-fill-color: var(--ink); }
+.player-theme .password-input button, .player-theme .username-input > span { color: #c2b9ac; }
+.player-theme .account-checkbox input { accent-color: var(--player-accent); }
+.player-theme .avatar-picker button { color: var(--muted); }
+.player-theme .avatar-picker button:hover { background: var(--player-raised); color: var(--ink); }
+.player-theme .avatar-picker button[aria-pressed='true'] { background: var(--player-accent-surface); color: #f0c995; border-color: var(--player-accent); }
+.player-theme .onboarding-heading .eyebrow, .player-theme .onboarding-heading h1 em { color: var(--player-accent); }
+.player-theme .onboarding-heading h1 { font-size: clamp(32px, 4vw, 44px); }
+.player-theme .username-availability { color: #edc49c; }
+.player-theme .username-availability.available { color: #bfd4b5; }
+.player-theme .settings-account-email { background: var(--player-inset); border: 1px solid var(--line); }
+.player-theme .connected-provider { border-color: var(--line); }
+.player-theme .settings-save a { color: #e4c5a0; }
+.player-theme .account-error { color: #ffbcb0; background: #33201d; border-color: #794639; }
+.player-theme .account-success-note { color: #c6dfbc; background: #253022; border-color: #506245; }
+.player-theme .verification-banner { background: #2c251b; border-color: #675034; }
+.player-theme .verification-banner p, .player-theme .verification-banner > svg { color: #f3c994; }
+.player-theme .verification-banner span { color: #cebea9; }
+.player-theme .verification-actions button { color: #f3c994; }
+
+.player-theme .public-profile-card { border-radius: 18px; }
+.player-theme .public-profile-cover { background: #24221e; border-bottom: 1px solid #4b4133; overflow: hidden; }
+.player-theme .public-profile-cover::before,
+.player-theme .public-profile-cover::after { content: ''; position: absolute; width: 300px; height: 300px; right: 12%; top: -120px; border: 1px solid #756044; transform: rotate(-30deg); pointer-events: none; }
+.player-theme .public-profile-cover::after { right: 7%; top: -80px; border-color: #4e4538; }
+.player-theme .public-profile-cover > span { position: relative; z-index: 1; }
+.player-theme .public-profile-cover > span:first-child { color: #f1c58e; font-weight: 600; }
+.player-theme .public-profile-cover > span:last-child { color: #c8c0b4; }
+.player-theme .public-profile-identity > .player-avatar { border-color: var(--player-surface); box-shadow: 0 0 0 1px #655744; }
+.player-theme .public-profile-stats .account-stat { background: var(--player-inset); }
+.player-theme .public-profile-bottom { background: var(--player-inset); border-color: var(--line); }
+
+.player-theme .play-activity { padding-bottom: 21px; }
+.player-theme .activity-period-control select { min-height: 36px; padding: 6px 30px 6px 12px; border: 1px solid #686158; border-radius: 7px; color: var(--ink); background: var(--player-inset); font-size: 11px; cursor: pointer; }
+.player-theme .activity-day-detail { color: #cfc6b9; font-size: 11px; line-height: 1.7; min-height: 19px; margin-top: 13px; }
+.player-theme .activity-pending-note { color: var(--muted); font-size: 10px; line-height: 1.7; margin-top: 6px; }
+
+@media (max-width: 767px) {
+  .player-theme .dashboard-sidebar nav a[aria-current] { box-shadow: inset 0 -2px 0 var(--player-accent); }
+  .player-theme .dashboard-welcome { border-radius: 12px; }
+  .player-theme .public-profile-cover { padding: 24px 22px; }
+}
+
+@media (max-width: 359px) {
+  .player-theme .dashboard-sidebar nav a { flex-direction: column; gap: 4px; }
+  .player-theme .dashboard-sidebar nav a .friend-count { position: absolute; top: 3px; right: 3px; }
+  .player-theme .dashboard-sidebar nav a:has(.friend-count) { position: relative; }
+}
+
+@media (forced-colors: active) {
+  .player-theme .public-profile-cover::before, .player-theme .public-profile-cover::after { display: none; }
+  .player-theme .button, .player-theme .account-field input, .player-theme .account-field textarea { border-color: ButtonText; }
+  .player-theme .account-field input:is(:autofill, :-webkit-autofill) { -webkit-text-fill-color: CanvasText; }
+}

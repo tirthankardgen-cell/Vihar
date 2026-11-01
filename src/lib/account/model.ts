@@ -25,6 +25,8 @@ export type GameStats = {
   bestScore?: number;
   distanceMeters?: number;
   lastPlayedAt: StoredTime;
+  /** Trusted game backends may publish session totals keyed by UTC YYYY-MM-DD. */
+  dailySessions?: Record<string, number>;
 };
 export type Friendship = {
   id: string;
