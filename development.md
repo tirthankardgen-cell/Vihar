@@ -48,6 +48,16 @@ Retrieved directly from Google on 31 October 2026:
 
 ## Change history
 
+### Image cards and category browsing — 2026-11-01
+
+The home collection and Games page now share full-image cards, with a title, short description, two quiet category labels, and one link covering the entire card. Availability and concept-art labels remain visible. The original artwork, warm canvas, serif typography and restrained hover effects are retained. Cards stack on phones; the category row scrolls horizontally. The home collection fits the usual desktop panel sizes, with scroll access retained in short windows.
+
+Added a shared category registry in `src/lib/game-categories.ts`: Arcade, Free roam, Teamwork, Simulation and Solo. Homepage links and the Bap Ka Rasta detail links open the matching filtered collection. Games receive typed category IDs in `src/lib/games.ts`; the first two appear on their cards. Bap Ka Rasta is tagged for free roam, solo, arcade and simulation. Gulam Chor remains an upcoming announcement without invented gameplay or player-mode categories. Empty categories have a simple, honest empty state.
+
+The Games page has a compact introduction, category selection, search, an availability filter, and Featured / Name A–Z / Name Z–A / Playable first sorting. Search matches words across titles, genres, descriptions, platforms and category labels. Result counts, clear-search and reset controls keep recovery straightforward. Validated URL parameters retain filters on reload and shared links; category/filter/sort changes support Back and Forward. A Suspense fallback preserves the complete static card list and usable game links before JavaScript loads. Only the first visible catalogue card loads eagerly; the homepage preview remains lazy.
+
+Validation with Node 22.23.4: `npm run check` and `npm run verify` passed, including all 11 public routes and the existing metadata, asset and homepage CSS budgets. Production browser checks passed 16 search/filter/sort/history cases, including fast typing and the literal search term `all`, plus 13 keyboard, navigation, reduced-motion, forced-colors and JavaScript-disabled checks. Both updated pages passed layout checks at 1440×900, 1280×632, 768×500, 844×390, 390×844 and 320×740, with no horizontal overflow or clipped card text. Axe found no violations in the main content of Home, Games and Bap Ka Rasta at desktop and phone widths. Desktop and phone screenshots were visually reviewed. Browser scripts, results and previews are in ignored `output/playwright/catalogue-*` and `output/playwright/collection-*` files. These checks were run locally. The owner authorized committing and pushing this change to GitHub on 1 November 2026; deployment verification remains separate. The existing AVIF passthrough build notices remain.
+
 ### Fit desktop sections, reset page navigation and improve image discovery — 2026-10-31
 
 The owner corrected the coming-soon game name to **Gulam Chor**. The catalogue, page, FAQ, supporting copy and sharing image use that name, with canonical path `/games/gulam-chor`. The previous page and image URLs permanently redirect to their renamed destinations. Its development status and noindex policy are unchanged.

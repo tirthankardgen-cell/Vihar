@@ -4,6 +4,7 @@ import { ArrowRight, ArrowUpRight, Compass, Keyboard, Monitor, Play, Smartphone,
 import { Breadcrumbs } from "@/components/page-intro";
 import { BreadcrumbData, StructuredData } from "@/components/structured-data";
 import { gameImages, galleryPath } from "@/lib/game-images";
+import { categoryLabel } from "@/lib/game-categories";
 import { featuredGame } from "@/lib/games";
 import { pageMetadata, site } from "@/lib/site";
 
@@ -19,7 +20,7 @@ export default function BapKaRastaPage() {
       <div className="container game-detail-page">
         <Breadcrumbs items={[{ label: "Games", href: "/games" }, { label: "Bap Ka Rasta" }]} />
         <section className="game-detail-hero page-hero" aria-label="Bap Ka Rasta introduction"><div className="game-detail-intro"><div><p className="eyebrow"><span className="tiny-spark" aria-hidden="true">✳</span> Your auto. Your own sweet time.</p><h1>Bap Ka <em>Rasta.</em></h1><p>Take the long way home. Mumbai has a little more to show you.</p></div><div className="game-launch"><a href={featuredGame.playUrl} target="_blank" rel="noopener noreferrer" className="button button-dark"><Play size={15} fill="currentColor" aria-hidden="true" /> Play now <ArrowUpRight size={18} aria-hidden="true" /></a><span>Opens the game in a new tab.</span></div></div>
-        <div className="game-facts"><span className="status-badge status-available"><span className="status-dot" aria-hidden="true" />Early playable build</span><span><Monitor size={16} aria-hidden="true" /> Browser</span><span>Single player</span><span>Driving · Exploration</span><span>No account needed</span></div>
+        <div className="game-facts"><span className="status-badge status-available"><span className="status-dot" aria-hidden="true" />Early playable build</span><span><Monitor size={16} aria-hidden="true" /> Browser</span><nav className="game-fact-categories" aria-label="Game categories">{featuredGame.categories.map((category) => <Link key={category} href={`/games?category=${category}`}>{categoryLabel(category)}</Link>)}</nav></div>
         <figure className="detail-cover"><Image src={featuredGame.artwork} alt={featuredGame.artworkAlt} width={1536} height={1024} sizes="(max-width: 1280px) 100vw, 1280px" preload /><figcaption>Concept artwork · The playable world is shown below.</figcaption></figure>
         </section><div className="game-detail-body viewport-section viewport-grid">
           <div className="game-story"><p className="eyebrow">Apna sheher. Apni sawaari. Apna rasta.</p><h2>The road is yours.<br /><em>Mostly.</em></h2><p>Slide into a black-and-yellow auto rickshaw and head out into a neighbourhood inspired by South Mumbai. Follow the sea edge, find a narrow galli, or make another loop around the block.</p><p>You’ll share the streets with traffic, pedestrians and street vendors. There are no laps or missions in this build. Just you, your auto, and the pleasure of seeing what’s around the next corner.</p><div className="game-highlights"><div><Compass size={22} aria-hidden="true" /><h3>Follow your curiosity</h3><p>Explore an independently imagined, Mumbai-inspired street network.</p></div><div><Volume2 size={22} aria-hidden="true" /><h3>A city with a soundtrack</h3><p>Engine sounds, street ambience and a horn for when words won’t do.</p></div></div></div>

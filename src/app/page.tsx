@@ -3,8 +3,10 @@ import Image from "next/image";
 import Link from "@/components/site-link";
 import { ArrowDown, ArrowRight, ArrowUpRight, Compass, Monitor, Play, Sparkles } from "lucide-react";
 import { GameCard } from "@/components/game-card";
+import { GameCategories } from "@/components/game-categories";
 import { StructuredData } from "@/components/structured-data";
 import { featuredGame, games } from "@/lib/games";
+import { categoryLabel } from "@/lib/game-categories";
 import { site } from "@/lib/site";
 import "./home.css";
 import courtyardAvif480 from "../../public/images/courtyard-480.avif";
@@ -28,7 +30,7 @@ export default function Home() {
           <div className="hero-copy">
             <p className="eyebrow"><span className="tiny-spark" aria-hidden="true">✳</span> A little room for wonder</p>
             <h1 id="hero-title">A space<br />to <em>play.</em></h1>
-            <p className="hero-description">Original browser games. Different worlds.<br />No download. Find your next little escape.</p>
+            <p className="hero-description">Original browser games. Every kind of play.<br />No download. Find your next little escape.</p>
             <div className="hero-actions">
               <Link href="/games" className="button button-dark">Explore games <ArrowUpRight size={18} aria-hidden="true" /></Link>
               <a href="#featured" className="hero-scroll" aria-label="Discover our featured game"><ArrowDown size={17} aria-hidden="true" /></a>
@@ -58,7 +60,7 @@ export default function Home() {
             </Link>
             <div className="featured-copy">
               <span className="status-badge status-available"><span className="status-dot" aria-hidden="true" />Playable now</span>
-              <div><p className="eyebrow featured-genre">Driving · Exploration</p><h2 id="featured-title">Bap Ka<br /><em>Rasta.</em></h2></div>
+              <div><p className="eyebrow featured-genre">{featuredGame.categories.slice(0, 2).map(categoryLabel).join(" · ")}</p><h2 id="featured-title">Bap Ka<br /><em>Rasta.</em></h2></div>
               <p>Your auto. Your city. Your own sweet time. Weave through Mumbai-inspired streets and see where the road takes you.</p>
               <p className="hinglish">Apna sheher. Apni sawaari. Apna rasta.</p>
               <div className="featured-actions"><a href={featuredGame.playUrl} target="_blank" rel="noopener noreferrer" className="button button-dark"><Play size={14} fill="currentColor" aria-hidden="true" />Play now<span className="sr-only"> — opens Bap Ka Rasta in a new tab</span><ArrowUpRight size={17} aria-hidden="true" /></a><Link href="/games/bap-ka-rasta" className="text-link">Meet the game <ArrowRight size={16} aria-hidden="true" /></Link></div>
@@ -71,6 +73,7 @@ export default function Home() {
       <section className="section collection-section viewport-section" aria-labelledby="collection-title">
         <div className="container">
           <div className="section-title-row"><div><p className="eyebrow"><span className="section-number">02 /</span> Pick your next adventure</p><h2 id="collection-title">Different worlds.<br /><em>Same curiosity.</em></h2></div><Link href="/games" className="text-link">View all games <ArrowUpRight size={18} aria-hidden="true" /></Link></div>
+          <GameCategories showAll={false} />
           <div className="game-grid">{games.map((game) => <GameCard key={game.slug} game={game} />)}</div>
           <p className="collection-note"><Sparkles size={16} aria-hidden="true" /> A small collection, growing with a little imagination.</p>
         </div>

@@ -35,6 +35,7 @@
 .featured-details > span { display: inline-flex; align-items: center; gap: 6px; }
 .featured-details > span + span::before { content: ""; width: 3px; height: 3px; border-radius: 50%; background: #9b959a; margin-right: 1px; }
 .collection-section { padding-top: 10px; }
+.collection-section .game-categories { margin-bottom: 18px; }
 .collection-note { display: flex; align-items: center; justify-content: center; gap: 9px; margin-top: 42px; font-size: 11px; color: var(--muted); }
 .world-section { background: #eeecf3; padding-block: 78px; }
 .world-inner { display: grid; grid-template-columns: .95fr 1.05fr; align-items: center; gap: 95px; }
@@ -147,8 +148,9 @@
   .featured-details { padding-top: 16px; }
   .collection-section.viewport-section, .world-section.viewport-section, .closing-section.viewport-section { padding-block: var(--section-space); }
   .collection-section .section-title-row { margin-bottom: 24px; }
-  .collection-section .section-title-row h2 { font-size: clamp(32px, min(4vw, 7svh), 56px); }
-  .collection-section .game-card-image { height: clamp(100px, calc(var(--section-height) - 390px), 340px); aspect-ratio: auto; }
+  .collection-section .section-title-row h2 { font-size: clamp(32px, min(4vw, 6svh), 52px); }
+  .collection-section .game-card-link { height: clamp(270px, calc(var(--section-height) - 330px), 440px); min-height: 270px; aspect-ratio: auto; }
+  .collection-section .game-card-content { padding-top: 40px; }
   .collection-section .collection-note { margin-top: 24px; }
   .world-inner { gap: clamp(32px, 5vw, 80px); }
   .world-art img { max-height: calc(var(--section-height) - 2 * var(--section-space)); object-fit: contain; }
@@ -163,6 +165,10 @@
   .hero-description { font-size: 15px; line-height: 1.6; margin-top: 16px; }
   .hero-actions { margin-top: 18px; }
   .hero-footnote { margin-top: 12px; }
+  .collection-section .section-title-row { margin-bottom: 12px; }
+  .collection-section .section-title-row .eyebrow { margin-bottom: 10px; }
+  .collection-section .game-categories { margin-bottom: 10px; }
+  .collection-section .collection-note { margin-top: 12px; }
   .world-copy > p:not(.eyebrow) { margin-top: 14px; }
 }
 @media (max-width: 767px) {
