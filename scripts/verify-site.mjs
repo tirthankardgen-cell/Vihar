@@ -110,23 +110,45 @@ try {
     assert.equal(metadata.width, 1200, asset + " width");
     assert.equal(metadata.height, 630, asset + " height");
   }
-  // Guard the first-load budgets and verify every negotiated hero format.
+  // Exercise the nine-card tunnel in the server HTML and both responsive formats.
   const home = pages.get("/");
-  const heroPicture = home.match(/<picture>([\s\S]*?)<\/picture>/)?.[1];
-  assert(heroPicture, "Homepage needs responsive hero artwork");
-  const heroSources = [...heroPicture.matchAll(/\bsrcSet="([^"]+)"/gi)].flatMap((match) => decode(match[1]).split(",").map((candidate) => candidate.trim().split(/\s+/)));
-  assert.equal(heroSources.length, 6, "Hero needs three sizes in AVIF and WebP");
-  for (const [url, descriptor] of heroSources) {
-    const response = await get(url);
-    assert.equal(response.status, 200, "Missing hero asset: " + url);
-    assert(response.headers.get("cache-control")?.includes("immutable"), "Hashed hero assets must be immutable");
-    const buffer = Buffer.from(await response.arrayBuffer());
-    const metadata = await sharp(buffer).metadata();
-    assert.equal(metadata.width, Number.parseInt(descriptor), "Hero srcset must describe its actual width");
-    assert.equal(metadata.height, metadata.width, "Hero artwork must retain its square aspect ratio");
-    assert.equal(response.headers.get("content-type"), url.endsWith(".avif") ? "image/avif" : "image/webp");
-    if (url.endsWith(".avif") && descriptor === "768w") assert(buffer.length <= 25 * 1024, "Mobile hero must stay within 25 KiB");
+  const hero = home.match(/<section\b[^>]*aria-labelledby="vihar-world-title"[^>]*>([\s\S]*?)<\/section>/)?.[1];
+  assert(hero, "Homepage needs the Vihar world hero");
+  const heroImages = [...hero.matchAll(/<img\b[^>]*>/g)].map((match) => match[0]);
+  assert.equal(heroImages.length, 9, "The tunnel needs nine image cards");
+  assert(hero.includes('href="/games"'), "The hero must expose the games catalogue");
+  assert(hero.includes('href="' + gameUrl + '"'), "The hero must use the configured play URL");
+  const formatBudgets = new Map([["image/avif", 0], ["image/webp", 0]]);
+  for (const image of heroImages) {
+    const srcset = image.match(/\bsrcSet="([^"]+)"/i)?.[1];
+    assert(srcset && image.includes('sizes="'), "Every hero image needs responsive sizing");
+    const candidates = decode(srcset).split(",").map((candidate) => candidate.trim().split(/\s+/));
+    const [url, descriptor] = candidates.find(([, width]) => Number.parseInt(width) >= 360) ?? [];
+    assert(url && Number.parseInt(descriptor) <= 640, "Hero cards need an appropriate mobile source");
+    const original = new URL(url, base).searchParams.get("url");
+    assert(original?.startsWith("/images/"), "Hero artwork must use local game assets");
+    const originalResponse = await get(original);
+    assert.equal(originalResponse.status, 200, "Missing original hero asset: " + original);
+    const originalMetadata = await sharp(Buffer.from(await originalResponse.arrayBuffer())).metadata();
+    for (const format of formatBudgets.keys()) {
+      const response = await fetch(new URL(url, base), { headers: { Accept: format }, signal: AbortSignal.timeout(20000) });
+      assert.equal(response.status, 200, "Missing responsive hero asset: " + url);
+      assert.equal(response.headers.get("content-type"), format, "Hero must negotiate the requested format");
+      assert(response.headers.get("cache-control")?.includes("max-age="), "Optimized hero images need cache headers");
+      const buffer = Buffer.from(await response.arrayBuffer());
+      const metadata = await sharp(buffer).metadata();
+      assert.equal(metadata.width, Number.parseInt(descriptor), "Hero srcset must describe its actual width");
+      assert(Math.abs(metadata.height - metadata.width * originalMetadata.height / originalMetadata.width) <= 1, "Hero sources must keep their original proportions");
+      formatBudgets.set(format, formatBudgets.get(format) + buffer.length);
+    }
   }
+  // Aggregate budget replaces the former 25 KiB single courtyard image budget.
+  for (const [format, bytes] of formatBudgets) assert(bytes <= 128 * 1024, "All nine mobile hero images must stay within 128 KiB: " + format);
+  const heroPreviewResponse = await get("/preview/vihar-world");
+  assert.equal(heroPreviewResponse.status, 200, "Hero preview must remain testable");
+  const heroPreview = await heroPreviewResponse.text();
+  assert(attribute(heroPreview, "meta", "name", "robots")?.includes("noindex"), "The hero preview must stay out of search results");
+  assert.equal([...heroPreview.matchAll(/data-world-card=/g)].length, 9, "The preview must use the same nine-card hero");
   const homeStylesheets = [...home.matchAll(/<link\b[^>]*rel="stylesheet"[^>]*href="([^"]+)"[^>]*>/g)].map((match) => decode(match[1]));
   let homeCssBytes = 0;
   for (const url of new Set(homeStylesheets)) {
@@ -134,7 +156,8 @@ try {
     assert.equal(response.status, 200, "Missing homepage stylesheet: " + url);
     homeCssBytes += (await response.arrayBuffer()).byteLength;
   }
-  assert(homeCssBytes > 0 && homeCssBytes <= 32 * 1024, "Homepage CSS must stay within 32 KiB uncompressed");
+  // The animated tunnel adds a scoped stylesheet; obsolete courtyard styles are removed.
+  assert(homeCssBytes > 0 && homeCssBytes <= 42 * 1024, "Homepage CSS, including the tunnel, must stay within 42 KiB uncompressed");
   for (const asset of [
     "/images/courtyard.webp", "/images/playground.webp", "/images/bap-ka-rasta-cover.webp",
     "/images/bap-ka-rasta-gameplay.webp", "/images/bap-ka-rasta-camera.webp", "/images/gulam-chor.webp",
@@ -283,7 +306,7 @@ try {
     const metadata = await sharp(Buffer.from(await response.arrayBuffer())).metadata();
     assert.equal(metadata.width, metadata.height, "Avatars must retain a square aspect ratio");
   }
-  console.log(`PASS: ${routes.length} public routes, ${accountRoutes.length} ad-free/noindex account routes, six avatar assets, SEO metadata, structured data, internal links/assets, responsive hero formats/cache/byte budget, homepage CSS budget, robots, image gallery and completed-page sitemap, game links, contact, headers, ad-free 404s, FAQ parity, original-logo favicon, approval/consent/preview gates, guide-only ads, privacy disclosures, ads.txt and llms.txt.`);
+  console.log(`PASS: ${routes.length} public routes, ${accountRoutes.length} ad-free/noindex account routes, six avatar assets, SEO metadata, structured data, internal links/assets, nine-card hero and noindex preview, responsive AVIF/WebP hero formats/cache/128 KiB aggregate image budget, ${homeCssBytes} bytes of homepage CSS, robots, image gallery and completed-page sitemap, game links, contact, headers, ad-free 404s, FAQ parity, original-logo favicon, approval/consent/preview gates, guide-only ads, privacy disclosures, ads.txt and llms.txt.`);
 } catch (error) {
   console.error(error);
   process.exitCode = 1;

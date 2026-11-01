@@ -3,6 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: { formats: ["image/avif", "image/webp"] },
+  experimental: {
+    // Keep page-specific styles separate from the shared site shell.
+    cssChunking: { type: "graph", requestCost: 2000 },
+  },
   outputFileTracingIncludes: {
     "/u/*/card": ["./public/avatars/*.svg", "./public/brand/vihar-emblem-inverse.svg"],
   },
