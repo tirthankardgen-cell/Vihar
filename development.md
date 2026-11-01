@@ -109,6 +109,12 @@ Auth listens on `127.0.0.1:9099`, Firestore on `127.0.0.1:8080`. Emulator verifi
 
 ## Change history
 
+### Fit the login page into one viewport — 2026-11-01
+
+Author: Codex, at the owner's request. `/login` now fills the space below the header in one viewport, with its site footer and visible scrollbars removed. The two-column composition, heading, spacing and player card adapt to the available height. Normal laptop/phone sizes display the complete sign-in form without scrolling. Very short landscape windows retain wheel, touch and keyboard access inside the form without an outer page scrollbar; a failed-login message is brought into view automatically. The page marker scopes these styles even when Next retains CSS during client navigation, so other pages restore their normal footer and scrolling. Changes are limited to the login wrapper/styles, the login heading/error presentation in the shared form, and this record.
+
+Validation: `npm run check` and `npm run verify` passed on Node 22, including the production build and all 20 public/account routes. Production browser checks covered 1920×1080, 1440×900, 1280×632, 1280×599, 768×600, 390×844, 320×740 and 844×390. All had no outer page overflow or visible footer/scrollbar; the seven taller cases showed every sign-in control without form scrolling, and the short landscape case retained keyboard access to the bottom of the form. Mobile menu navigation, browser Back, signup layout restoration, password visibility and a mocked failed-login response passed. Axe found no main-content violations at desktop and phone sizes. Screenshots and scripts are in ignored `output/playwright/login-viewport-*`.
+
 ### Vihar ID accounts, profiles and friends — 2026-11-01
 
 Author: Codex, at the owner's request. Added an optional Firebase account layer with Google/email sign-in, unique atomic username claims, six selectable avatars, public shareable profiles, private saved games, mutual friend requests, dashboard statistics, profile settings, email verification, password recovery, provider linking and data export. The owner requested a more mature gaming identity during review; the final assets are the six geometric gamer portraits documented above, with graphite player cards and more direct account copy. Public pages retain the existing Vihar design. Independent game repositories were not changed, and game statistics remain explicitly pending their future integration.

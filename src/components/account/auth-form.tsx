@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createUserWithEmailAndPassword, GoogleAuthProvider, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { ArrowRight, Eye, EyeOff, Mail, ShieldCheck, Sparkles } from "lucide-react";
@@ -26,7 +26,11 @@ export function AuthForm({ mode }: { mode: "login" | "signup" | "reset" }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
+  const errorRef = useRef<HTMLParagraphElement>(null);
   useEffect(() => { if (!loading && user && !reset) router.replace(next); }, [user, loading, reset, router, next]);
+  useEffect(() => {
+    if (mode === "login" && error) errorRef.current?.scrollIntoView({ block: "nearest", behavior: "instant" });
+  }, [error, mode]);
   async function google() {
     setBusy(true); setError("");
     try {
@@ -58,11 +62,11 @@ export function AuthForm({ mode }: { mode: "login" | "signup" | "reset" }) {
   }
   return <div className="account-auth container">
     <section className="auth-story" aria-labelledby="id-story-title"><p className="eyebrow"><Sparkles size={16} aria-hidden="true" /> Your player identity</p><h2 id="id-story-title">One ID.<br />A world of <em>play.</em></h2><p>Your profile, your games, your community. Make your mark on Vihar.</p><div className="id-preview"><div className="id-preview-top"><span>VIHAR <b>ID</b></span><span aria-hidden="true">✳</span></div><Avatar id="tiger" size={94} /><p>Player One</p><span>@your_username</span><div className="id-preview-bottom"><span>Your name in the game</span><span aria-hidden="true">↗</span></div></div><div className="auth-story-note"><ShieldCheck size={18} aria-hidden="true" /><p>One identity for Vihar.<br /><span>More games. Same you.</span></p></div></section>
-    <section className="auth-form-panel" aria-labelledby="auth-title"><p className="eyebrow">{reset ? "A fresh start" : signup ? "Your next chapter" : "Your space awaits"}</p><h1 id="auth-title">{reset ? "Forgot your password?" : signup ? <>Create your<br /><em>player ID.</em></> : <>Welcome<br /><em>back.</em></>}</h1><p className="account-muted">{reset ? "We’ll send you a link to choose a new one." : signup ? "Choose your username. Build your profile. Find your next game." : "Sign in to your Vihar ID and pick up where you left off."}</p>
+    <section className="auth-form-panel" aria-labelledby="auth-title"><p className="eyebrow">{reset ? "A fresh start" : signup ? "Your next chapter" : "Your space awaits"}</p><h1 id="auth-title">{reset ? "Forgot your password?" : signup ? <>Create your<br /><em>player ID.</em></> : <>Welcome <br /><em>back.</em></>}</h1><p className="account-muted">{reset ? "We’ll send you a link to choose a new one." : signup ? "Choose your username. Build your profile. Find your next game." : "Sign in to your Vihar ID and pick up where you left off."}</p>
     {sent ? <div className="account-success" role="status"><Mail size={28} aria-hidden="true" /><h2>Check your inbox.</h2><p>If that email has an account, a reset link is on its way. Check your spam folder too.</p><Link href="/login" className="text-link">Back to sign in <ArrowRight size={16} aria-hidden="true" /></Link></div> : <>
       {!reset && <><button type="button" className="google-button" onClick={() => void google()} disabled={busy}><GoogleMark />Continue with Google</button><div className="form-divider"><span>or with email</span></div></>}
       <form onSubmit={(event) => void submit(event)}><fieldset disabled={busy} className="account-fields"><label className="account-field" htmlFor="email"><span>Email address</span><input id="email" name="email" type="email" autoComplete="email" placeholder="you@example.com" required maxLength={254} /></label>{!reset && <PasswordInput newPassword={signup} />}{signup && <label className="account-checkbox"><input type="checkbox" required /><span>I agree to the <Link href="/terms">Terms</Link> and <Link href="/privacy">Privacy notice</Link>.</span></label>}{!reset && !signup && <Link href="/forgot-password" className="forgot-link">Forgot password?</Link>}<button className="button button-dark account-submit" type="submit">{busy ? "Please wait…" : reset ? "Send reset link" : signup ? "Create my Vihar ID" : "Sign in"}<ArrowRight size={17} aria-hidden="true" /></button></fieldset></form>
-      {error && <p className="account-error" role="alert">{error}</p>}
+      {error && <p ref={errorRef} className="account-error" role="alert">{error}</p>}
       {!reset && <p className="auth-switch">{signup ? "Already have an ID?" : "New around here?"} <Link href={`${signup ? "/login" : "/signup"}${next !== "/dashboard" ? `?next=${encodeURIComponent(next)}` : ""}`}>{signup ? "Sign in" : "Create your Vihar ID"} <ArrowRight size={13} aria-hidden="true" /></Link></p>}
       {reset && <Link href="/login" className="text-link">Back to sign in</Link>}
     </>}
