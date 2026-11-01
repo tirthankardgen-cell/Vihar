@@ -125,7 +125,22 @@ test("reciprocal requests cannot duplicate an existing connection, including sim
     setDoc(requestRef(db("alice")), requestData("alice", "bobby")),
     setDoc(requestRef(db("bobby"), "bobby", "alice"), requestData("bobby", "alice")),
   ]);
-  assert.equal(outcomes.filter((item) => item.status === "fulfilled").length, 1);
+  // Rules read the reciprocal document. Competing raw writes can both abort;
+  // safety requires at most one winner, not that the server picks a winner.
+  const successful = outcomes.filter((item) => item.status === "fulfilled").length;
+  assert(successful <= 1, "Reciprocal writes must never both succeed");
+  for (const outcome of outcomes) if (outcome.status === "rejected") {
+    assert(["permission-denied", "aborted"].includes(outcome.reason.code), "Unexpected concurrent-write error: " + outcome.reason.code);
+  }
+  const connections = async () => (await getDocs(query(
+    collection(db("alice"), "friendships"), where("members", "array-contains", "alice"),
+  ))).docs.map((item) => item.data());
+  assert.equal((await connections()).length, successful, "Rejected writes must not leave a connection");
+  if (!successful) await assertSucceeds(setDoc(requestRef(db("alice")), requestData("alice", "bobby")));
+  const saved = await connections();
+  assert.equal(saved.length, 1, "A retry must create exactly one connection");
+  const { from, to } = saved[0];
+  await assertFails(setDoc(requestRef(db(to), to, from), requestData(to, from)));
 });
 test("either participant can cancel, decline or remove a connection; outsiders cannot", async () => {
   await pending();
