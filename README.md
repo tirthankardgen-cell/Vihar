@@ -16,6 +16,8 @@ npm run verify
 
 Use `npm run assets` to reproduce artwork, icons and fonts. Committed public assets are ready for deployment; regeneration is not required during a Vercel build.
 
+Bap Ka Rasta has a visual game page with a six-ride garage and a 27-image gallery. Gameplay, 3D characters, world renders and future city/vehicle concepts are labelled separately. The showcase images can also be regenerated on their own with `node scripts/generate-game-showcase.mjs`.
+
 See [development.md](development.md) for the single change history, configuration guide, asset provenance, validation evidence and agent handoff. The original design requirements remain in [website-brief.md](website-brief.md).
 
 AdSense ownership metadata and ads.txt remain available while advertising is paused for review. Ads require explicit serving, site-approval, and consent-readiness settings, and can load only on the completed first-drive guide. Preview, game launch, upcoming, navigation, support, legal and missing pages have no ad loader. See [development.md](development.md#adsense-review-and-account-setup) for the policy audit and account setup; settings are in [.env.example](.env.example). Google approval is still required.
