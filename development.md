@@ -92,7 +92,9 @@ The dashboard also summarizes games with sessions, elapsed time, session count, 
 
 ### Personal ID cards and sharing
 
-`/u/{username}/card` returns the player's vertical 900 × 1200 PNG card and is linked by **Download ID card** on their profile. `?format=preview` places the vertical card inside a 1200 × 630 sharing image, preserving the whole card when social platforms use a wide preview. The profile's server-rendered Open Graph and Twitter metadata points to this preview, with the public profile update timestamp as an image version. No account login is required for a sharing crawler.
+`/u/{username}/card` returns the player's vertical 900 × 1200 PNG card and is linked by **Download ID card** on their profile. This same portrait is the profile's Open Graph and Twitter image, with explicit portrait dimensions and a format/profile version in its URL. The previous `?format=preview` URL also returns the portrait; there is no wide banner variant. `?download=1` returns the PNG as an attachment. No account login is required for a sharing crawler.
+
+**Share ID card** opens a portrait preview from the dashboard, friends, settings and public profile. On browsers supporting Web Share files, a second tap sends the actual PNG plus the public profile URL to the chosen app. The PNG is prepared before that tap to preserve transient user activation on phones. Browsers without photo sharing can download the card and attach it manually. Copying the profile link remains available, including a selectable link when clipboard access fails. WhatsApp and other apps control their own link-preview size/cropping; sending the PNG as a photo preserves the vertical image. Existing messages and cached link previews do not change immediately.
 
 The renderer only performs the two exact public Firestore reads already allowed by the published rules, and uses the display name, username, chosen catalogue avatar and join date. It does not use an Admin credential or include email, tokens, private data or arbitrary remote images. Missing players return 404 and temporary failures return an uncached 503. Public profile fetches revalidate after 60 seconds and card responses cache at the CDN for five minutes; third-party sharing services maintain their own preview caches. The six SVG portraits and brand emblem are explicitly included in the card route's deployment trace.
 
@@ -116,6 +118,14 @@ Use Node 22 and Java 21 or newer. Run `npm ci`, then `npm run test:rules` for th
 Auth listens on `127.0.0.1:9099`, Firestore on `127.0.0.1:8080`. Emulator verification/reset messages are available in terminal output. Do not run the rules suite while relying on a manual emulator session: it clears the demo Firestore database between tests. Browser QA scripts, synthetic account details, screenshots and Java runtime downloads live under ignored `output/`; `.env.local`, `.firebase` and emulator logs must remain ignored.
 
 ## Change history
+
+### Share the portrait ID as a photo — 2026-11-01
+
+Author: Codex, at the owner's request after reviewing the WhatsApp screenshots. Replaced the wide social banner with the standalone 900 × 1200 portrait card, declared its actual dimensions in Open Graph metadata, and versioned its image URL. Added a native sharing dialog with the full card, photo sharing, download and copy-link actions. File sharing starts directly on a user tap after preparation; cancel, download-only browsers, clipboard failure, retry and modal cleanup are handled. Native sharing hands the image to the selected app without automatically sending a message. Public profile reads, account permissions and game stats are unchanged.
+
+The dialog styles load with the existing player theme. Tailwind source discovery is explicitly rooted at `src/`, keeping temporary verification files and surrounding workspaces out of generated utility CSS.
+
+Validation: lint, all 10 existing tests, type checking, the final production build and `npm run verify` passed, including the homepage CSS budget. The sharing dialog passed layout and axe checks at 1440 × 900, 390 × 844, 320 × 740 and 844 × 390, with no horizontal overflow or page errors. A controlled Web Share stub confirmed a real 900 × 1200 PNG file, its filename, the profile link and active user activation at handoff; no message was sent to an external app. Cancellation, sharing failure, unsupported file sharing, download, clipboard success/fallback, retry, Escape, focus restoration and object URL cleanup passed. Read-only checks of the real `mrtg1b` profile confirmed portrait dimensions and PNG metadata in the head for WhatsApp, Twitterbot and Facebook crawlers. The legacy preview URL also returns the portrait, and the download response uses an attachment disposition.
 
 ### Dark player screens, activity calendar, onboarding and personal cards — 2026-11-01
 

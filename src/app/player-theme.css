@@ -185,3 +185,41 @@ body:has(.player-theme) .skip-link { background: var(--player-accent); color: #1
   .player-theme .button, .player-theme .account-field input, .player-theme .account-field textarea { border-color: ButtonText; }
   .player-theme .account-field input:is(:autofill, :-webkit-autofill) { -webkit-text-fill-color: CanvasText; }
 }
+
+/* Portrait sharing is loaded with the player routes. */
+body:has(.id-share-dialog[open]) { overflow: hidden; }
+
+.id-share-dialog {
+  width: min(520px, calc(100vw - 24px));
+  max-height: calc(100dvh - 24px);
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  color: #f2f0eb;
+  background: #191919;
+  border: 1px solid #46413b;
+  border-radius: 20px;
+}
+
+.id-share-dialog::backdrop { background: #000b; }
+.id-share-content { padding: 22px; }
+.id-share-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.id-share-dialog .id-share-title { margin: 0; font: 600 1.2rem/1.3 var(--font-sans); letter-spacing: -.025em; }
+.id-share-header p { margin: 6px 0 0; color: #aaa69f; font-size: .85rem; }
+.id-share-close { display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; padding: 0; color: #f2f0eb; background: #222; border: 1px solid #46413b; border-radius: 50%; cursor: pointer; }
+.id-share-preview { display: block; width: auto; height: auto; max-width: 100%; max-height: min(47dvh, 420px); margin: 18px auto; border-radius: 12px; }
+.id-share-loading { display: grid; place-items: center; min-height: 160px; color: #aaa69f; font-size: .9rem; }
+.id-share-hint { margin: 14px 0; color: #bcb6ac; font-size: .85rem; line-height: 1.5; text-align: center; }
+.id-share-error { margin: 16px 0; color: #f2b4a2; font-size: .875rem; line-height: 1.5; }
+.id-share-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.id-share-actions > * { flex: 1 1 auto; justify-content: center; }
+.id-share-actions .id-share-primary { flex-basis: 100%; }
+.id-share-copy { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 12px; min-height: 44px; }
+.id-share-fallback { display: grid; gap: 6px; margin-top: 12px; font-size: .8rem; color: #aaa69f; }
+.id-share-fallback input { width: 100%; min-width: 0; padding: 10px; border: 1px solid #46413b; border-radius: 8px; background: #111; color: #f2f0eb; font: inherit; }
+
+@media (max-width: 479px) {
+  .id-share-content { padding: 18px; }
+  .id-share-dialog .id-share-title { font-size: 1.1rem; }
+}
