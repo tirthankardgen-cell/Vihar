@@ -1,6 +1,6 @@
 import Link from "@/components/site-link";
 import { ArrowUpRight, Mail, ShieldCheck } from "lucide-react";
-import { Breadcrumbs, PageIntro } from "@/components/page-intro";
+import { PageIntro } from "@/components/page-intro";
 import { BreadcrumbData } from "@/components/structured-data";
 import { pageMetadata, site } from "@/lib/site";
 
@@ -14,7 +14,6 @@ export default function ContactPage() {
   const emailLink = "mailto:" + site.email;
   return (
     <div className="container">
-      <Breadcrumbs items={[{ label: "Contact" }]} />
       <PageIntro eyebrow="The door is open" title="A conversation starts here." description="A question, a little feedback, or an idea worth exploring. We’d like to hear it." />
       <section className="contact-panel viewport-section" aria-label="Contact options"><div className="contact-grid">
         <section className="contact-primary" aria-labelledby="hello-title">

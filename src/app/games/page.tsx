@@ -1,5 +1,5 @@
 import { GameCatalogue } from "@/components/game-catalogue";
-import { Breadcrumbs } from "@/components/page-intro";
+import "@/app/content.css";
 import { BreadcrumbData, StructuredData } from "@/components/structured-data";
 import { games } from "@/lib/games";
 import { pageMetadata, site } from "@/lib/site";
@@ -9,7 +9,6 @@ export const metadata = pageMetadata("Explore our games", "Find your kind of pla
 export default function GamesPage() {
   return (
     <div className="container catalogue-page">
-      <Breadcrumbs items={[{ label: "Games" }]} />
       <div className="catalogue-intro">
         <p className="eyebrow"><span className="tiny-spark" aria-hidden="true">✳</span> Small breaks. New worlds.</p>
         <h1>Find your kind <em>of play.</em></h1>

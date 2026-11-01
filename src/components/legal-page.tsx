@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Breadcrumbs, PageIntro } from "@/components/page-intro";
+import { PageIntro } from "@/components/page-intro";
 import { BreadcrumbData } from "@/components/structured-data";
 
 type LegalSection = { id: string; title: string; content: ReactNode };
@@ -13,7 +13,6 @@ export function LegalPage({ title, path, description, summary, sections }: {
 }) {
   return (
     <div className="container">
-      <Breadcrumbs items={[{ label: title }]} />
       <PageIntro eyebrow="The useful details" title={title} description={description} />
       <p className="policy-date">Last updated: <time dateTime="2026-10-31">31 October 2026</time></p>
       <div className="legal-layout">

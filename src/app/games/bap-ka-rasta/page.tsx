@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "@/components/site-link";
 import { ArrowRight, ArrowUpRight, Check, Gamepad2, Keyboard, LockKeyhole, MapPin, Monitor, Play, SlidersHorizontal, Smartphone } from "lucide-react";
-import { Breadcrumbs } from "@/components/page-intro";
+import "@/app/content.css";
 import { GameGallery } from "@/components/game-gallery";
 import { VehicleShowcase } from "@/components/vehicle-showcase";
 import { BreadcrumbData, StructuredData } from "@/components/structured-data";
@@ -27,9 +27,12 @@ function PlayLink({ label = "Play now" }: { label?: string }) {
 export default function BapKaRastaPage() {
   return <div className="bkr-page">
     <div className="container bkr-opening">
-      <Breadcrumbs items={[{ label: "Games", href: "/games" }, { label: "Bap Ka Rasta" }]} />
       <section className="bkr-hero" aria-labelledby="bkr-title">
-        <div className="bkr-hero-art"><Image src={featuredGame.artwork} alt={featuredGame.artworkAlt} fill sizes="(max-width: 767px) 100vw, 75vw" preload /></div>
+        <div className="bkr-hero-art">
+          <Image src={featuredGame.artwork} alt={featuredGame.artworkAlt} fill sizes="(max-width: 767px) 100vw, 75vw" preload />
+          <span className="bkr-hero-art-label">Concept artwork</span>
+          <div className="bkr-hero-location"><MapPin size={16} aria-hidden="true" /><span>Mumbai<small>Your first stop.</small></span></div>
+        </div>
         <div className="bkr-hero-copy">
           <span className="bkr-badge bkr-hero-status"><span className="status-dot" aria-hidden="true" />Early playable build</span>
           <h1 id="bkr-title">Bap Ka<br /><span>Rasta.</span></h1>
@@ -37,10 +40,8 @@ export default function BapKaRastaPage() {
           <div className="bkr-hero-meta"><span><Monitor size={15} aria-hidden="true" />Browser</span><nav aria-label="Game categories"><Gamepad2 size={16} aria-hidden="true" />{featuredGame.categories.slice(0, 2).map((category) => <Link key={category} href={`/games?category=${category}`}>{categoryLabel(category)}</Link>)}</nav></div>
           <div className="bkr-hero-launch"><PlayLink /><span>Free to play · No account · Opens a new tab</span></div>
         </div>
-        <span className="bkr-hero-art-label">Concept artwork</span>
-        <div className="bkr-hero-location"><MapPin size={16} aria-hidden="true" /><span>Mumbai<small>Your first stop.</small></span></div>
       </section>
-      <nav className="bkr-jump-nav" aria-label="Explore Bap Ka Rasta"><span>Take a look around</span><Link href="#rides">The rides</Link><Link href="#cities">The cities</Link><Link href="#characters">The people</Link><Link href="#gameplay">Gameplay</Link><Link href="#controls-title">Controls <ArrowRight size={14} aria-hidden="true" /></Link></nav>
+      <nav className="bkr-jump-nav" aria-label="Explore Bap Ka Rasta"><span>Take a look around</span><Link href="#rides">The rides</Link><Link href="#cities">The cities</Link><Link href="#characters">The people</Link><Link href="#gameplay">Gameplay</Link><Link href="#controls">Controls <ArrowRight size={14} aria-hidden="true" /></Link></nav>
     </div>
 
     <section className="container bkr-panel viewport-section" id="rides" aria-labelledby="rides-title">
@@ -73,7 +74,7 @@ export default function BapKaRastaPage() {
       <div className="bkr-section-footer"><p className="bkr-section-note">Actual browser gameplay · Two camera views. Plenty of room to roam.</p><Link href={galleryPath} className="bkr-text-link">Open the gallery <ArrowRight size={15} aria-hidden="true" /></Link></div>
     </section>
 
-    <section className="container bkr-panel bkr-controls-panel viewport-section" aria-labelledby="controls-title">
+    <section className="container bkr-panel bkr-controls-panel viewport-section" id="controls" aria-labelledby="controls-title">
       <div className="bkr-section-heading"><div><p className="eyebrow">05 / Meter down. Tension down.</p><h2 id="controls-title">Get in. <span>Head out.</span></h2></div><Link href="/guides/bap-ka-rasta-first-drive" className="bkr-text-link">First-drive guide <ArrowUpRight size={16} aria-hidden="true" /></Link></div>
       <div className="bkr-ready-grid">
         <div className="bkr-keyboard"><h3><Keyboard size={20} aria-hidden="true" />Your keys to the city</h3><dl className="bkr-controls-list">{controls.map(([action, key]) => <div key={action}><dt>{action}</dt><dd><kbd>{key}</kbd></dd></div>)}</dl><p>Keep holding brake after stopping to reverse.</p></div>

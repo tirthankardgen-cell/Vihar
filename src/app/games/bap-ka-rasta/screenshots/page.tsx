@@ -1,6 +1,6 @@
 import Link from "@/components/site-link";
 import { ArrowLeft, ArrowUpRight, Play } from "lucide-react";
-import { Breadcrumbs } from "@/components/page-intro";
+import "@/app/content.css";
 import { GameGallery } from "@/components/game-gallery";
 import { BreadcrumbData, StructuredData } from "@/components/structured-data";
 import { galleryPath } from "@/lib/game-images";
@@ -14,7 +14,6 @@ export const metadata = pageMetadata(title, description, galleryPath, "/images/s
 
 export default function ScreenshotsPage() {
   return <div className="bkr-page bkr-media-page container">
-    <Breadcrumbs items={[{ label: "Games", href: "/games" }, { label: "Bap Ka Rasta", href: "/games/bap-ka-rasta" }, { label: "Gallery" }]} />
     <header className="bkr-media-intro"><div><Link href="/games/bap-ka-rasta" className="bkr-text-link"><ArrowLeft size={15} aria-hidden="true" />Back to the game</Link><h1>A look <span>around.</span></h1><p>The streets, the sawaaris, and the people who make the city.</p></div><a href={featuredGame.playUrl} target="_blank" rel="noopener noreferrer" className="bkr-play-button"><Play size={15} fill="currentColor" aria-hidden="true" />Play now<ArrowUpRight size={18} aria-hidden="true" /><span className="sr-only">, opens Bap Ka Rasta in a new tab</span></a></header>
     <GameGallery items={galleryImages} preloadFirst />
     <p className="bkr-gallery-note">Mumbai and the auto are playable. Other cities and rides are concept previews. Each image is labelled.</p>

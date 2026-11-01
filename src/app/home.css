@@ -121,9 +121,9 @@
 .guide-preview img { border-radius: 16px; }
 .guide-preview figcaption { margin-top: 12px; color: var(--muted); font-size: 12px; }
 
-/* Each desktop panel uses the space below the persistent header. */
+/* Desktop panels fill the space below the header and grow with their content. */
 @media screen and (min-width: 768px) {
-  .hero.viewport-section { padding: 0; overflow: auto; }
+  .hero.viewport-section { padding: 0; }
   .hero-inner { flex: 1; min-height: min-content; }
   .hero-copy { padding-block: 20px; }
   .hero-copy > .eyebrow { margin-bottom: clamp(16px, 3svh, 28px); }
@@ -137,7 +137,7 @@
   .featured-section .section-heading { margin-bottom: 20px; flex-shrink: 0; }
   .featured-card { flex: 1; min-height: 0; }
   .featured-visual { min-height: 0; }
-  .featured-copy { padding: clamp(18px, 3svh, 32px); overflow: auto; }
+  .featured-copy { padding: clamp(18px, 3svh, 32px); }
   .featured-genre { margin-top: clamp(12px, 2.5svh, 24px); }
   .featured-copy h2 { font-size: clamp(42px, min(5vw, 9svh), 68px); }
   .featured-copy h2 br { display: none; }
@@ -165,10 +165,11 @@
   .hero-description { font-size: 15px; line-height: 1.6; margin-top: 16px; }
   .hero-actions { margin-top: 18px; }
   .hero-footnote { margin-top: 12px; }
-  .collection-section .section-title-row { margin-bottom: 12px; }
-  .collection-section .section-title-row .eyebrow { margin-bottom: 10px; }
-  .collection-section .game-categories { margin-bottom: 10px; }
-  .collection-section .collection-note { margin-top: 12px; }
+  .collection-section .section-title-row { margin-bottom: 10px; }
+  .collection-section .section-title-row h2 { font-size: clamp(30px, min(4vw, 5.5svh), 52px); }
+  .collection-section .section-title-row .eyebrow { margin-bottom: 8px; }
+  .collection-section .game-categories { margin-bottom: 8px; }
+  .collection-section .collection-note { margin-top: 8px; }
   .world-copy > p:not(.eyebrow) { margin-top: 14px; }
 }
 @media (max-width: 767px) {

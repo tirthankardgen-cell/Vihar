@@ -1,9 +1,4 @@
-/* Inner-page styles load with Breadcrumbs / PageIntro, keeping the homepage small. */
-.breadcrumbs { padding-top: 29px; color: var(--muted); font-size: 11px; }
-.breadcrumbs ol, .breadcrumbs li { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; list-style: none; }
-.breadcrumbs a { display: inline-flex; align-items: center; min-height: 30px; }
-.breadcrumbs a:hover { text-decoration: underline; text-underline-offset: 4px; }
-.breadcrumbs [aria-current] { color: var(--ink); }
+/* Inner pages import these styles directly or through PageIntro. */
 .page-intro { padding-block: 58px 49px; }
 .page-intro h1 { font-size: clamp(52px, 6.4vw, 86px); max-width: 900px; margin-top: 22px; }
 .catalogue-page { padding-bottom: 64px; }
@@ -168,7 +163,6 @@
   .legal-layout { grid-template-columns: 190px minmax(0, 1fr); gap: 45px; }
 }
 @media (max-width: 767px) {
-  .breadcrumbs { padding-top: 20px; font-size: 10px; }
   .page-intro { padding-block: 33px 32px; }
   .page-intro h1 { font-size: 55px; margin-top: 18px; }
   .catalogue-intro { padding-block: 24px 25px; }
@@ -247,8 +241,8 @@
 .guide-figure { margin: 28px 0; }
 .guide-figure img { width: 100%; height: auto; border-radius: 12px; }
 .guide-figure figcaption { margin-top: 10px; font-size: 12px; color: var(--muted); line-height: 1.7; }
-.guide-page .legal-copy section { scroll-margin-top: 110px; }
-.privacy-choices { border-top: 1px solid var(--line); padding: 28px 0 40px; scroll-margin-top: 110px; }
+.guide-page .legal-copy section { scroll-margin-top: 0; }
+.privacy-choices { border-top: 1px solid var(--line); padding: 28px 0 40px; scroll-margin-top: 0; }
 .privacy-choices h2 { font-size: 28px; margin-bottom: 18px; }
 .privacy-choices p { color: var(--muted); font-size: 12px; margin-top: 12px; max-width: 700px; }
 .privacy-choices a { text-decoration: underline; text-underline-offset: 3px; }
@@ -269,7 +263,7 @@
   .page-intro h1 { font-size: clamp(48px, min(6.4vw, 12svh), 86px); }
   .about-hero.page-hero, .upcoming-grid.page-hero { padding-block: var(--section-space); }
   .about-hero h1 { font-size: clamp(42px, min(6vw, 10svh), 88px); }
-  .about-hero img, .upcoming-art img { max-height: calc(var(--section-height) - var(--breadcrumbs-height) - 2 * var(--section-space) - 35px); width: 100%; object-fit: contain; }
+  .about-hero img, .upcoming-art img { max-height: calc(var(--section-height) - 2 * var(--section-space) - 35px); width: 100%; object-fit: contain; }
   .upcoming-page { padding-bottom: 0; }
   .upcoming-copy h1 { font-size: clamp(48px, min(7vw, 10svh), 96px); margin-top: 10px; }
   .upcoming-copy > .eyebrow { margin-top: 18px; }
@@ -313,6 +307,15 @@
   .guide-figure { margin-block: 18px; }
   .guide-figure img { max-height: calc(var(--section-height) - 330px); min-height: 100px; object-fit: contain; }
   .gallery-section img { max-height: calc(var(--section-height) - 140px); }
+}
+@media screen and (min-width: 768px) and (max-height: 700px) {
+  .contact-grid { padding-bottom: 0; }
+  .contact-primary > p { margin-top: 10px; }
+  .contact-email { margin-top: 18px; }
+  .contact-primary .button { margin-top: 17px; }
+  .contact-option + .contact-option { margin-top: 8px; padding-top: 10px; }
+  .contact-note { padding-block: 5px; }
+  .legal-copy p + p { margin-top: 8px; }
 }
 @media (max-width: 767px) {
   .gallery-section { grid-template-columns: 1fr; gap: 24px; padding-block: 40px; }

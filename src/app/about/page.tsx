@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "@/components/site-link";
 import { ArrowUpRight, Compass, Heart, Sparkles } from "lucide-react";
 import { Emblem } from "@/components/brand";
-import { Breadcrumbs } from "@/components/page-intro";
+import "@/app/content.css";
 import { BreadcrumbData } from "@/components/structured-data";
 import { pageMetadata } from "@/lib/site";
 
@@ -16,7 +16,6 @@ export default function AboutPage() {
   return (
     <>
       <div className="container">
-        <Breadcrumbs items={[{ label: "About" }]} />
         <section className="about-hero page-hero" aria-labelledby="about-title">
           <div>
             <p className="eyebrow"><span className="tiny-spark" aria-hidden="true">✳</span> The world of Vihar</p>

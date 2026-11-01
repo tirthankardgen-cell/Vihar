@@ -2,7 +2,7 @@ import { DiscoveryFaq } from "@/components/discovery-faq";
 import Link from "@/components/site-link";
 import { ArrowUpRight, MessageCircle } from "lucide-react";
 import type { ReactNode } from "react";
-import { Breadcrumbs, PageIntro } from "@/components/page-intro";
+import { PageIntro } from "@/components/page-intro";
 import { BreadcrumbData } from "@/components/structured-data";
 import { pageMetadata } from "@/lib/site";
 
@@ -19,7 +19,6 @@ function Faq({ question, children }: { question: string; children: ReactNode }) 
 export default function HelpPage() {
   return (
     <div className="container">
-      <Breadcrumbs items={[{ label: "Help" }]} />
       <PageIntro eyebrow="A little help along the way" title="Let’s get you playing." description="A few useful answers, so you can get back to the good part." />
       <div className="help-layout">
         <div>

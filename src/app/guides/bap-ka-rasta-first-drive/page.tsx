@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "@/components/site-link";
 import { AdSense } from "@/components/adsense";
-import { Breadcrumbs, PageIntro } from "@/components/page-intro";
+import { PageIntro } from "@/components/page-intro";
 import { BreadcrumbData, StructuredData } from "@/components/structured-data";
 import { pageMetadata, site } from "@/lib/site";
 
@@ -20,7 +20,6 @@ const sections = [
 export default function FirstDriveGuide() {
   return (
     <div className="container guide-page">
-      <Breadcrumbs items={[{ label: "Games", href: "/games" }, { label: "Bap Ka Rasta", href: "/games/bap-ka-rasta" }, { label: "First-drive guide" }]} />
       <PageIntro eyebrow="The Vihar play guide" title="Your first drive, at your own pace." description={description} />
       <p className="policy-date">By Vihar · Updated <time dateTime="2026-10-31">31 October 2026</time> · Early playable build</p>
       <div className="legal-layout">
