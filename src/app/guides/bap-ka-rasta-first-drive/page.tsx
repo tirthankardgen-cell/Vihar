@@ -8,6 +8,7 @@ import { pageMetadata, site } from "@/lib/site";
 const path = "/guides/bap-ka-rasta-first-drive";
 const title = "Your first drive in Bap Ka Rasta";
 const description = "A practical guide to starting the Mumbai auto-rickshaw game, choosing gears, exploring the streets, using both cameras, and recovering from a stuck vehicle.";
+const updatedIso = "2026-11-02";
 export const metadata = pageMetadata(title, description, path, "/images/social-bap-ka-rasta.png");
 
 const sections = [
@@ -21,7 +22,7 @@ export default function FirstDriveGuide() {
   return (
     <div className="container guide-page">
       <PageIntro eyebrow="The Vihar play guide" title="Your first drive, at your own pace." description={description} />
-      <p className="policy-date">By Vihar · Updated <time dateTime="2026-10-31">31 October 2026</time> · Early playable build</p>
+      <p className="policy-date">By Vihar · Updated <time dateTime={updatedIso}>2 November 2026</time> · Early playable build</p>
       <div className="legal-layout">
         <aside className="legal-toc"><p className="eyebrow">In this guide</p><nav aria-label="First-drive guide contents">{sections.map(([id, label]) => <a key={id} href={"#" + id}>{label}</a>)}</nav></aside>
         <article className="legal-copy">
@@ -31,7 +32,7 @@ export default function FirstDriveGuide() {
           </div><section className="viewport-section" id="start" aria-labelledby="start-title"><h2 id="start-title">Start the playable build</h2>
             <p>Open the game from the <Link href="/games/bap-ka-rasta">Bap Ka Rasta page</Link>. It opens in its own tab; no account or installation is required. On the landing screen, select <strong>Mera Bap Ka Rasta</strong>. Choose <strong>Mumbai</strong>, then <strong>Yahin Chalao</strong>. Select the <strong>auto rickshaw</strong> and <strong>Drive Mumbai</strong>.</p>
             <p>The other city and vehicle cards are previews. Choosing one marked Coming soon will not start a drive. Stay with Mumbai and the auto for the currently playable combination.</p>
-            <p>Select <strong>Chal Chala</strong> when you are ready. This interaction also lets the browser start the game’s audio. You can mute the speaker control if you prefer to explore quietly.</p>
+            <p>Select <strong>Chal Chala</strong> when you are ready. This interaction also lets the browser start the game’s audio. The driver’s opening scene is skippable, so you can watch it or move straight into your drive. You can mute the speaker control if you prefer to explore quietly.</p>
           </section>
           <section className="viewport-section" id="handling" aria-labelledby="handling-title"><h2 id="handling-title">Get comfortable with the auto</h2>
             <p>For the first stretch, choose gear <strong>1</strong> using the number key or the on-screen gear button. The four gears limit speed to approximately 12, 25, 45, and 65 km/h. A lower limit gives you more time to see a turn and make small steering corrections; there is no reward for reaching top speed.</p>
@@ -40,7 +41,8 @@ export default function FirstDriveGuide() {
           </section>
           <section className="viewport-section" id="explore" aria-labelledby="explore-title"><h2 id="explore-title">Choose a little route</h2>
             <p>Try moving from a broad avenue toward the sea edge, then look for a smaller side street before returning to an open road. This is a suggestion for exploring, not a mission with checkpoints. Your position can change after a reset, so use the street names in the driving display and the visible road connections rather than a fixed sequence of left and right turns.</p>
-            <p><Link href="/games/bap-ka-rasta/screenshots">Browse gameplay screenshots and the playable map</Link> for a closer look at the world.</p><p>The playable neighbourhood includes Marine Drive, Churchgate, Fort, and Colaba-inspired areas, a roundabout, and narrow bazaar lanes. The map compresses and reimagines these places for play. It is not a real-world navigation map, and a street name does not promise an exact recreation of its real location.</p>
+            <p><Link href="/games/bap-ka-rasta/screenshots">Browse gameplay screenshots and the playable map</Link> for a closer look at the world.</p><p>The current city draws on Colaba, Fort, Worli, Dadar, Bandra and Juhu, with narrow two-way lanes, curved streets and four clockwise roundabouts. Start with a short loop around the central Mumbai Chowk or Fort Circle before venturing farther. The map compresses and reimagines these places for play. It is not a real-world navigation map, and a street name does not promise an exact recreation of its real location.</p>
+            <p>The game’s <a href={`${site.gameUrl}/guide.html`} target="_blank" rel="noopener noreferrer">world and controls guide (opens in a new tab)</a> identifies 29 authored landmarks and shops, including the Gateway of India, Taj Mahal Palace and CSMT. Pick one as a place to look for, then use the numbered playable map to connect it with a nearby road. These buildings are game interpretations; their appearance and placement can differ from the real city.</p>
             <p>Slow down before a narrow lane or an intersection. Traffic, people crossing, and roadside objects share the space. A wall or closed-end barrier marks a boundary; use another connection instead of assuming every gap between buildings is a road. There is no minimap in the current build, so a short loop is a useful way to become familiar with a few neighbouring streets.</p>
           </section>
           <section className="viewport-section" id="camera" aria-labelledby="camera-title"><h2 id="camera-title">Use both camera views</h2>
@@ -54,7 +56,7 @@ export default function FirstDriveGuide() {
             <p>Ending a drive returns you to the landing screen. There is no saved progress or completed-mission record to restore; each visit is another chance to roam.</p>
           </section>
           <section className="viewport-section" id="devices" aria-labelledby="devices-title"><h2 id="devices-title">Adjust for your device</h2>
-            <p>Use a current browser with WebGL 2 and hardware acceleration. On a phone, turning the screen sideways gives the landscape play area more room. Touch controls are included, but device performance varies and broad physical-phone and Safari testing is still in progress.</p>
+            <p>Use a current browser with WebGL 2 and hardware acceleration. On a phone, city selection, vehicle selection and driving automatically use a landscape canvas, even when the device is upright. The game’s home screen follows your device orientation. Touch controls are included, but device performance varies and broad physical-phone and Safari testing is still in progress.</p>
             <p>If steering looks delayed or the scene feels choppy, open the pause panel and choose <strong>Low graphics</strong>. It reduces rendering resolution and fog distance and turns off shadows. This changes presentation, not the roads available to explore. Closing other demanding tabs can also leave more resources for the game.</p>
             <p>If sound is missing, check the speaker toggle and device volume after starting the drive. Toggling sound off and on can retry a failed audio download. If a graphics-context error appears, use the game’s retry action. For persistent problems, send your browser, device, and the step where it failed through <Link href="/contact">Contact</Link>.</p>
           </section>
@@ -65,7 +67,7 @@ export default function FirstDriveGuide() {
         </article>
       </div>
       <BreadcrumbData items={[{ name: "Games", path: "/games" }, { name: "Bap Ka Rasta", path: "/games/bap-ka-rasta" }, { name: title, path }]} />
-      <StructuredData data={{ "@context": "https://schema.org", "@type": "Article", headline: title, description, mainEntityOfPage: `${site.url}${path}`, image: `${site.url}/images/bap-ka-rasta-gameplay.webp`, author: { "@type": "Organization", name: "Vihar", url: `${site.url}/about` }, publisher: { "@id": `${site.url}/#organization` }, datePublished: "2026-10-31", dateModified: "2026-10-31" }} />
+      <StructuredData data={{ "@context": "https://schema.org", "@type": "Article", headline: title, description, mainEntityOfPage: `${site.url}${path}`, image: `${site.url}/images/bap-ka-rasta-gameplay.webp`, author: { "@type": "Organization", name: "Vihar", url: `${site.url}/about` }, publisher: { "@id": `${site.url}/#organization` }, datePublished: "2026-10-31", dateModified: updatedIso }} />
       <AdSense path={path} />
     </div>
   );

@@ -46,6 +46,18 @@ Retrieved directly from Google on 31 October 2026:
 - [Google consent management requirements](https://support.google.com/adsense/answer/13554116?hl=en): certified CMP and TCF requirements for personalized ads in the EEA, UK and Switzerland; EU consent policy still applies.
 - [Privacy & messaging JavaScript API](https://developers.google.com/funding-choices/fc-api-docs): CONSENT_API_READY callback and showRevocationMessage.
 
+## Content maintenance for AdSense review
+
+The AdSense email checklist is a quality review, not a guarantee of acceptance. About, Contact, Help, Privacy and Terms must remain reachable from normal navigation. Keep the first-drive guide useful to actual players, with accurate controls, source links, a real author/publisher and dates that reflect substantive edits. Use actual gameplay captures where gameplay is claimed, and retain the separate concept/render labels. Articles, screenshots, illustrations and the playable game already provide different formats; a video can be added when an original recording helps players, but is not an AdSense eligibility requirement.
+
+Use this editorial routine; it is an operating checklist, not an automatic publishing service or a public promise of release dates:
+
+- **Weekly:** review support feedback and broken game/content links; confirm the support mailbox receives messages. Publish a useful tip, tested gameplay explanation or factual development update when there is material to share. Do not manufacture posts, traffic or new dates to appear active.
+- **Every game release:** compare the deployed game with its catalogue description, Help, guide, screenshots and availability labels. Update affected copy and the guide's visible and structured-data dates together. Confirm phone instructions and Play destinations against the actual build. Add new guides only when they answer a distinct player need; review content and placements before changing the advertising allowlist.
+- **Monthly and after substantial UI/ad changes:** run `npm run check` and `npm run verify`, inspect desktop/mobile navigation, and run Lighthouse against production. Review Search Console coverage/Core Web Vitals, the current Google policies and AdSense site status. Recheck privacy disclosures whenever data handling changes, and real consent/ad placements before enabling serving.
+
+Fresh content is not generated or scheduled by the site. There is currently one dedicated first-drive article and one playable game; more useful guides and real development updates remain ongoing editorial work. Content quality, ownership and Google approval cannot be certified by a build, a page count, a publishing interval or an SEO score. Review user-submitted public profile names/bios when reported, using the existing Terms and Contact flow; those account pages remain ad-free and noindex.
+
 ## Vihar ID configuration and operations
 
 Vihar ID uses Firebase Authentication and Cloud Firestore in project `vihar-27`. It is an optional account layer on this website. The independent game applications have not been modified, so they still launch as guests and do not yet submit statistics or share a browser session. Do not describe the current release as automatic cross-domain single sign-on.
@@ -118,6 +130,36 @@ Use Node 26 and Java 21 or newer. Run `npm ci`, then `npm run test:rules` for th
 Auth listens on `127.0.0.1:9099`, Firestore on `127.0.0.1:8080`. Emulator verification/reset messages are available in terminal output. Do not run the rules suite while relying on a manual emulator session: it clears the demo Firestore database between tests. Browser QA scripts, synthetic account details, screenshots and Java runtime downloads live under ignored `output/`; `.env.local`, `.firebase` and emulator logs must remain ignored.
 
 ## Change history
+
+### AdSense email checklist audit and content refresh — 2026-11-02
+
+Author: Codex, at the owner's request to check and maintain the content, transparency, navigation, performance and SEO points in Google's email.
+
+Live HTTPS checks confirmed About, Contact, Help, Privacy, Terms, the first-drive article, game detail/gallery and the public site directory. The www site has unique page metadata and canonical URLs; the apex returns 308 to www. `robots.txt`, the image sitemap and `ads.txt` return 200 with the expected public publisher `pub-6693217545827146`. The game and its readable `/guide.html` also return 200. No ad loader appeared on the checked publisher pages; the upcoming page remains noindex and the missing-page check returned an ad-free/noindex 404. The contact email link is correct, but mailbox delivery was not tested and authenticated AdSense/Search Console status was not inspected.
+
+The reviewed publisher pages contain game-specific writing, screenshots and original illustrations with gameplay/concept labels. No obvious adult, hateful or graphic violent material was found in those pages. This is a scoped review, not a certification of every user profile, media right, game interaction or Google's assessment of content value. There is one dedicated article and one playable game. Useful new content and policy reviews remain ongoing work; the operating checklist above records how to maintain them without fabricating activity.
+
+The deployed game's published README was checked directly against the first-drive article. The article now covers the skippable opening, the current four-roundabout map, 29 authored landmarks and the readable game guide. Phone advice in the article, Help and game detail now reflects automatic landscape selection/driving even on an upright phone. The visible guide update date and Article `dateModified` share `2026-11-02`; the original publication date remains `2026-10-31`. Changes are in `src/app/guides/bap-ka-rasta-first-drive/page.tsx`, `src/app/help/page.tsx`, `src/app/games/bap-ka-rasta/page.tsx` and this record. These content changes were verified locally and have not been deployed by this audit.
+
+Validation: `npm run check` passed on Node 26.13.0 (lint, all four AdSense and six account tests, type generation/type checking, production build). `npm run verify` passed for 12 public routes, nine ad-free/noindex account routes, metadata, links, asset budgets and the existing advertising gates. Live browser checks covered all 12 public routes at 390px and 1440px, mobile navigation/escape, search, Contact and the guide/site directory without JavaScript, with no page errors or horizontal overflow. Local checks verified the three changed pages at 320px, 390px and 1440px, the guide's date parity, current instructions and new source link. Updated guide/game screenshots were visually reviewed. A transient local 500 occurred while the shared build manifest was unavailable; after it was restored, all nine local page/width checks passed.
+
+Fresh Lighthouse 13.6.0 measurements on the **live homepage**, with Chrome 156 and standard simulated mobile/desktop settings:
+
+| Audit | Mobile | Desktop |
+| --- | --- | --- |
+| Performance | 81 | 95 |
+| Accessibility | 100 | 100 |
+| Best practices | 100 | 100 |
+| SEO | 100 | 100 |
+| Largest contentful paint | 1.6 s | 1.3 s |
+| Total blocking time | 730 ms | 10 ms |
+| Cumulative layout shift | 0 | 0 |
+
+Mobile responsiveness remains an optimization target: the audit reports JavaScript execution and style/layout work during startup. These are lab results, not real-user Core Web Vitals or proof of AdSense eligibility. The existing animated homepage was retained; this audit does not claim a performance fix. HTTP results, source captures, browser scripts/screenshots and both HTML/JSON Lighthouse reports are in ignored `output/playwright/adsense-checklist-live/` and `output/playwright/adsense-checklist-*.js`.
+
+Official Google pages were refreshed directly on 2 November 2026: [AdSense Program policies](https://support.google.com/adsense/answer/48182?hl=en), [eligibility requirements](https://support.google.com/adsense/answer/9724?hl=en) and [screens without publisher content](https://support.google.com/publisherpolicies/answer/11112688?hl=en). Eligibility requires unique, high-quality content and policy compliance; it does not mandate a video, a specific number of articles or a fixed publishing frequency. Only Google can grant site approval. Leave serving disabled while approval and the documented account/consent/placement checks are pending.
+
+The owner subsequently authorized committing and pushing these four audited files to GitHub on 2 November 2026. Publication uses the existing `main` branch and GitHub/Vercel connection; a successful GitHub push is separate from confirmation that the production deployment has finished.
 
 ### Into the Vihar World hero and preview — 2026-11-01
 
