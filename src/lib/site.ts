@@ -29,7 +29,7 @@ if (canonical.pathname !== "/" || canonical.search || canonical.hash) {
 export const isPreview = process.env.VERCEL_ENV === "preview";
 export const publicRoutes = [
   "/", "/games", "/games/bap-ka-rasta", "/games/bap-ka-rasta/screenshots", "/games/gulam-chor",
-  "/about", "/help", "/contact", "/privacy", "/terms", "/guides/bap-ka-rasta-first-drive",
+  "/about", "/help", "/contact", "/privacy", "/terms", "/guides/bap-ka-rasta-first-drive", "/site-map",
 ] as const;
 
 // The announcement remains accessible and honestly labelled, but is not a

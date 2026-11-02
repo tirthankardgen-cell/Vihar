@@ -48,7 +48,14 @@ export const metadata: Metadata = {
     images: [{ url: "/images/social-vihar.png", width: 1200, height: 630, alt: "Vihar — A space to play. Original games, different worlds." }],
   },
   twitter: { card: "summary_large_image", title: "Vihar — A space to play.", description: site.description, images: ["/images/social-vihar.png"] },
-  icons: { icon: [{ url: "/favicon.ico", sizes: "16x16 32x32 48x48" }, { url: "/brand/favicon-48.png", type: "image/png", sizes: "48x48" }], apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }] },
+  icons: {
+    icon: [
+      { url: "/brand/icon-192.png", type: "image/png", sizes: "192x192" },
+      { url: "/favicon.ico", type: "image/x-icon", sizes: "16x16 32x32 48x48" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  },
   manifest: "/manifest.webmanifest",
 };
 

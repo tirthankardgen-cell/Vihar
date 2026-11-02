@@ -19,7 +19,7 @@ const email = process.env.SUPPORT_EMAIL || "contact@vihar.online";
 const preview = process.env.VERCEL_ENV === "preview";
 const guidePath = "/guides/bap-ka-rasta-first-drive";
 const galleryPath = "/games/bap-ka-rasta/screenshots";
-const routes = ["/", "/games", "/games/bap-ka-rasta", "/games/gulam-chor", "/about", "/help", "/contact", "/privacy", "/terms", guidePath, galleryPath];
+const routes = ["/", "/games", "/games/bap-ka-rasta", "/games/gulam-chor", "/about", "/help", "/contact", "/privacy", "/terms", guidePath, galleryPath, "/site-map"];
 const indexableRoutes = routes.filter((route) => route !== "/games/gulam-chor");
 const server = spawn(process.execPath, [require.resolve("next/dist/bin/next"), "start", "--hostname", "127.0.0.1", "--port", new URL(base).port], {
   cwd: root,
@@ -112,6 +112,20 @@ try {
   }
   // Exercise the nine-card tunnel in the server HTML and both responsive formats.
   const home = pages.get("/");
+  const primaryIcon = attribute(home, "link", "rel", "icon", "href");
+  assert.equal(primaryIcon, "/brand/icon-192.png", "Advertise a Google-supported favicon larger than 48px");
+  const iconResponse = await fetch(new URL(primaryIcon, base), { headers: { "User-Agent": "Googlebot-Image" }, signal: AbortSignal.timeout(20000) });
+  assert.equal(iconResponse.status, 200, "Googlebot-Image must be able to fetch the favicon");
+  assert.equal(iconResponse.headers.get("content-type"), "image/png");
+  assert(!/noindex|noimageindex/i.test(iconResponse.headers.get("x-robots-tag") || ""));
+  const iconBytes = Buffer.from(await iconResponse.arrayBuffer());
+  const iconMetadata = await sharp(iconBytes).metadata();
+  assert.equal(iconMetadata.width, 192);
+  assert.equal(iconMetadata.height, 192);
+  const directory = pages.get("/site-map");
+  for (const route of routes) assert(directory.includes(`href="${route}"`), "Site map must link to " + route);
+  for (const [route, html] of pages) assert(html.includes('href="/site-map"'), route + " must link to the site map");
+  assert(directory.includes(new URL("/guide.html", gameUrl).href), "Expose the separate game's public guide");
   const hero = home.match(/<section\b[^>]*aria-labelledby="vihar-world-title"[^>]*>([\s\S]*?)<\/section>/)?.[1];
   assert(hero, "Homepage needs the Vihar world hero");
   const heroImages = [...hero.matchAll(/<img\b[^>]*>/g)].map((match) => match[0]);
@@ -281,6 +295,7 @@ try {
   const expectedIcon = await sharp(original).resize(48, 48, { fit: "contain" }).raw().toBuffer();
   const actualIcon = await sharp(await readFile(path.join(root, "public/brand/favicon-48.png"))).raw().toBuffer();
   assert.deepEqual(actualIcon, expectedIcon, "Favicon must match the original emblem pixels");
+  assert.deepEqual(await sharp(iconBytes).raw().toBuffer(), await sharp(original).resize(192, 192, { fit: "contain" }).raw().toBuffer(), "Search favicon must match the original emblem pixels");
   const missing = await get("/this-page-does-not-exist");
   assert.equal(missing.status, 404, "Unknown pages must return HTTP 404");
   const missingHtml = await missing.text();

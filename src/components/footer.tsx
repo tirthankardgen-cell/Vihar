@@ -24,7 +24,7 @@ export function Footer() {
         </div>
         <div className="footer-bottom">
           <p>© {new Date().getFullYear()} Vihar. Made for a little escape.</p>
-          <nav aria-label="Legal"><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/contact">Contact</Link></nav>
+          <nav aria-label="Legal and site map"><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/contact">Contact</Link><Link href="/site-map">Site map</Link></nav>
           <span className="footer-signoff"><span aria-hidden="true">✳</span> Rooted in India. Open to everyone.</span>
         </div>
       </div>

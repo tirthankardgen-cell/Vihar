@@ -371,6 +371,23 @@ Vercel supplies VERCEL_ENV automatically. **Preview** builds emit noindex/nofoll
 
 ## Search visibility
 
+### Favicon and public discovery — 2 November 2026
+
+The production homepage and public pages declare `/brand/icon-192.png` as their first favicon, a square 192px PNG derived from the owner's original emblem. `/favicon.ico` remains a stable fallback. Google's current [favicon guidance](https://developers.google.com/search/docs/appearance/favicon-in-search) recommends an image larger than 48px, a stable URL, and access for both Googlebot and Googlebot-Image. A generic globe in Search Console does not establish whether a page is indexed.
+
+`/site-map` provides ordinary HTML links to all public pages, including the honestly labelled upcoming announcement, the gallery, and the independent game's `/guide.html`. Every page links to this directory from the footer. The XML sitemap includes completed public pages and representative artwork, screenshots, logo and favicon images. Account pages and the unfinished announcement remain crawlable but carry their existing noindex metadata; preview builds retain their existing crawl restrictions. `llms.txt` lists public resources but is not a Google indexing mechanism.
+
+Live inspection before this change confirmed HTTP 200 for both canonical homepages, robots, sitemaps, ICO files and PNG icons, without blocking robots headers. The apex domain redirects to `www.vihar.online`; keep `SITE_URL=https://www.vihar.online` consistent with that redirect.
+
+After deployment, submit both sitemaps in the matching Search Console domain properties:
+
+- `https://www.vihar.online/sitemap.xml` under `vihar.online`.
+- `https://rasta.vihar.online/sitemap.xml` under `rasta.vihar.online`.
+
+Use URL Inspection → Test live URL → Request indexing for `https://www.vihar.online/` and `https://rasta.vihar.online/`, and inspect the new public directory and game guide. Google fetches the favicon from the homepage declaration; request indexing for the homepage rather than submitting the icon as a page. Recrawling may take days or weeks and favicon display is not guaranteed. These authenticated Search Console actions require the owner's account and are separate from the code changes and GitHub push.
+
+Validation on Node.js 22.23.4: `npm run check` passed (lint, advertising/account tests, generated route types, TypeScript and production build); `npm run verify` passed across twelve public pages, nine noindex account pages, original-logo PNG pixels, all gallery/sitemap images, metadata and local links. Browser inspection without JavaScript confirmed all twelve directory links at desktop and phone widths, with no horizontal overflow. The independent game guide's five cities, six vehicles, twenty characters and twenty-nine landmarks also rendered without JavaScript; homepage-to-guide navigation and hydrated game selection passed without page errors.
+
 After the custom domain is live, verify ownership in Google Search Console and submit:
 
 ~~~text

@@ -6,6 +6,7 @@ export function GET() {
 > ${site.description}
 
 ## Public information
+- [Site map](${site.url}/site-map): all public pages and game resources.
 - [Games](${site.url}/games): available and upcoming games.
 - [Bap Ka Rasta](${site.url}/games/bap-ka-rasta): early browser driving game, controls and requirements.
 - [Game gallery](${site.url}/games/bap-ka-rasta/screenshots): gameplay, playable Mumbai map, character models, landmark renders, and city and vehicle concept previews.
@@ -15,6 +16,8 @@ export function GET() {
 - [Contact](${site.url}/contact): support.
 - [Privacy](${site.url}/privacy)
 - [Terms](${site.url}/terms)
+- [Play Bap Ka Rasta](${site.gameUrl}): the independent playable game.
+- [Game world and controls](${new URL("/guide.html", site.gameUrl).href}): current cities, vehicles, characters, landmarks and credits.
 
 Games are hosted separately. No multiplayer, saved progress or downloadable release is claimed for the current Bap Ka Rasta build.
 `, { headers: { "Content-Type": "text/plain; charset=utf-8" } });

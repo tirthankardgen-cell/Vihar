@@ -1,0 +1,9 @@
+.site-map-page .page-intro { min-height: 0; padding-block: 56px 36px; }
+.site-map-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 40px; padding: 0; list-style: none; }
+.site-map-grid li { padding-block: 22px; border-top: 1px solid var(--line); }
+.site-map-link { display: inline-block; font-size: 18px; font-weight: 500; }
+.site-map-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+.site-map-grid p { max-width: 50ch; margin-top: 8px; font-size: 14px; color: var(--muted); }
+.site-map-resources { margin-top: 40px; }
+.site-map-resources h2 { margin-bottom: 20px; font-size: 32px; }
+@media (max-width: 767px) { .site-map-grid { grid-template-columns: 1fr; } .site-map-page .page-intro { padding-block: 36px; } }
