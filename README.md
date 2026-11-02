@@ -4,7 +4,7 @@ Original browser games at [www.vihar.online](https://www.vihar.online), built wi
 
 ## Development
 
-Use Node.js 22.x, then run:
+Use Node.js 26.x (also selected by `.nvmrc`), then run:
 
 ```sh
 npm ci
@@ -33,4 +33,4 @@ AdSense ownership metadata and ads.txt remain available while advertising is pau
 - `scripts`: asset generation and production HTTP checks.
 - `.github/workflows`: CI checks.
 
-Deploy with Vercel's Next.js preset, repository root, Node 22.x, `npm ci`, and `npm run build`. Keep the default Next.js output directory. A push to the connected production branch can trigger deployment.
+Deploy with Vercel's Next.js preset, repository root, Node 26.x, `npm ci`, and `npm run build`. Keep the default Next.js output directory. Keep Vercel's Node.js setting at `26.x` to match `package.json` and `.nvmrc`; Vercel gives `package.json` priority over its project setting. A push to the connected production branch can trigger deployment.

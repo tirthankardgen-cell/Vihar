@@ -5,7 +5,7 @@ This is the single developer handoff, operational guide, asset register and chan
 ## Current configuration
 
 - Canonical site: https://www.vihar.online; preserve the apex-to-www redirect in Vercel.
-- Node.js 22.x; npm ci; npm run check; npm run verify. Build before verify.
+- Node.js 26.x in package.json, .nvmrc and Vercel; npm ci; npm run check; npm run verify. GitHub Actions reads .nvmrc. Build before verify.
 - AdSense publisher: ca-pub-6693217545827146, explicitly supplied by the owner. This is a public identifier, not a secret.
 - Default mode: review-only. Keep the public ownership meta tag and /ads.txt, but do not load advertising. ADSENSE_ENABLED=true, ADSENSE_SITE_APPROVED=true and ADSENSE_CONSENT_READY=true are ALL required before the loader appears, and Vercel previews always suppress it. The approval and consent flags record account-side checks; they do not grant approval or collect consent. An old deployment with ADSENSE_ENABLED=true alone now fails closed. This supersedes earlier all-page loader instructions.
 - The completed /guides/bap-ka-rasta-first-drive article is the only advertising candidate. Root layout, home, catalogue/search, game launch/detail, upcoming, support, legal and 404 pages never render the loader. SiteLink uses full-document navigation into/out of the article so Google scripts and inserted ads cannot persist on excluded pages. Other links retain Next.js navigation. The script is async and hoisted by React to the head only on a successful article render. A hydrated article error leaves the document for the ad-free Help page.
@@ -52,7 +52,7 @@ Vihar ID uses Firebase Authentication and Cloud Firestore in project `vihar-27`.
 
 ### Deployment
 
-1. Use Node.js 22.x and the existing Vercel Next.js preset. Set the seven `NEXT_PUBLIC_FIREBASE_*` web configuration values listed in `.env.example` from Firebase Project settings → Your apps. Set `NEXT_PUBLIC_FIREBASE_EMULATORS=false` on deployments. Public variables are embedded at build time; save them before the deployment or rebuild after changing them. Local values belong in ignored `.env.local`. Never put Firebase Admin credentials, service-account JSON, private keys or login tokens in public variables.
+1. Use Node.js 26.x and the existing Vercel Next.js preset. Set the seven `NEXT_PUBLIC_FIREBASE_*` web configuration values listed in `.env.example` from Firebase Project settings → Your apps. Set `NEXT_PUBLIC_FIREBASE_EMULATORS=false` on deployments. Public variables are embedded at build time; save them before the deployment or rebuild after changing them. Local values belong in ignored `.env.local`. Never put Firebase Admin credentials, service-account JSON, private keys or login tokens in public variables.
 2. Enable Email/Password and Google in Firebase Authentication. Add `www.vihar.online` and `vihar.online` to Authorized domains, and add a specific preview domain if testing Google sign-in there. The owner confirmed both providers and the production domains; the domains were also checked through the public Firebase configuration endpoint. Keep the supplied `vihar-27.firebaseapp.com` auth domain unless the Firebase auth-handler setup is deliberately changed.
 3. Create the default Cloud Firestore database if necessary. Publish the exact contents of `firestore.rules` under Firestore Database → Rules. These are rules for this account schema; do not use blanket test-mode access. `firestore.indexes.json` uses the standard single-field indexes, including the membership array used to query friend connections.
 4. With an authorized Firebase CLI login, the equivalent command is `npx firebase deploy --project vihar-27 --only firestore:rules,firestore:indexes`. The saved login on this workstation returned 403 for this project. The owner published the rules through Firebase Console on 1 November 2026. Subsequent live read-only checks confirmed a missing public username returns `NOT_FOUND`, while bulk profile listing and private favorites return `PERMISSION_DENIED`. Future rule deployments still need project-owner access; do not mistake passing emulator tests for live deployment.
@@ -113,7 +113,7 @@ The six avatars are original, code-authored vector gamer portraits with faceted 
 
 ### Local Firebase testing
 
-Use Node 22 and Java 21 or newer. Run `npm ci`, then `npm run test:rules` for the isolated Firestore rule suite. CI installs both runtimes. For manual account tests, run `npm run emulators`, then start Next with `NEXT_PUBLIC_FIREBASE_EMULATORS=true`. In PowerShell: `$env:NEXT_PUBLIC_FIREBASE_EMULATORS='true'; npm run dev`. Remove that shell override before a production build. The emulator mode uses project `demo-vihar`, a fake API key and a separate local Auth persistence key; it rejects non-localhost deployment origins and never points at production data.
+Use Node 26 and Java 21 or newer. Run `npm ci`, then `npm run test:rules` for the isolated Firestore rule suite. CI installs both runtimes. For manual account tests, run `npm run emulators`, then start Next with `NEXT_PUBLIC_FIREBASE_EMULATORS=true`. In PowerShell: `$env:NEXT_PUBLIC_FIREBASE_EMULATORS='true'; npm run dev`. Remove that shell override before a production build. The emulator mode uses project `demo-vihar`, a fake API key and a separate local Auth persistence key; it rejects non-localhost deployment origins and never points at production data.
 
 Auth listens on `127.0.0.1:9099`, Firestore on `127.0.0.1:8080`. Emulator verification/reset messages are available in terminal output. Do not run the rules suite while relying on a manual emulator session: it clears the demo Firestore database between tests. Browser QA scripts, synthetic account details, screenshots and Java runtime downloads live under ignored `output/`; `.env.local`, `.firebase` and emulator logs must remain ignored.
 
@@ -133,7 +133,7 @@ Next.js 16.4.3's bundled guides were consulted. The graph CSS strategy separates
 
 Validation on Node.js 22.23.4: `npm run check` passed, including lint, ten existing AdSense/account tests, type checking and the production build. Final build and `npm run verify` passed. Browser checks covered 1440×900, 1280×632, 768×500, 844×390, 390×844 and 320×740: nine cards at distinct depths in front of the heading, no horizontal overflow or nested scrolling, and reachable actions. Native scrolling, parallax, pause/resume, the Featured jump, all 35 desktop/phone keyboard focus steps, live reduced-motion changes, forced colours, 150% text at three widths and navigation with JavaScript disabled passed. Axe reported no WCAG A/AA violations at desktop/phone widths and there were no uncaught browser errors. Screenshots were visually reviewed, including the phone heading line breaks. Scripts, JSON results and images are in ignored `output/playwright/vihar-hero-*` and `vihar-world-*` files; these are local production-build checks.
 
-The owner explicitly requested a GitHub push for production after the revision. Production publication uses the repository's existing GitHub/Vercel connection. The local production-mode preview is `http://localhost:3000/preview/vihar-world`; the owned process record is in `output/playwright/hero-preview-process.json`. If stopped, use Node 22 to build, then run `npm run start -- --hostname 127.0.0.1 --port 3000`.
+The owner explicitly requested a GitHub push for production after the revision. Production publication uses the repository's existing GitHub/Vercel connection. The local production-mode preview is `http://localhost:3000/preview/vihar-world`; the owned process record is in `output/playwright/hero-preview-process.json`. If stopped, use the Node.js version in `.nvmrc` to build, then run `npm run start -- --hostname 127.0.0.1 --port 3000`.
 
 ### Share the portrait ID as a photo — 2026-11-01
 
@@ -320,7 +320,7 @@ For the existing project, or when importing [the Vihar GitHub repository](https:
 | --- | --- |
 | Framework preset | Next.js |
 | Root directory | Repository root |
-| Node.js | 22.x |
+| Node.js | 26.x |
 | Install command | npm ci |
 | Build command | npm run build |
 | Output directory | Leave the Next.js default |
@@ -428,7 +428,7 @@ The HTTP verifier starts and stops its own production server. It passed checks f
 
 Canonical comparisons normalize URLs, so equivalent homepage URLs with and without a trailing slash are accepted. Missing or incorrect canonical URLs still fail verification.
 
-GitHub Actions repeats installation, checks, and production verification on main and pull requests using Node.js 22 on Linux.
+GitHub Actions repeats installation, checks, and production verification on main and pull requests using the Node.js version in `.nvmrc` on Linux.
 
 ## Chrome interaction and layout review
 
@@ -505,7 +505,7 @@ Sarvam’s live homepage was reviewed in Chrome as a reference for warm gradient
 
 ## Reproduction
 
-With Node.js 22 and the locked dependencies installed:
+With the Node.js version in `.nvmrc` and the locked dependencies installed:
 
 ~~~sh
 npm run assets
@@ -515,3 +515,12 @@ The script copies licensed font files, writes the logo masters and editable orig
 
 Game captures can become outdated as the independent game changes. To refresh them, launch the current game in Chrome, capture actual third-person and driver-camera views at 1440 × 900, replace the two original PNGs, and run the asset command. Keep concept and gameplay labels accurate.
 
+## Node.js 26 deployment alignment — 2026-11-02
+
+Author: Codex. The owner's Vercel screenshot showed the repository's Node.js 22.x engine overriding the project's selected 26.x runtime. Set `package.json` to `engines.node: "26.x"` and `.nvmrc` to `26`, so Vercel, local development and both GitHub Actions jobs select the same major version. Updated `@types/node` to 26.x and regenerated `package-lock.json` with npm 11.20.0. Updated README and operational version instructions; historical validation records retain their original Node.js versions.
+
+Validation used the official, SHA-256-verified Node.js 26.13.0 Windows distribution and npm 11.20.0. A clean `npm ci` passed. Strict lint, all ten AdSense/account tests and TypeScript checks passed. The first build attempt in `npm run check` encountered an existing Next.js build lock; after it cleared, `npm run build` passed and generated all 28 static pages. `npm run verify` passed for twelve public routes, nine account routes, metadata, links, assets and the existing rendering/advertising checks. All fourteen Firestore authorization tests passed with Node.js 26 and Java 21 against the isolated `demo-vihar` emulator. Logs are under ignored `output/node-runtime/`.
+
+The locked Firebase CLI still pulls in `superstatic@10.0.0`, whose declared Node support ends at 24. npm reports an engine warning for that Firebase Hosting helper; installation and the Firestore tests succeeded on 26. This project serves the website through Next.js on Vercel. Existing upstream ESLint peer and package deprecation notices also remain.
+
+Release through the existing GitHub `main` branch and Vercel connection. Keep Vercel's Node.js setting at `26.x` to match the repository, and inspect the hosted deployment status on the new commit after pushing.
