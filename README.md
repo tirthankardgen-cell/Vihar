@@ -16,7 +16,7 @@ npm run verify
 
 Use `npm run assets` to reproduce artwork, icons and fonts. Committed public assets are ready for deployment; regeneration is not required during a Vercel build.
 
-Bap Ka Rasta has a visual game page with a six-ride garage and a 27-image gallery. Gameplay, 3D characters, world renders and future city/vehicle concepts are labelled separately. The showcase images can also be regenerated on their own with `node scripts/generate-game-showcase.mjs`.
+Bap Ka Rasta has a visual game page with a 13-vehicle garage and a 57-image gallery. Gameplay, 3D characters, world renders and upcoming city concepts and promotional artwork are labelled separately. The showcase images can also be regenerated on their own with `node scripts/generate-game-showcase.mjs`.
 
 See [development.md](development.md) for the single change history, configuration guide, asset provenance, validation evidence and agent handoff. The original design requirements remain in [website-brief.md](website-brief.md).
 
@@ -34,3 +34,5 @@ AdSense ownership metadata and ads.txt remain available while advertising is pau
 - `.github/workflows`: CI checks.
 
 Deploy with Vercel's Next.js preset, repository root, Node 26.x, `npm ci`, and `npm run build`. Keep the default Next.js output directory. Keep Vercel's Node.js setting at `26.x` to match `package.json` and `.nvmrc`; Vercel gives `package.json` priority over its project setting. A push to the connected production branch can trigger deployment.
+
+The [Vihar launch kit](launch-kit/README.md) includes 15 Instagram posters, captions, a Vihar DP and Facebook covers.

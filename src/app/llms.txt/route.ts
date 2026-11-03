@@ -8,7 +8,7 @@ export function GET() {
 ## Public information
 - [Site map](${site.url}/site-map): all public pages and game resources.
 - [Games](${site.url}/games): available and upcoming games.
-- [Bap Ka Rasta](${site.url}/games/bap-ka-rasta): early browser driving game, controls and requirements.
+- [Bap Ka Rasta](${site.url}/games/bap-ka-rasta): free-roaming driving game inspired by Indian cities, with a growing city and vehicle line-up, controls and requirements.
 - [Game gallery](${site.url}/games/bap-ka-rasta/screenshots): gameplay, playable Mumbai map, character models, landmark renders, and city and vehicle concept previews.
 - [First-drive guide](${site.url}/guides/bap-ka-rasta-first-drive): gears, routes, cameras, recovery and device settings for the playable build.
 - [Help and FAQs](${site.url}/help): answers about downloads, accounts and supported devices.

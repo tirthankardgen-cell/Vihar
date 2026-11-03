@@ -29,7 +29,7 @@ export default function AboutPage() {
           <div className="editorial-copy">
             <p>A quick drive after a long day. One more turn before dinner. A new world when the familiar one needs a little pause. Those small moments are where Vihar begins.</p>
             <p>We’re an independent home for original games. Some are inspired by streets and stories close to home in India. Others will wander somewhere entirely different. Each game gets its own personality; Vihar gives them a shared front door.</p>
-            <p>We’re starting with Bap Ka Rasta, a browser driving game set in a Mumbai-inspired neighbourhood. Gulam Chor is taking shape next. Small beginnings, plenty of curiosity.</p>
+            <p>We’re starting with Bap Ka Rasta, a free-roaming browser driving game inspired by familiar Indian cities. Gulam Chor is taking shape next. Small beginnings, plenty of curiosity.</p>
             <Link href="/games" className="text-link">Find your next little escape <ArrowUpRight size={17} aria-hidden="true" /></Link>
           </div>
         </section>

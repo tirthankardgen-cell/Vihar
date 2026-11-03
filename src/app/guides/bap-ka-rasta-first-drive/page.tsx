@@ -7,7 +7,7 @@ import { pageMetadata, site } from "@/lib/site";
 
 const path = "/guides/bap-ka-rasta-first-drive";
 const title = "Your first drive in Bap Ka Rasta";
-const description = "A practical guide to starting the Mumbai auto-rickshaw game, choosing gears, exploring the streets, using both cameras, and recovering from a stuck vehicle.";
+const description = "A practical guide to starting the free-roaming driving game, choosing gears, exploring the streets, using both cameras, and recovering from a stuck vehicle.";
 const updatedIso = "2026-11-02";
 export const metadata = pageMetadata(title, description, path, "/images/social-bap-ka-rasta.png");
 
@@ -26,7 +26,7 @@ export default function FirstDriveGuide() {
       <div className="legal-layout">
         <aside className="legal-toc"><p className="eyebrow">In this guide</p><nav aria-label="First-drive guide contents">{sections.map(([id, label]) => <a key={id} href={"#" + id}>{label}</a>)}</nav></aside>
         <article className="legal-copy">
-          <div className="guide-overview viewport-section"><p className="legal-summary">Bap Ka Rasta gives you an auto rickshaw and a Mumbai-inspired neighbourhood to wander through. There is no race to win or route to complete. This guide suggests a short first drive that lets you learn the controls before exploring the busier streets.</p>
+          <div className="guide-overview viewport-section"><p className="legal-summary">Bap Ka Rasta is about free roaming: familiar streets, your choice of direction, and time to explore. The current playable build starts with an auto rickshaw in Mumbai-inspired neighbourhoods. There is no race to win or route to complete. This guide suggests a short first drive that lets you learn the controls before exploring the busier streets.</p>
           <figure className="guide-figure"><Image src="/images/bap-ka-rasta-gameplay.webp" alt="The playable auto rickshaw and street view in the early Bap Ka Rasta browser build" width={1440} height={900} sizes="(max-width: 767px) 100vw, 800px" /><figcaption>Actual browser gameplay. The streets are an independently authored interpretation of Mumbai.</figcaption></figure>
 
           </div><section className="viewport-section" id="start" aria-labelledby="start-title"><h2 id="start-title">Start the playable build</h2>
