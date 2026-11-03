@@ -1,12 +1,13 @@
+import { publicGames } from "@/lib/community-public";
 import type { MetadataRoute } from "next";
 import { indexableRoutes, site } from "@/lib/site";
 import { galleryPath } from "@/lib/game-images";
 import { galleryImages } from "@/lib/game-showcase";
 
-// Refresh the generated sitemap hourly; lastmod records content changes, not requests.
-export const revalidate = 3600;
-const updatedContent = new Set(["/", "/games", "/games/bap-ka-rasta", galleryPath, "/guides/bap-ka-rasta-first-drive", "/about", "/help", "/site-map"]);
-const brandingUpdated = "2026-11-03T00:00:00+05:30";
+// Refresh the generated sitemap every five minutes; lastmod records content changes, not requests.
+export const revalidate = 300;
+const updatedContent = new Set(["/", "/games", "/games/bap-ka-rasta", galleryPath, "/guides/bap-ka-rasta-first-drive", "/about", "/help", "/site-map", "/privacy", "/terms"]);
+const creatorUpdated = "2026-11-03T10:43:58+00:00";
 
 const pageImages: Record<string, readonly string[]> = {
   "/": [
@@ -23,10 +24,11 @@ const pageImages: Record<string, readonly string[]> = {
   "/about": ["/images/playground.webp"],
 };
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  return indexableRoutes.map((path) => ({
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const community = await publicGames();
+  return [...indexableRoutes.map((path) => ({
     url: site.url + (path === "/" ? "" : path),
     images: pageImages[path]?.map((image) => site.url + image),
-    ...(updatedContent.has(path) ? { lastModified: brandingUpdated } : {}),
-  }));
+    ...(updatedContent.has(path) ? { lastModified: ["/games/bap-ka-rasta", galleryPath, "/guides/bap-ka-rasta-first-drive"].includes(path) ? "2026-11-03T00:00:00+05:30" : creatorUpdated } : {}),
+  })), ...community.map((game) => ({ url: `${site.url}/community/${game.id}`, lastModified: game.updatedAt }))];
 }

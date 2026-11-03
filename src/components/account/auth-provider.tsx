@@ -10,7 +10,7 @@ type AuthState = { user: User | null; profile: PlayerProfile | null; loading: bo
 const AuthContext = createContext<AuthState>({ user: null, profile: null, loading: true, error: "", retry: () => {} });
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const needed = /^\/(login|signup|forgot-password|dashboard|u|auth)(\/|$)/.test(pathname);
+  const needed = /^\/(login|signup|forgot-password|dashboard|community|u|auth)(\/|$)/.test(pathname);
   const [attempt, setAttempt] = useState(0);
   const [state, setState] = useState<Omit<AuthState, "retry">>({ user: null, profile: null, loading: true, error: "" });
   useEffect(() => {

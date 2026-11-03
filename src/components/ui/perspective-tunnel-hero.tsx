@@ -204,13 +204,13 @@ export default function PerspectiveTunnelHero({ playUrl }: { playUrl: string }) 
               <span className={styles.titleName}>Vihar </span>
               <span className={styles.titleWorld}>world.</span>
             </h1>
-            <p className={styles.description}>Familiar places. Unexpected adventures.<br />Original games, made for getting a little lost.</p>
+            <p className={styles.description}>Games from Vihar. Worlds from creators.<br />Discover your next favourite, or share your own.</p>
           </motion.div>
           <div className={styles.actions}>
             <Link href="/games" className={styles.enterButton}>Enter the world <ArrowUpRight size={18} aria-hidden="true" /></Link>
             <a href={playUrl} target="_blank" rel="noopener noreferrer" className={styles.playButton}><Play size={12} fill="currentColor" aria-hidden="true" /> Play Bap Ka Rasta<span className="sr-only"> — opens the game in a new tab</span></a>
           </div>
-          <p className={styles.footnote}>In your browser. No downloads. Just play.</p>
+          <p className={styles.footnote}>Browser games. Downloadable adventures. A space for your game.</p>
         </div>
 
         <div className={styles.scene}>

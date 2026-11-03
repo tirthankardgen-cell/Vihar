@@ -12,9 +12,10 @@ export const site = {
   name: "Vihar",
   tagline: "A space to play.",
   url: httpsUrl(process.env.SITE_URL || "https://www.vihar.online", "SITE_URL"),
+  instagram: "https://www.instagram.com/vihar.world",
   email: process.env.SUPPORT_EMAIL || "contact@vihar.online",
   description:
-    "Find your kind of play on Vihar, a growing collection of original browser games. Find your own route through familiar Indian streets in Bap Ka Rasta, a free-roaming driving game.",
+    "Discover games from Vihar and independent creators. Play browser games, find downloadable games, or share your own self-hosted game and follow player feedback.",
   gameUrl: httpsUrl(
     process.env.BAP_KA_RASTA_URL || "https://rasta.vihar.online",
     "BAP_KA_RASTA_URL",

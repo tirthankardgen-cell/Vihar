@@ -157,3 +157,64 @@ test("all unrecognized collections are denied by default", async () => {
   await assertFails(getDoc(doc(db("alice"), "accounts", "bobby")));
   await assertFails(setDoc(doc(db("alice"), "profiles", "alice", "achievements", "winner"), { unlocked: true }));
 });
+
+const communityGame = (extra = {}) => ({ ownerId: "alice", title: "Orbit", kind: "browser", description: "A little space game", url: "https://games.example.com/orbit/", published: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp(), ...extra });
+async function publishGame(extra = {}) {
+  await claim("alice");
+  await setDoc(doc(db("alice"), "communityGames", "orbit"), communityGame(extra));
+}
+test("community listings enforce ownership, schema and safe URLs", async () => {
+  await claim("alice");
+  for (const database of [anonymous(), db("bobby")]) await assertFails(setDoc(doc(database, "communityGames", "orbit"), communityGame()));
+  for (const extra of [{ url: "javascript:alert(1)" }, { url: "http://games.example.com/" }, { url: "https://user:pass@example.com/" }, { title: "" }, { description: "" }, { published: "yes" }, { kind: "unknown" }, { plays: 999 }]) await assertFails(setDoc(doc(db("alice"), "communityGames", "orbit"), communityGame(extra)));
+  await assertSucceeds(setDoc(doc(db("alice"), "communityGames", "orbit"), communityGame()));
+  await assertSucceeds(getDoc(doc(anonymous(), "communityGames", "orbit")));
+  await assertFails(updateDoc(doc(db("bobby"), "communityGames", "orbit"), { title: "Stolen", updatedAt: serverTimestamp() }));
+  await assertFails(updateDoc(doc(db("alice"), "communityGames", "orbit"), { ownerId: "bobby", updatedAt: serverTimestamp() }));
+  await assertSucceeds(updateDoc(doc(db("alice"), "communityGames", "orbit"), { published: false, updatedAt: serverTimestamp() }));
+  await assertFails(getDoc(doc(anonymous(), "communityGames", "orbit")));
+  await assertSucceeds(getDoc(doc(db("alice"), "communityGames", "orbit")));
+});
+test("public discovery and creator queries only expose authorized listings", async () => {
+  await publishGame();
+  await setDoc(doc(db("alice"), "communityGames", "draft"), communityGame({ published: false }));
+  const publicGames = await assertSucceeds(getDocs(query(collection(anonymous(), "communityGames"), where("published", "==", true))));
+  assert.equal(publicGames.size, 1);
+  assert.equal((await assertSucceeds(getDocs(query(collection(db("alice"), "communityGames"), where("ownerId", "==", "alice"))))).size, 2);
+  await assertFails(getDocs(collection(anonymous(), "communityGames")));
+});
+test("launch receipts are immutable, private and cannot be forged for another player", async () => {
+  await publishGame();
+  const launch = (database, uid = "bobby") => doc(database, "communityGames", "orbit", "players", uid);
+  const receipt = () => ({ startedAt: serverTimestamp() });
+  await assertFails(setDoc(launch(anonymous()), receipt()));
+  await assertFails(setDoc(launch(db("alice")), receipt()));
+  await assertFails(setDoc(launch(db("alice"), "alice"), receipt()));
+  await assertSucceeds(setDoc(launch(db("bobby")), receipt()));
+  await assertFails(setDoc(launch(db("bobby")), receipt()));
+  await assertFails(deleteDoc(launch(db("bobby"))));
+  await assertFails(getDocs(collection(db("charlie"), "communityGames", "orbit", "players")));
+  await assertSucceeds(getDocs(collection(db("alice"), "communityGames", "orbit", "players")));
+  await updateDoc(doc(db("alice"), "communityGames", "orbit"), { published: false, updatedAt: serverTimestamp() });
+  await assertFails(setDoc(launch(db("charlie"), "charlie"), receipt()));
+});
+test("reviews require a launch, allow one per player, and creators cannot alter feedback", async () => {
+  await publishGame();
+  const ref = (database, uid = "bobby") => doc(database, "communityGames", "orbit", "reviews", uid);
+  const review = (extra = {}) => ({ rating: 4, text: "Fun game", updatedAt: serverTimestamp(), ...extra });
+  await assertFails(setDoc(ref(db("bobby")), review()));
+  await setDoc(doc(db("bobby"), "communityGames", "orbit", "players", "bobby"), { startedAt: serverTimestamp() });
+  for (const extra of [{ rating: 6 }, { rating: 1.5 }, { text: "" }, { text: "x".repeat(1001) }, { ownerId: "alice" }]) await assertFails(setDoc(ref(db("bobby")), review(extra)));
+  await assertSucceeds(setDoc(ref(db("bobby")), review()));
+  await assertSucceeds(setDoc(ref(db("bobby")), review({ rating: 5 })));
+  await assertFails(setDoc(ref(db("alice")), review()));
+  await assertFails(deleteDoc(ref(db("alice"))));
+  assert.equal((await getDocs(collection(anonymous(), "communityGames", "orbit", "reviews"))).size, 1);
+  await assertSucceeds(deleteDoc(ref(db("bobby"))));
+});
+
+ test("download listings are publishable and counted through the same player receipts", async () => {
+  await publishGame({ kind: "download", url: "https://games.example.com/download/" });
+  assert.equal((await getDoc(doc(anonymous(), "communityGames", "orbit"))).data().kind, "download");
+  await assertSucceeds(updateDoc(doc(db("alice"), "communityGames", "orbit"), { kind: "browser", updatedAt: serverTimestamp() }));
+});

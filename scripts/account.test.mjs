@@ -9,8 +9,8 @@ test("usernames have one canonical, reserved-aware identity", () => {
   for (const name of ["", "aa", "UPPER", "1player", "hello.world", "hello/world", "éclair", "a".repeat(21), "admin", "vihar", "support", "system"]) assert.equal(typeof usernameError(name), "string", name);
 });
 test("login return paths cannot navigate to external or arbitrary pages", () => {
-  for (const path of ["/dashboard", "/dashboard/friends", "/dashboard/settings", "/dashboard/games", "/u/sunny_road"]) assert.equal(safeReturnPath(path), path);
-  for (const path of [null, "https://evil.example", "//evil.example", "/\\evil.example", "javascript:alert(1)", "/%2f%2fevil.example", "/auth/action?oobCode=stolen", "/dashboard?redirect=https://evil.example", "/u/admin", "/u/x", " /dashboard"]) assert.equal(safeReturnPath(path), "/dashboard");
+  for (const path of ["/dashboard", "/dashboard/friends", "/dashboard/settings", "/dashboard/games", "/dashboard/publish", "/community/AbC123_game", "/u/sunny_road"]) assert.equal(safeReturnPath(path), path);
+  for (const path of [null, "https://evil.example", "//evil.example", "/\\evil.example", "javascript:alert(1)", "/%2f%2fevil.example", "/auth/action?oobCode=stolen", "/dashboard?redirect=https://evil.example", "/u/admin", "/u/x", " /dashboard", "/community/../dashboard", "/community/id?redirect=https://evil.example"]) assert.equal(safeReturnPath(path), "/dashboard");
 });
 test("auth errors do not reveal whether a sign-in email exists", () => {
   assert.equal(accountError({ code: "auth/user-not-found" }), accountError({ code: "auth/wrong-password" }));
