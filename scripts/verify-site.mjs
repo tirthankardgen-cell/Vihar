@@ -283,7 +283,7 @@ try {
   const help = pages.get("/help");
   const faq = [...help.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)]
     .map((match) => JSON.parse(match[1])).find((data) => data["@type"] === "FAQPage");
-  assert(faq && faq.mainEntity.length === 4, "Visible discovery FAQ schema");
+  assert(faq && faq.mainEntity.length === 5, "Visible discovery FAQ schema");
   for (const question of faq.mainEntity) {
     assert(homepage.includes(question.name));
     assert(homepage.includes(question.acceptedAnswer.text));
@@ -301,7 +301,7 @@ try {
   const missingHtml = await missing.text();
   assert(missingHtml.includes("noindex"), "404 page must not be indexed");
   assert(!missingHtml.includes("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"), "404 must never load advertising");
-  const accountRoutes = ["/login", "/signup", "/forgot-password", "/auth/action", "/dashboard", "/dashboard/games", "/dashboard/friends", "/dashboard/settings", "/u/sample_player"];
+  const accountRoutes = ["/login", "/signup", "/forgot-password", "/auth/action", "/dashboard", "/dashboard/games", "/dashboard/publish", "/dashboard/friends", "/dashboard/settings", "/u/sample_player"];
   for (const route of accountRoutes) {
     const response = await get(route);
     assert.equal(response.status, 200, route + " must be reachable");

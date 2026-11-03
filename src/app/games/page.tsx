@@ -1,3 +1,4 @@
+import { CommunityGames } from "@/components/community-games";
 import { GameCatalogue } from "@/components/game-catalogue";
 import "@/app/content.css";
 import { BreadcrumbData, StructuredData } from "@/components/structured-data";
@@ -14,6 +15,7 @@ export default function GamesPage() {
         <h1>Find your kind <em>of play.</em></h1>
       </div>
       <section className="catalogue-panel" aria-label="Browse games"><GameCatalogue games={games} /></section>
+      <CommunityGames />
       <BreadcrumbData items={[{ name: "Games", path: "/games" }]} />
       <StructuredData data={{ "@context": "https://schema.org", "@type": "CollectionPage", name: "Vihar games", url: `${site.url}/games`, description: "Original browser games and upcoming worlds from Vihar.", mainEntity: { "@type": "ItemList", itemListElement: games.map((game, index) => ({ "@type": "ListItem", position: index + 1, url: `${site.url}/games/${game.slug}`, name: game.title })) } }} />
     </div>

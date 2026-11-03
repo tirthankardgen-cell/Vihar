@@ -14,11 +14,12 @@ export function Footer() {
           </div>
           <div className="footer-group">
             <p className="eyebrow">Wander a little</p>
-            <nav aria-label="Explore"><Link href="/games">Games</Link><Link href="/signup">Create your Vihar ID</Link><Link href="/guides/bap-ka-rasta-first-drive">First-drive guide</Link><Link href="/about">Our story</Link><Link href="/help">FAQs</Link><Link href="/help">Help &amp; support</Link></nav>
+            <nav aria-label="Explore"><Link href="/games">Games</Link><Link href="/dashboard/publish">Share your game</Link><Link href="/signup">Create your Vihar ID</Link><Link href="/guides/bap-ka-rasta-first-drive">First-drive guide</Link><Link href="/about">Our story</Link><Link href="/help">FAQs</Link><Link href="/help">Help &amp; support</Link></nav>
           </div>
           <div className="footer-group">
             <p className="eyebrow">Say hello</p>
             <Link href="/contact" className="footer-contact">Let’s talk <ArrowUpRight size={16} aria-hidden="true" /></Link>
+            <a href={site.instagram} target="_blank" rel="noopener noreferrer">Instagram · @vihar.world <ArrowUpRight size={16} aria-hidden="true" /></a>
             <a href={`mailto:${site.email}`} className="footer-email">{site.email}</a>
           </div>
         </div>

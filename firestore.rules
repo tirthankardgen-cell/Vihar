@@ -76,6 +76,46 @@ service cloud.firestore {
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt']);
       allow delete: if participant();
     }
+    match /communityGames/{gameId} {
+      function ownsGame() { return owner(resource.data.ownerId); }
+      function published() { return resource.data.published == true; }
+      function validGame(data) {
+        return data.keys().hasAll(['ownerId', 'title', 'description', 'url', 'kind', 'published', 'createdAt', 'updatedAt'])
+          && data.keys().hasOnly(['ownerId', 'title', 'description', 'url', 'kind', 'published', 'createdAt', 'updatedAt'])
+          && data.title is string && data.title.size() >= 1 && data.title.size() <= 80
+          && data.description is string && data.description.size() >= 1 && data.description.size() <= 2000
+          && data.url is string && data.url.size() <= 2048
+          && data.url.matches('^https://[a-zA-Z0-9][a-zA-Z0-9.-]*[.][a-zA-Z]{2,}(/[^ ]*)?$')
+          && data.kind in ['browser', 'download'] && data.published is bool && data.createdAt is timestamp && data.updatedAt == request.time;
+      }
+      allow read: if published() || ownsGame();
+      allow create: if signedIn() && request.resource.data.ownerId == request.auth.uid
+        && exists(/databases/$(database)/documents/profiles/$(request.auth.uid))
+        && validGame(request.resource.data) && request.resource.data.createdAt == request.time;
+      allow update: if ownsGame() && validGame(request.resource.data)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['title', 'description', 'url', 'kind', 'published', 'updatedAt']);
+      allow delete: if false;
+      match /players/{uid} {
+        function game() { return get(/databases/$(database)/documents/communityGames/$(gameId)).data; }
+        allow read: if owner(uid) || owner(game().ownerId);
+        // One immutable launch receipt per signed-in player. No client-written counters.
+        allow create: if owner(uid) && game().published == true && game().ownerId != uid
+          && request.resource.data.keys().hasOnly(['startedAt']) && request.resource.data.startedAt == request.time;
+        allow update, delete: if false;
+      }
+      match /reviews/{uid} {
+        function game() { return get(/databases/$(database)/documents/communityGames/$(gameId)).data; }
+        allow read: if game().published == true || owner(game().ownerId);
+        allow create, update: if owner(uid) && game().published == true && game().ownerId != uid
+          && exists(/databases/$(database)/documents/communityGames/$(gameId)/players/$(uid))
+          && request.resource.data.keys().hasAll(['rating', 'text', 'updatedAt'])
+          && request.resource.data.keys().hasOnly(['rating', 'text', 'updatedAt'])
+          && request.resource.data.rating is int && request.resource.data.rating >= 1 && request.resource.data.rating <= 5
+          && request.resource.data.text is string && request.resource.data.text.size() >= 1 && request.resource.data.text.size() <= 1000
+          && request.resource.data.updatedAt == request.time;
+        allow delete: if owner(uid);
+      }
+    }
     match /{document=**} { allow read, write: if false; }
   }
 }
