@@ -3,6 +3,11 @@ import { indexableRoutes, site } from "@/lib/site";
 import { galleryPath } from "@/lib/game-images";
 import { galleryImages } from "@/lib/game-showcase";
 
+// Refresh the generated sitemap hourly; lastmod records content changes, not requests.
+export const revalidate = 3600;
+const updatedContent = new Set(["/", "/games", "/games/bap-ka-rasta", galleryPath, "/guides/bap-ka-rasta-first-drive", "/about", "/help", "/site-map"]);
+const brandingUpdated = "2026-11-03T00:00:00+05:30";
+
 const pageImages: Record<string, readonly string[]> = {
   "/": [
     "/brand/icon-192.png", "/brand/vihar-avatar.png", "/images/social-vihar.png",
@@ -12,7 +17,7 @@ const pageImages: Record<string, readonly string[]> = {
     "/images/bap-ka-rasta-seafront.webp", "/images/bap-ka-rasta-mumbai-map.webp",
   ],
   "/games": ["/images/bap-ka-rasta-cover.webp", "/images/gulam-chor.webp"],
-  "/games/bap-ka-rasta": ["/images/bap-ka-rasta-cover.webp", "/images/bap-ka-rasta-gameplay.webp", "/images/bap-ka-rasta-camera.webp"],
+  "/games/bap-ka-rasta": ["/images/bap-ka-rasta-city-preview.webp", "/images/bap-ka-rasta-mumbai-chowk.webp", "/images/bap-ka-rasta-mumbai-map.webp", "/images/bap-ka-rasta-cover.webp", "/images/bap-ka-rasta-gameplay.webp", "/images/bap-ka-rasta-camera.webp"],
   [galleryPath]: galleryImages.map((image) => image.src),
   "/guides/bap-ka-rasta-first-drive": ["/images/bap-ka-rasta-gameplay.webp", "/images/bap-ka-rasta-camera.webp"],
   "/about": ["/images/playground.webp"],
@@ -22,5 +27,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return indexableRoutes.map((path) => ({
     url: site.url + (path === "/" ? "" : path),
     images: pageImages[path]?.map((image) => site.url + image),
+    ...(updatedContent.has(path) ? { lastModified: brandingUpdated } : {}),
   }));
 }

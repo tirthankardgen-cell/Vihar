@@ -15,15 +15,15 @@ export function HomeContent() {
         <div className="container">
           <div className="section-heading"><p className="eyebrow"><span className="section-number">01 /</span> In the spotlight</p><span className="quiet-note">A little escape, ready when you are.</span></div>
           <div className="featured-card">
-            <Link href="/games/bap-ka-rasta" className="featured-visual" aria-label="Discover Bap Ka Rasta. Mumbai, with a little imagination. Concept artwork.">
+            <Link href="/games/bap-ka-rasta" className="featured-visual" aria-label="Discover Bap Ka Rasta. Familiar streets. A little imagination. Concept artwork.">
               <Image src={featuredGame.artwork} alt={featuredGame.artworkAlt} fill sizes="(max-width: 767px) calc(100vw - 42px), (max-width: 1376px) 52vw, 700px" />
-              <span className="featured-location"><span aria-hidden="true">↗</span> Mumbai, with a little imagination.</span>
+              <span className="featured-location"><span aria-hidden="true">↗</span> Familiar streets. A little imagination.</span>
               <span className="artwork-label">Concept artwork</span>
             </Link>
             <div className="featured-copy">
               <span className="status-badge status-available"><span className="status-dot" aria-hidden="true" />Playable now</span>
               <div><p className="eyebrow featured-genre">{featuredGame.categories.slice(0, 2).map(categoryLabel).join(" · ")}</p><h2 id="featured-title">Bap Ka<br /><em>Rasta.</em></h2></div>
-              <p>Your auto. Your city. Your own sweet time. Weave through Mumbai-inspired streets and see where the road takes you.</p>
+              <p>Familiar cities. Different rides. Your own sweet time. Bap Ka Rasta is a free-roaming driving game about exploring Indian streets and seeing where the road takes you.</p>
               <p className="hinglish">Apna sheher. Apni sawaari. Apna rasta.</p>
               <div className="featured-actions"><a href={featuredGame.playUrl} target="_blank" rel="noopener noreferrer" className="button button-dark"><Play size={14} fill="currentColor" aria-hidden="true" />Play now<span className="sr-only"> — opens Bap Ka Rasta in a new tab</span><ArrowUpRight size={17} aria-hidden="true" /></a><Link href="/games/bap-ka-rasta" className="text-link">Meet the game <ArrowRight size={16} aria-hidden="true" /></Link></div>
               <div className="featured-details"><span><Monitor size={14} aria-hidden="true" />Browser</span><span>Single player</span><span>Early build</span></div>

@@ -14,7 +14,7 @@ export const site = {
   url: httpsUrl(process.env.SITE_URL || "https://www.vihar.online", "SITE_URL"),
   email: process.env.SUPPORT_EMAIL || "contact@vihar.online",
   description:
-    "Find your kind of play on Vihar, a growing collection of original browser games. Start with a free-roaming drive through Mumbai in Bap Ka Rasta.",
+    "Find your kind of play on Vihar, a growing collection of original browser games. Find your own route through familiar Indian streets in Bap Ka Rasta, a free-roaming driving game.",
   gameUrl: httpsUrl(
     process.env.BAP_KA_RASTA_URL || "https://rasta.vihar.online",
     "BAP_KA_RASTA_URL",

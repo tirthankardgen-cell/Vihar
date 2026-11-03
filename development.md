@@ -566,3 +566,19 @@ Validation used the official, SHA-256-verified Node.js 26.13.0 Windows distribut
 The locked Firebase CLI still pulls in `superstatic@10.0.0`, whose declared Node support ends at 24. npm reports an engine warning for that Firebase Hosting helper; installation and the Firestore tests succeeded on 26. This project serves the website through Next.js on Vercel. Existing upstream ESLint peer and package deprecation notices also remain.
 
 Release through the existing GitHub `main` branch and Vercel connection. Keep Vercel's Node.js setting at `26.x` to match the repository, and inspect the hosted deployment status on the new commit after pushing.
+
+## Bap Ka Rasta branding and Vihar launch campaign — 3 November 2026
+
+The game is positioned as free-roaming driving through familiar Indian cities, with a growing vehicle and city line-up. Availability is shown on individual cards rather than defining the brand as an auto-only Mumbai game.
+
+Source of truth: `tirthankardgen-cell/Bap-Ka-Rasta` commit `98eb1c86dc7af980f4623c367bbf5182f89973b3`. The updated map comes from `docs/maps/mumbai-game-map.png`; city renders come from `docs/mumbai-landmarks/`. The official BR vector is copied unchanged from `public/brand/br-mark.svg`. Vihar retains its existing original identity.
+
+All 13 vehicle portraits were rendered directly from the shipped `gallery-traffic.glb` and `mumbai-auto.glb` using Three.js GLTFLoader with MeshoptDecoder and Chromium software WebGL. Portraits retain the actual model shapes, including the Dio-style scooter and naked Duke-style KTM. The complete vehicle-library studio image is copied from `assets/vehicles/gallery-traffic/preview.webp`. The remaining twelve cast portraits are extracted from the original `docs/mumbai-characters/renders/street-crowd.jpg`, bringing the gallery to all 20 authored characters.
+
+Third-person and driver-camera gameplay captures were taken from the current local game build, after selecting Mumbai, the available auto, and Drive without intro. The conversation capture is retained and labelled as earlier-build material. Generated hero, garage, character-market and city artwork uses the game’s current model/reference images and is always labelled as promotional concept artwork. It does not stand in for gameplay screenshots or a real navigation map.
+
+The gallery has 57 entries with crawlable full-size links, descriptions, dimensions, image structured data and sitemap entries. The sitemap now revalidates hourly and records a fixed content modification date for pages changed by this release. It does not manufacture new modification dates on each request. Google determines crawl and indexing timing.
+
+`launch-kit/instagram` contains 15 individual 1080×1350 posts: four Vihar introductions/brand posts and eleven Bap Ka Rasta posts. `campaign.json` and `captions.md` contain the relative day sequence, copy and alt text. No social posts were published. Profile exports use Vihar’s original vector emblem with safe margins; there is no Bap Ka Rasta account DP. Facebook cover exports are supplied at 1640×624 and 820×312.
+
+Reproduce website assets with `node scripts/refresh-bkr-brand.mjs`. Poster exports use `scripts/render-launch-kit.mjs` and `scripts/render-social-campaign.mjs`; supply `PLAYWRIGHT_MODULE` pointing to an installed `@playwright/test/index.mjs` and a local Chromium binary. The original Barlow font licence is preserved beside its webfont. Social campaign exports are not loaded by the website.

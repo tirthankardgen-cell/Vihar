@@ -211,7 +211,7 @@ try {
   const gallery = pages.get(galleryPath);
   const gallerySchema = [...gallery.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)]
     .map((match) => JSON.parse(match[1])).find((data) => data["@type"] === "ImageGallery");
-  assert.equal(gallerySchema?.image.length, 27, "Gallery must describe gameplay, map, cities, rides, characters and world renders");
+  assert.equal(gallerySchema?.image.length, 57, "Gallery must describe gameplay, map, cities, rides, characters and world renders");
   for (const image of gallerySchema.image) {
     const imagePath = new URL(image.contentUrl).pathname;
     assert(gallery.includes(`href="${imagePath}"`), "Every gallery image needs a crawlable full-size link");

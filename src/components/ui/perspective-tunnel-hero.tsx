@@ -26,11 +26,11 @@ const WORLD_CARDS: WorldCard[] = [
     href: "/about",
   },
   {
-    src: "/images/bap-ka-rasta-gameplay.webp", title: "Take the long way", caption: "Actual browser gameplay",
+    src: "/images/bap-ka-rasta-gameplay.webp", title: "Take the long way", caption: "Updated browser gameplay",
     href: "/games/bap-ka-rasta/screenshots",
   },
   {
-    src: "/images/bap-ka-rasta/street-scene.webp", title: "Streets worth wandering", caption: "Game world render",
+    src: "/images/bap-ka-rasta-mumbai-chowk.webp", title: "Streets worth wandering", caption: "Updated game world render",
     href: "/games/bap-ka-rasta/screenshots",
   },
   {
@@ -38,11 +38,11 @@ const WORLD_CARDS: WorldCard[] = [
     href: "/games/gulam-chor",
   },
   {
-    src: "/images/bap-ka-rasta/auto.webp", title: "Your city. Your ride.", caption: "Playable auto · Game render",
+    src: "/images/bap-ka-rasta/thar-model.webp", title: "Your city. Your ride.", caption: "Actual vehicle model",
     href: "/games/bap-ka-rasta",
   },
   {
-    src: "/images/bap-ka-rasta-seafront.webp", title: "Meet me by the sea", caption: "Actual browser gameplay",
+    src: "/images/bap-ka-rasta-seafront.webp", title: "Meet me by the sea", caption: "Earlier-build gameplay",
     href: "/games/bap-ka-rasta/screenshots",
   },
   {

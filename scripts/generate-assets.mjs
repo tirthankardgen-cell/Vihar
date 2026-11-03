@@ -151,7 +151,7 @@ for (const name of ["bap-ka-rasta-gameplay", "bap-ka-rasta-camera"]) {
     .toFile(at("public/images", name + ".webp"));
 }
 
-const cover = await readFile(at("assets/original/bap-ka-rasta-landing.webp"));
+const cover = await readFile(at("assets/original/bap-ka-rasta-free-roam.png"));
 for (const name of ["bap-ka-rasta-seafront", "bap-ka-rasta-conversation", "bap-ka-rasta-mumbai-map"]) {
   await sharp(at("assets/original", name + ".png"))
     .webp({ quality: 86, effort: 6 })
@@ -166,7 +166,10 @@ const courtyardData = await pngData(at("public/images/courtyard.webp"));
 const gulamData = await pngData(at("public/images/gulam-chor.webp"));
 const gameData = await pngData(cover);
 await sharp(Buffer.from(socialBase("A space to play.", "Original games. Different worlds.", `<image href="${courtyardData}" x="647" y="45" width="610" height="610"/>`))).png().toFile(at("public/images/social-vihar.png"));
-await sharp(Buffer.from(socialBase("Bap Ka Rasta.", "Your auto. Your city. Your little escape.", `<defs><clipPath id="coverClip"><rect x="690" y="52" width="458" height="526" rx="24"/></clipPath></defs><image href="${gameData}" x="580" y="52" width="790" height="526" preserveAspectRatio="xMidYMid slice" clip-path="url(#coverClip)"/><rect x="715" y="522" width="181" height="31" rx="15" fill="#FAF9F6"/><text x="805" y="543" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#26272C">Concept artwork</text>`, "game"))).png().toFile(at("public/images/social-bap-ka-rasta.png"));
+await sharp(Buffer.from(socialBase("Bap Ka Rasta.", "Your city. Your ride. Your own way.", `<defs><clipPath id="coverClip"><rect x="690" y="52" width="458" height="526" rx="24"/></clipPath></defs><image href="${gameData}" x="580" y="52" width="790" height="526" preserveAspectRatio="xMidYMid slice" clip-path="url(#coverClip)"/><rect x="715" y="522" width="181" height="31" rx="15" fill="#FAF9F6"/><text x="805" y="543" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#26272C">Concept artwork</text>`, "game"))).png().toFile(at("public/images/social-bap-ka-rasta.png"));
 await sharp(Buffer.from(socialBase("Gulam Chor.", "A new world is taking shape. Coming soon.", `<defs><clipPath id="coverClip"><rect x="705" y="52" width="443" height="526" rx="24"/></clipPath></defs><image href="${gulamData}" x="575" y="52" width="700" height="526" preserveAspectRatio="xMidYMid slice" clip-path="url(#coverClip)"/>`, "game"))).png().toFile(at("public/images/social-gulam-chor.png"));
 await import("./generate-game-showcase.mjs");
 console.log("Generated Vihar logo masters, icons, local fonts, original artwork and sharing images.");
+
+// Preserve the refreshed game exports when rebuilding all assets.
+await import("./refresh-bkr-brand.mjs");
