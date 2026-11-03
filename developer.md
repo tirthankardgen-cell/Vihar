@@ -21,3 +21,5 @@ Deploy firestore.rules before the website update. Run `npm run check`, `npm run 
 Sitemap and public listing data refresh every 300 seconds. Use actual content-update timestamps for lastmod, never the request time. robots.txt advertises the canonical XML sitemap. External Instagram URLs and account-only dashboard routes belong in navigation, not the website's XML sitemap.
 
 A shorter cache lifetime makes new URLs available sooner but cannot force Google to crawl or index them. After release, submit the canonical /sitemap.xml in Google Search Console, check its fetch status and inspect new public URLs. Keep production robots permissive and previews noindex. Do not manipulate lastmod, promise indexing deadlines, or use retired sitemap ping endpoints.
+
+Community listing fetches time out after ten seconds and fall back to the core site map on permission/network/backend errors. This prevents Firestore rule rollout timing from failing Vercel builds. Failures are logged; both sitemap routes retry on their five-minute revalidation cycle. Publishing still requires deployed Firestore rules.

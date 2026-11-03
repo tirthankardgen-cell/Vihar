@@ -16,15 +16,22 @@ function endpoint() {
 export async function publicGames(): Promise<PublicGame[]> {
   const base = endpoint();
   if (!base) return [];
-  const response = await fetch(`${base}:runQuery`, {
-    method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ structuredQuery: { from: [{ collectionId: "communityGames" }], where: { fieldFilter: { field: { fieldPath: "published" }, op: "EQUAL", value: { booleanValue: true } } } } }),
-    next: { revalidate: 300 },
-  });
-  // Do not cache an empty sitemap when the backend is unavailable.
-  if (!response.ok) throw new Error(`Public game index unavailable (${response.status})`);
-  const rows = await response.json() as { document?: PublicDocument }[];
-  return rows.flatMap((row) => row.document ? [decode(row.document)] : []);
+  try {
+    const response = await fetch(`${base}:runQuery`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ structuredQuery: { from: [{ collectionId: "communityGames" }], where: { fieldFilter: { field: { fieldPath: "published" }, op: "EQUAL", value: { booleanValue: true } } } } }),
+      next: { revalidate: 300 },
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!response.ok) throw new Error(`Public game index unavailable (${response.status})`);
+    const rows = await response.json() as { document?: PublicDocument }[];
+    return rows.flatMap((row) => row.document ? [decode(row.document)] : []);
+  } catch (error) {
+    // Community discovery must not prevent shipping the rest of the website.
+    // Both sitemap routes retain their canonical pages and retry after 300s.
+    console.warn("Community listings unavailable; serving the core site map.", error instanceof Error ? error.message : "Unknown fetch error");
+    return [];
+  }
 }
 export const publicGame = cache(async (id: string): Promise<PublicGame | null> => {
   const base = endpoint();

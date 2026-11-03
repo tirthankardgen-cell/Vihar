@@ -2,7 +2,7 @@
   "name": "vihar",
   "version": "1.0.0",
   "private": true,
-  "description": "Vihar — A space to play. Original browser games, made for a little escape.",
+  "description": "Vihar \u2014 A space to play. Original browser games, made for a little escape.",
   "license": "UNLICENSED",
   "scripts": {
     "dev": "next dev",
@@ -14,10 +14,11 @@
     "test:account": "node --experimental-strip-types --test scripts/account.test.mjs",
     "test:rules": "firebase emulators:exec --project demo-vihar --only firestore \"node --test scripts/firestore-rules.test.mjs\"",
     "emulators": "firebase emulators:start --project demo-vihar --only auth,firestore",
-    "check": "npm run lint && npm run test:adsense && npm run test:account && npm run typecheck && npm run build",
+    "check": "npm run lint && npm run test:adsense && npm run test:account && npm run test:community && npm run typecheck && npm run build",
     "assets:avatars": "node scripts/generate-avatars.mjs",
     "assets": "node scripts/generate-assets.mjs",
-    "verify": "node scripts/verify-site.mjs"
+    "verify": "node scripts/verify-site.mjs",
+    "test:community": "node --experimental-strip-types --test scripts/community-public.test.mjs"
   },
   "engines": {
     "node": "26.x"
