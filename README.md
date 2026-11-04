@@ -1,56 +1,126 @@
-# Vihar — A space to play.
+<div align="center">
 
-Original browser games at [www.vihar.online](https://www.vihar.online), built with Next.js, React and TypeScript.
+<img src="public/images/social-vihar.png" alt="Vihar — A space to play" width="900" />
 
-## Development
+# Vihar
 
-Use Node.js 26.x (also selected by `.nvmrc`), then run:
+**A space to play. A place for your next adventure.**
+
+Discover original browser games, explore independent creations, and share the worlds you build.
+
+[Visit Vihar](https://www.vihar.online) · [Explore games](https://www.vihar.online/games) · [Creator studio](https://www.vihar.online/dashboard/publish) · [Instagram](https://www.instagram.com/vihar.world)
+
+[![Website checks](https://github.com/tirthankardgen-cell/Vihar/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/tirthankardgen-cell/Vihar/actions/workflows/ci.yml)
+![Node.js 26](https://img.shields.io/badge/Node.js-26-417E38?logo=nodedotjs&logoColor=white)
+![Next.js 16](https://img.shields.io/badge/Next.js-16-111111?logo=nextdotjs)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-98754B)](LICENSE)
+
+</div>
+
+---
+
+## The experience
+
+Vihar brings games from Vihar and independent creators into one discovery platform. Players can find something to play, build a Vihar ID, and leave useful feedback. Creators can give their self-hosted games a dedicated page and learn from the people who open them.
+
+| For players | For creators |
+| --- | --- |
+| Discover browser and downloadable games | Publish through a four-step creator studio |
+| Explore artwork, screenshots, and play guides | Add game links, cover images, screenshots, and instructions |
+| Create a profile, save favourites, and connect with friends | Preview a listing, save drafts, publish, and edit |
+| Rate and review released games after opening them | View unique game opens, average ratings, and written feedback |
+
+- **Production:** [https://www.vihar.online](https://www.vihar.online)
+- **Playable Vihar game:** [Bap Ka Rasta](https://rasta.vihar.online)
+- **Contact:** [contact@vihar.online](mailto:contact@vihar.online)
+
+### Made for discovery
+
+- **Game pages:** individual descriptions, screenshots, controls, device requirements, and how-to-play instructions.
+- **Creator studio:** Details → Images & play guide → Preview → Visibility, with separate Content and Analytics views.
+- **Player feedback:** thumbnail rating badges, star distributions, and editable reviews for released games. Upcoming games open reviews on release.
+- **Vihar ID:** Google/email authentication, unique usernames, avatars, public profiles, favourites, and friends.
+- **Focused dashboard:** independent navigation and content scrolling on desktop; a natural mobile layout with no dashboard footer.
+- **Search foundations:** server-rendered public listings, canonical metadata, structured data, and a sitemap that refreshes community listings every five minutes.
+
+Games and downloads remain on their creators’ hosting. Images are supplied as public HTTPS URLs. “Unique game opens” counts signed-in accounts opening a game or download page from Vihar; it does not represent concurrent players, completed downloads, or verified gameplay. Integrations for in-game statistics are separate from this website.
+
+## Start developing
+
+Use **Node.js 26.x**, as specified in [`.nvmrc`](.nvmrc). Java 21 or newer is needed for Firestore rules tests.
 
 ```sh
+git clone https://github.com/tirthankardgen-cell/Vihar.git
+cd Vihar
 npm ci
+cp .env.example .env.local
 npm run dev
-# Production checks
-npm run check
-npm run verify
 ```
 
-Use `npm run assets` to reproduce artwork, icons and fonts. Committed public assets are ready for deployment; regeneration is not required during a Vercel build.
+Open `http://localhost:3000`. Configure the Firebase web values in `.env.local` for account features, or use the local emulators described in [Getting started](docs/GETTING_STARTED.md). Never commit credentials or enable emulators in production.
 
-Bap Ka Rasta has a visual game page with a 13-vehicle garage and a 57-image gallery. Gameplay, 3D characters, world renders and upcoming city concepts and promotional artwork are labelled separately. The showcase images can also be regenerated on their own with `node scripts/generate-game-showcase.mjs`.
+### Quality checks
 
-See [development.md](development.md) for the single change history, configuration guide, asset provenance, validation evidence and agent handoff. The original design requirements remain in [website-brief.md](website-brief.md).
+```sh
+npm run check       # Lint, unit tests, TypeScript, and production build
+npm run test:rules  # Firestore authorization tests; requires Java 21+
+npm run verify     # HTTP, assets, SEO, and policy checks against the built site
+```
 
-Vihar ID adds Google/email accounts, unique usernames, six gamer avatars, public profiles, friends and a personal dashboard. Configure the public Firebase variables in Vercel and publish the tested rules before using accounts in production; see [Vihar ID setup](development.md#vihar-id-configuration-and-operations). Run `npm run test:rules` with Java 21 for authorization checks, and `npm run assets:avatars` to reproduce the portraits. Existing game apps remain independent until their account/stat integrations are implemented.
+The GitHub Actions workflow runs website checks and authorization tests on pull requests and pushes to `main`. See [Contributing](CONTRIBUTING.md) for the review checklist and browser smoke tests.
 
-AdSense ownership metadata and ads.txt remain available while advertising is paused for review. Ads require explicit serving, site-approval, and consent-readiness settings, and can load only on the completed first-drive guide. Preview, game launch, upcoming, navigation, support, legal and missing pages have no ad loader. See [development.md](development.md#adsense-review-and-account-setup) for the policy audit and account setup; settings are in [.env.example](.env.example). Google approval is still required.
+## Technology
 
-## Repository layout
+| Layer | Implementation |
+| --- | --- |
+| Application | Next.js App Router, React, TypeScript |
+| Interface | Tailwind CSS, scoped CSS, Motion, Lucide icons |
+| Identity & data | Firebase Authentication and Cloud Firestore |
+| Assets | Optimized local imagery, self-hosted fonts, Sharp tooling |
+| Hosting | Vercel; production branch `main` |
+| Verification | ESLint, TypeScript, Node.js tests, Firebase Emulator Suite, HTTP checks |
 
-- `src/app`: pages, styles and metadata/text routes.
-- `src/components` and `src/lib`: reusable UI, typed content and configuration.
-- `public`: deployed assets and font licences.
-- `assets/original` and `logo.png`: authoring inputs; retain for reproduction.
-- `scripts`: asset generation and production HTTP checks.
-- `.github/workflows`: CI checks.
+## Repository guide
 
-Deploy with Vercel's Next.js preset, repository root, Node 26.x, `npm ci`, and `npm run build`. Keep the default Next.js output directory. Keep Vercel's Node.js setting at `26.x` to match `package.json` and `.nvmrc`; Vercel gives `package.json` priority over its project setting. A push to the connected production branch can trigger deployment.
+```text
+src/app/           Pages, layouts, styles, and route handlers
+src/components/    Shared interfaces, account features, and creator studio
+src/lib/           Typed content, Firebase setup, and domain logic
+public/            Production artwork, fonts, branding, and notices
+assets/            Original authoring inputs
+scripts/           Asset tooling and automated verification
+docs/              Setup, architecture, and production operations
+.github/           CI workflow, issue forms, and pull-request template
+```
 
-The [Vihar launch kit](launch-kit/README.md) includes 15 Instagram posters, captions, a Vihar DP and Facebook covers.
+## Documentation
 
-### Community games / Creator studio
+| Document | Purpose |
+| --- | --- |
+| [Getting started](docs/GETTING_STARTED.md) | Local setup, environment values, emulators, and commands |
+| [Architecture](docs/ARCHITECTURE.md) | Application boundaries, publishing, ratings, and data access |
+| [Deployment](docs/DEPLOYMENT.md) | Vercel configuration, Firebase rules, release checks, and rollback |
+| [Contributing](CONTRIBUTING.md) | Contribution process, standards, and validation |
+| [Security](SECURITY.md) | Private vulnerability reporting and supported code |
+| [Support](SUPPORT.md) | Help, bug reports, account issues, and creator questions |
+| [Code of conduct](CODE_OF_CONDUCT.md) | Community expectations and reporting |
+| [Changelog](CHANGELOG.md) | Notable repository changes |
+| [License](LICENSE) · [Third-party notices](THIRD_PARTY_NOTICES.md) | Ownership and third-party material |
+| [Developer guide](developer.md) | Product direction and implementation guidance |
+| [Development record](development.md) | Detailed change history, configuration, assets, and verification evidence |
+| [Launch kit](launch-kit/README.md) | Existing promotional assets and captions |
 
-Signed-in users with a Vihar profile can submit an existing public HTTPS game URL at `/dashboard/publish`. Listings can be saved as drafts, edited, published or unpublished. Published listings appear on `/games`, with a shareable `/community/{id}` page. Vihar lists games; game files remain on their creator's hosting.
+## Production
 
-The creator studio displays an aggregate count of unique signed-in accounts that opened each game or download page from Vihar (excluding its owner), plus ratings and written reviews. This is not concurrent player telemetry or a measure of in-game activity. Launch receipts are immutable and keyed by UID; players can create/update/delete only their own review after launching. Raw player receipts are private to the player and creator. Reviews are public while the game is published. These browser-originated signals are not anti-fraud verified gameplay.
+The canonical website is **[www.vihar.online](https://www.vihar.online)**. Vercel uses the Next.js preset, Node.js 26.x, `npm ci`, and `npm run build`. Pushes to the connected `main` branch can trigger production deployment.
 
-Deploy the updated `firestore.rules` to your configured Firebase project before releasing the UI (`firebase deploy --only firestore:rules`). No composite index or Storage changes are required. Validate locally with `npm run check` and `npm run test:rules` (Java 21+ required). Smoke test two accounts: publish as a creator, launch and review as a player, return to Creator studio and refresh stats, then unpublish and confirm the listing disappears from public discovery.
+Deploy compatible Firestore rules **before** releasing features that depend on them. A website build does not deploy Firebase rules. Follow the [deployment guide](docs/DEPLOYMENT.md) and verify the Vercel deployment result rather than treating a successful Git push as a successful release.
 
-### Vihar World direction (internal context)
+Advertising is paused by default. Publisher verification metadata and `ads.txt` remain available; serving ads requires the existing approval and consent settings. See [`.env.example`](.env.example) and the [development record](development.md) before changing these controls.
 
-Vihar World will be like the “YouTube of games”: Vihar publishes its own games, while other users create accounts to discover and play games and post their own self-hosted browser or downloadable game links for others to enjoy. This analogy is internal context for README.md and developer.md only, not website marketing copy. Public messaging emphasizes games from Vihar and independent creators, sharing games, reaching players and learning from feedback.
+## Ownership
 
-Official Instagram: https://www.instagram.com/vihar.world. See [developer.md](developer.md) for publishing, statistics, security and search-discovery implementation details.
+Vihar is **proprietary**, not an open-source release. Original code, branding, games, writing, and artwork retain their existing ownership; public source access does not grant a general right to redistribute or republish them. See [LICENSE](LICENSE). Fonts, icons, and dependencies retain their own licenses, listed in [Third-party notices](THIRD_PARTY_NOTICES.md).
 
-The XML sitemap and HTML site map now include published community listings and refresh every five minutes. `lastmod` reflects real content edits. Published game pages render content and canonical metadata on the server. Google controls crawl timing; submit `/sitemap.xml` in Search Console and inspect new URLs after deployment. Sitemap freshness does not guarantee immediate indexing.
-
-Creator studio now includes a four-step editor with cover/screenshot URLs, play instructions, controls, device requirements and a public-page preview. Content and Analytics show lifetime game opens and player feedback. Rating badges cover community games and playable Vihar games; Bap Ka Rasta accepts reviews after a signed-in launch. Upcoming games open reviews on release. Dashboard navigation and content scroll independently on desktop, and dashboard routes have no footer. Deploy the updated Firestore rules before the website update; see the November 2026 section of `development.md` for rollout and verification limits.
+For usage permission, collaboration, or support, contact [contact@vihar.online](mailto:contact@vihar.online).

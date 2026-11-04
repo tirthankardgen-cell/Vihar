@@ -2,7 +2,7 @@
   "name": "vihar",
   "version": "1.0.0",
   "private": true,
-  "description": "Vihar \u2014 A space to play. Original browser games, made for a little escape.",
+  "description": "Discover, play, and share games. Vihar brings original browser games, independent creators, player profiles, and community reviews together.",
   "license": "UNLICENSED",
   "scripts": {
     "dev": "next dev",
@@ -48,5 +48,14 @@
     "sharp": "0.35.5",
     "tailwindcss": "4.3.3",
     "typescript": "^5.9.3"
+  },
+  "homepage": "https://www.vihar.online",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tirthankardgen-cell/Vihar.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tirthankardgen-cell/Vihar/issues",
+    "email": "contact@vihar.online"
   }
 }

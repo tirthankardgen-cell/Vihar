@@ -1,0 +1,44 @@
+name: Bug report
+description: Report a reproducible problem with the Vihar website.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: "For vulnerabilities, follow SECURITY.md. Never include credentials or private account data."
+  - type: input
+    id: location
+    attributes:
+      label: Affected page or component
+      placeholder: https://www.vihar.online/games
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List the smallest sequence that reproduces the issue.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include redacted screenshots or error messages if useful.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser, device, and operating system
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Commit or deployment, if known
