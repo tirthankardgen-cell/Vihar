@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "@/components/site-link";
-import { ArrowDown, ArrowUpRight, CirclePause, Mouse, Play, Sparkles } from "lucide-react";
+import { ArrowUpRight, CirclePause, Play, Sparkles } from "lucide-react";
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from "motion/react";
 import type { MotionValue } from "motion/react";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
@@ -129,6 +129,7 @@ function TunnelCard({ card, progress, pointer }: {
     return `translate3d(calc(-50% - var(--camera-pan) * ${px}), calc(-50% - var(--camera-pan) * ${py}), calc(var(--far-z) + var(--z-travel) * ${travel})) rotateZ(${card.rotation}deg)`;
   });
   const opacity = useTransform(localProgress, [0, 0.18, 0.82, 0.98], [0, 1, 1, 0]);
+  const visibility = useTransform(opacity, (value) => value > 0.01 ? "visible" : "hidden");
   const positioning = {
     "--card-x": `${50 + card.x * 100}%`,
     "--card-y": `${50 + card.y * 100}%`,
@@ -138,7 +139,7 @@ function TunnelCard({ card, progress, pointer }: {
   } as CSSProperties;
 
   return (
-    <motion.div className={styles.card} style={{ ...positioning, transform, opacity }} data-world-card={card.index}>
+    <motion.div className={styles.card} style={{ ...positioning, transform, opacity, visibility }} data-world-card={card.index}>
       <Link href={card.href} className={styles.cardLink}>
         <Image src={card.src} alt="" fill sizes="(max-width: 767px) 180px, (max-width: 1100px) 240px, 320px" loading={card.index < 2 ? "eager" : "lazy"} draggable={false} className={styles.cardImage} />
         <span className={styles.cardNumber} aria-hidden="true">0{card.index + 1}</span>
@@ -162,9 +163,8 @@ export default function PerspectiveTunnelHero({ playUrl }: { playUrl: string }) 
     if (!element) return;
     // Observe this stage, rather than assuming it has the window's dimensions.
     const observer = new ResizeObserver(([entry]) => {
-      const { width, height } = entry.contentRect;
-      const headerHeight = document.querySelector(".site-header")?.getBoundingClientRect().height ?? 0;
-      setStage({ isMobile: width < 768, canPin: width >= 768 && height + headerHeight <= window.innerHeight + 1 });
+      const { width } = entry.contentRect;
+      setStage({ isMobile: width < 768, canPin: element.getBoundingClientRect().height <= window.innerHeight + 1 });
     });
     observer.observe(element);
     return () => observer.disconnect();
@@ -176,11 +176,9 @@ export default function PerspectiveTunnelHero({ playUrl }: { playUrl: string }) 
     target: containerRef,
     offset: stage.canPin && motionEnabled ? ["start start", "end end"] : ["start start", "end start"],
   });
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 80, damping: 30, restDelta: 0.0001 });
-  const progress = useTransform(smoothProgress, (value) => motionEnabled ? INITIAL_PHASE + Math.min(1, Math.max(0, value)) * (1 - INITIAL_PHASE) : INITIAL_PHASE);
+  // Clear every card before the pinned stage releases, leaving the copy visible.
+  const progress = useTransform(scrollYProgress, (value) => motionEnabled ? INITIAL_PHASE + Math.min(1, Math.max(0, value / 0.9)) * (1 - INITIAL_PHASE) : INITIAL_PHASE);
   const pointer = useCameraParallax(stageRef, motionEnabled && !stage.isMobile);
-  const titleScale = useTransform(progress, [0, 0.5, 1], [0.7, 1, 1.35]);
-  const titleOpacity = useTransform(progress, [0, 0.12, 0.85, 1], [0.25, 1, 1, 0]);
 
   return (
     <section ref={containerRef} className={styles.hero} aria-labelledby="vihar-world-title" data-motion={motionEnabled ? "on" : "off"} data-pinned={stage.canPin}>
@@ -193,11 +191,16 @@ export default function PerspectiveTunnelHero({ playUrl }: { playUrl: string }) 
 
         <div className={styles.topline}>
           <span className={styles.toplineLabel}><span className={styles.statusDot} aria-hidden="true" /> A space to play</span>
-          <span className={styles.toplineNote}><Sparkles size={13} aria-hidden="true" /> A little outside the everyday</span>
+          <div className={styles.toplineTools}>
+            <span className={styles.toplineNote}><Sparkles size={13} aria-hidden="true" /> A little outside the everyday</span>
+            <button type="button" className={styles.motionToggle} onClick={() => setPaused((value) => !value)} aria-label={reduce ? "Reduced motion" : motionEnabled ? "Pause motion" : "Resume motion"} title={reduce ? "Your device has requested reduced motion." : motionEnabled ? "Pause motion" : "Resume motion"} disabled={reduce}>
+              {motionEnabled ? <CirclePause size={16} aria-hidden="true" /> : <Play size={14} aria-hidden="true" />}
+            </button>
+          </div>
         </div>
 
         <div className={styles.copy}>
-          <motion.div className={styles.anchor} style={{ scale: titleScale, opacity: titleOpacity }}>
+          <div className={styles.anchor}>
             <p className={styles.eyebrow}>Your next little escape starts here</p>
             <h1 id="vihar-world-title" className={styles.title}>
               <span className={styles.titleIntro}>Into the </span>
@@ -205,25 +208,15 @@ export default function PerspectiveTunnelHero({ playUrl }: { playUrl: string }) 
               <span className={styles.titleWorld}>world.</span>
             </h1>
             <p className={styles.description}>Games from Vihar. Worlds from creators.<br />Discover your next favourite, or share your own.</p>
-          </motion.div>
+          </div>
           <div className={styles.actions}>
             <Link href="/games" className={styles.enterButton}>Enter the world <ArrowUpRight size={18} aria-hidden="true" /></Link>
             <a href={playUrl} target="_blank" rel="noopener noreferrer" className={styles.playButton}><Play size={12} fill="currentColor" aria-hidden="true" /> Play Bap Ka Rasta<span className="sr-only"> — opens the game in a new tab</span></a>
           </div>
-          <p className={styles.footnote}>Browser games. Downloadable adventures. A space for your game.</p>
         </div>
 
         <div className={styles.scene}>
           {TUNNEL_CARDS.map((card) => <TunnelCard key={card.src} card={card} progress={progress} pointer={pointer} />)}
-        </div>
-
-        <div className={styles.bottomline}>
-          <span className={styles.origin}>Rooted in India. Open to everyone.</span>
-          <a href="#featured" className={styles.scrollPrompt}><Mouse size={15} aria-hidden="true" /><span>Scroll to explore</span><ArrowDown size={14} aria-hidden="true" /></a>
-          <button type="button" className={styles.motionToggle} onClick={() => setPaused((value) => !value)} title={reduce ? "Your device has requested reduced motion." : undefined} disabled={reduce}>
-            {motionEnabled ? <CirclePause size={14} aria-hidden="true" /> : <Play size={12} aria-hidden="true" />}
-            {reduce ? "Reduced motion" : motionEnabled ? "Pause motion" : "Resume motion"}
-          </button>
         </div>
       </div>
     </section>

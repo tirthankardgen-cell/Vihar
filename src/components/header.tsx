@@ -9,9 +9,24 @@ import { AccountLink } from "@/components/account/account-link";
 
 export function Header() {
   const pathname = usePathname();
+  const hasHero = pathname === "/" || pathname === "/preview/vihar-world";
+  const [heroVisibility, setHeroVisibility] = useState({ pathname, visible: true });
+  const overHero = hasHero && (heroVisibility.pathname !== pathname || heroVisibility.visible);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
   const header = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!hasHero) return;
+    const hero = document.querySelector('[aria-labelledby="vihar-world-title"]');
+    if (!hero) return;
+    const headerHeight = header.current?.querySelector(".header-inner")?.getBoundingClientRect().height ?? 0;
+    const observer = new IntersectionObserver(([entry]) => {
+      setHeroVisibility({ pathname, visible: entry.isIntersecting });
+    }, { rootMargin: `-${headerHeight}px 0px 0px 0px` });
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, [hasHero, pathname]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -40,7 +55,7 @@ export function Header() {
   }, [menuOpen]);
 
   return (
-    <header className="site-header" ref={header}>
+    <header className={`site-header${hasHero ? " site-header--hero" : ""}`} data-over-hero={overHero} ref={header}>
       <div className="container header-inner">
         <Link href="/" aria-label="Vihar home" onClick={() => setMenuOpen(false)} className="logo-link">
           <Brand />
