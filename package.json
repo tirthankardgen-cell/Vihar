@@ -18,7 +18,7 @@
     "assets:avatars": "node scripts/generate-avatars.mjs",
     "assets": "node scripts/generate-assets.mjs",
     "verify": "node scripts/verify-site.mjs",
-    "test:community": "node --experimental-strip-types --test scripts/community-public.test.mjs"
+    "test:community": "node --experimental-strip-types --test scripts/community-public.test.mjs scripts/game-publishing.test.mjs"
   },
   "engines": {
     "node": "26.x"

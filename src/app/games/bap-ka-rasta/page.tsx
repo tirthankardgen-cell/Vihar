@@ -1,3 +1,4 @@
+import { OfficialGameReviews, OfficialPlayLink } from "@/components/game-reviews";
 import Image from "next/image";
 import Link from "@/components/site-link";
 import { ArrowRight, ArrowUpRight, Check, Gamepad2, Keyboard, LockKeyhole, MapPin, Monitor, Play, SlidersHorizontal, Smartphone } from "lucide-react";
@@ -21,7 +22,7 @@ const controls = [
 const mainCast = characters.filter((character) => ["sachin", "raju", "meera", "patil"].includes(character.id));
 
 function PlayLink({ label = "Play now" }: { label?: string }) {
-  return <a href={featuredGame.playUrl} target="_blank" rel="noopener noreferrer" className="bkr-play-button"><Play size={16} fill="currentColor" aria-hidden="true" />{label}<ArrowUpRight size={19} aria-hidden="true" /><span className="sr-only">, opens Bap Ka Rasta in a new tab</span></a>;
+  return <OfficialPlayLink id={featuredGame.slug} className="bkr-play-button"><Play size={16} fill="currentColor" aria-hidden="true" />{label}<ArrowUpRight size={19} aria-hidden="true" /><span className="sr-only">, opens Bap Ka Rasta in a new tab</span></OfficialPlayLink>;
 }
 
 export default function BapKaRastaPage() {
@@ -91,6 +92,7 @@ export default function BapKaRastaPage() {
       <div className="bkr-section-footer"><p className="bkr-section-note">Early build · Single player · No saved progress</p><a href="https://github.com/tirthankardgen-cell/Bap-Ka-Rasta/blob/main/README.md" target="_blank" rel="noopener noreferrer" className="bkr-text-link">Build notes <ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> on GitHub, opens in a new tab</span></a></div>
     </section>
 
+    <section className="container bkr-panel"><OfficialGameReviews id="bap-ka-rasta" /></section>
     <BreadcrumbData items={[{ name: "Games", path: "/games" }, { name: "Bap Ka Rasta", path: "/games/bap-ka-rasta" }]} />
     <StructuredData data={{ "@context": "https://schema.org", "@type": "VideoGame", name: "Bap Ka Rasta", description: "A single-player free-roaming browser driving game inspired by familiar Indian cities. Start with the playable Mumbai streets and explore concepts for more cities and rides.", url: `${site.url}/games/bap-ka-rasta`, image: `${site.url}/images/social-bap-ka-rasta.png`, screenshot: gameImages.map((image) => site.url + image.src), gamePlatform: "Web browser", operatingSystem: "Web browser with WebGL 2", genre: ["Driving", "Exploration"], playMode: "SinglePlayer", inLanguage: "en", publisher: { "@id": `${site.url}/#organization` }, sameAs: featuredGame.playUrl }} />
   </div>;

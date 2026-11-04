@@ -76,12 +76,56 @@ service cloud.firestore {
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt']);
       allow delete: if participant();
     }
+    function validImage(url) {
+      return url is string && url.size() <= 2048
+        && url.matches('^https://[a-zA-Z0-9][a-zA-Z0-9.-]*[.][a-zA-Z]{2,}(/[^ ]*)?$');
+    }
+    function validScreenshots(images) {
+      return images is list && images.size() <= 6
+        && (images.size() < 1 || validImage(images[0]))
+        && (images.size() < 2 || validImage(images[1]))
+        && (images.size() < 3 || validImage(images[2]))
+        && (images.size() < 4 || validImage(images[3]))
+        && (images.size() < 5 || validImage(images[4]))
+        && (images.size() < 6 || validImage(images[5]));
+    }
+    function validReview(data) {
+      return data.keys().hasAll(['rating', 'text', 'updatedAt'])
+        && data.keys().hasOnly(['rating', 'text', 'updatedAt'])
+        && data.rating is int && data.rating >= 1 && data.rating <= 5
+        && data.text is string && data.text.size() >= 1 && data.text.size() <= 1000
+        && data.updatedAt == request.time;
+    }
+    // Curated playable game IDs; no client may create or modify official listings.
+    match /officialGames/{gameId} {
+      function playable() { return gameId in ['bap-ka-rasta']; }
+      allow read, write: if false;
+      match /players/{uid} {
+        allow read: if playable() && owner(uid);
+        allow create: if playable() && owner(uid)
+          && request.resource.data.keys().hasOnly(['startedAt']) && request.resource.data.startedAt == request.time;
+        allow update, delete: if false;
+      }
+      match /reviews/{uid} {
+        allow read: if playable();
+        allow create, update: if playable() && owner(uid)
+          && exists(/databases/$(database)/documents/officialGames/$(gameId)/players/$(uid))
+          && validReview(request.resource.data);
+        allow delete: if playable() && owner(uid);
+      }
+    }
     match /communityGames/{gameId} {
       function ownsGame() { return owner(resource.data.ownerId); }
       function published() { return resource.data.published == true; }
       function validGame(data) {
         return data.keys().hasAll(['ownerId', 'title', 'description', 'url', 'kind', 'published', 'createdAt', 'updatedAt'])
-          && data.keys().hasOnly(['ownerId', 'title', 'description', 'url', 'kind', 'published', 'createdAt', 'updatedAt'])
+          && data.keys().hasOnly(['ownerId', 'title', 'description', 'url', 'kind', 'published', 'createdAt', 'updatedAt', 'coverUrl', 'screenshots', 'howToPlay', 'controls', 'requirements', 'genre'])
+          && (!('coverUrl' in data) || data.coverUrl == '' || validImage(data.coverUrl))
+          && (!('screenshots' in data) || validScreenshots(data.screenshots))
+          && (!('howToPlay' in data) || (data.howToPlay is string && data.howToPlay.size() <= 3000))
+          && (!('controls' in data) || (data.controls is string && data.controls.size() <= 1000))
+          && (!('requirements' in data) || (data.requirements is string && data.requirements.size() <= 1000))
+          && (!('genre' in data) || (data.genre is string && data.genre.size() <= 60))
           && data.title is string && data.title.size() >= 1 && data.title.size() <= 80
           && data.description is string && data.description.size() >= 1 && data.description.size() <= 2000
           && data.url is string && data.url.size() <= 2048
@@ -93,7 +137,7 @@ service cloud.firestore {
         && exists(/databases/$(database)/documents/profiles/$(request.auth.uid))
         && validGame(request.resource.data) && request.resource.data.createdAt == request.time;
       allow update: if ownsGame() && validGame(request.resource.data)
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['title', 'description', 'url', 'kind', 'published', 'updatedAt']);
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['title', 'description', 'url', 'kind', 'published', 'updatedAt', 'coverUrl', 'screenshots', 'howToPlay', 'controls', 'requirements', 'genre']);
       allow delete: if false;
       match /players/{uid} {
         function game() { return get(/databases/$(database)/documents/communityGames/$(gameId)).data; }
@@ -108,11 +152,7 @@ service cloud.firestore {
         allow read: if game().published == true || owner(game().ownerId);
         allow create, update: if owner(uid) && game().published == true && game().ownerId != uid
           && exists(/databases/$(database)/documents/communityGames/$(gameId)/players/$(uid))
-          && request.resource.data.keys().hasAll(['rating', 'text', 'updatedAt'])
-          && request.resource.data.keys().hasOnly(['rating', 'text', 'updatedAt'])
-          && request.resource.data.rating is int && request.resource.data.rating >= 1 && request.resource.data.rating <= 5
-          && request.resource.data.text is string && request.resource.data.text.size() >= 1 && request.resource.data.text.size() <= 1000
-          && request.resource.data.updatedAt == request.time;
+          && validReview(request.resource.data);
         allow delete: if owner(uid);
       }
     }

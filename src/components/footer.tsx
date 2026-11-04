@@ -1,9 +1,14 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import Link from "@/components/site-link";
 import { ArrowUpRight } from "lucide-react";
 import { Brand } from "@/components/brand";
 import { site } from "@/lib/site";
 
 export function Footer() {
+  const pathname = usePathname();
+  if (pathname === "/dashboard" || pathname.startsWith("/dashboard/")) return null;
   return (
     <footer className="site-footer">
       <div className="container">

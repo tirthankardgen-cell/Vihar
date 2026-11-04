@@ -218,3 +218,35 @@ test("reviews require a launch, allow one per player, and creators cannot alter 
   assert.equal((await getDoc(doc(anonymous(), "communityGames", "orbit"))).data().kind, "download");
   await assertSucceeds(updateDoc(doc(db("alice"), "communityGames", "orbit"), { kind: "browser", updatedAt: serverTimestamp() }));
 });
+
+test("rich game details accept safe media and reject injected or oversized values", async () => {
+  await publishGame({ coverUrl: "https://images.example.com/cover.jpg", screenshots: ["https://images.example.com/play.jpg"], howToPlay: "Explore and reach the goal", controls: "WASD", requirements: "Modern browser", genre: "Adventure" });
+  const ref = doc(db("alice"), "communityGames", "orbit");
+  for (const extra of [{ coverUrl: "javascript:alert(1)" }, { coverUrl: 5 }, { screenshots: ["http://unsafe.example.com/image.jpg"] }, { screenshots: Array(7).fill("https://images.example.com/play.jpg") }, { screenshots: "not a list" }, { howToPlay: "x".repeat(3001) }, { controls: 7 }, { requirements: "x".repeat(1001) }, { genre: "x".repeat(61) }]) {
+    await assertFails(updateDoc(ref, { ...extra, updatedAt: serverTimestamp() }));
+  }
+  await assertSucceeds(updateDoc(ref, { coverUrl: "", screenshots: [], updatedAt: serverTimestamp() }));
+  await assertFails(updateDoc(doc(db("bobby"), "communityGames", "orbit"), { coverUrl: "https://images.example.com/fake.jpg", updatedAt: serverTimestamp() }));
+});
+
+test("official games share review protections without allowing counterfeit games or public receipts", async () => {
+  const review = (database, uid = "bobby", game = "bap-ka-rasta") => doc(database, "officialGames", game, "reviews", uid);
+  const launch = (database, uid = "bobby", game = "bap-ka-rasta") => doc(database, "officialGames", game, "players", uid);
+  const data = () => ({ rating: 5, text: "Great drive", updatedAt: serverTimestamp() });
+  await assertFails(setDoc(review(db("bobby")), data()));
+  await assertFails(setDoc(launch(anonymous()), { startedAt: serverTimestamp() }));
+  await assertFails(setDoc(launch(db("alice")), { startedAt: serverTimestamp() }));
+  await assertSucceeds(setDoc(launch(db("bobby")), { startedAt: serverTimestamp() }));
+  await assertFails(setDoc(launch(db("bobby")), { startedAt: serverTimestamp() }));
+  await assertFails(getDoc(launch(anonymous())));
+  await assertSucceeds(setDoc(review(db("bobby")), data()));
+  await assertSucceeds(getDoc(review(anonymous())));
+  await assertSucceeds(setDoc(review(db("bobby")), { ...data(), rating: 3 }));
+  await assertFails(setDoc(review(db("bobby")), { ...data(), rating: 5.5 }));
+  await assertFails(setDoc(review(db("alice")), data()));
+  await assertFails(deleteDoc(review(db("alice"))));
+  await assertFails(setDoc(launch(db("bobby"), "bobby", "gulam-chor"), { startedAt: serverTimestamp() }));
+  await assertFails(setDoc(launch(db("bobby"), "bobby", "fake-game"), { startedAt: serverTimestamp() }));
+  await assertFails(setDoc(doc(db("bobby"), "officialGames", "bap-ka-rasta"), { published: true }));
+  await assertSucceeds(deleteDoc(review(db("bobby"))));
+});

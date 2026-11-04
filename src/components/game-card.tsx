@@ -1,3 +1,4 @@
+import { RatingBadge } from "@/components/rating-badge";
 import Image from "next/image";
 import Link from "@/components/site-link";
 import { ArrowUpRight } from "lucide-react";
@@ -15,6 +16,7 @@ export function GameCard({ game, eager = false }: { game: Game; eager?: boolean 
           </span>
           <span className="game-card-artwork-label">Concept artwork</span>
         </div>
+        <RatingBadge id={game.slug} source="officialGames" upcoming={game.status !== "playable"} />
         <div className="game-card-content">
           <p className="game-card-category">{game.categories.length ? game.categories.slice(0, 2).map(categoryLabel).join(" · ") : game.genre}</p>
           <h3>{game.title}</h3>

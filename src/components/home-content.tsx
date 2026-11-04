@@ -1,3 +1,4 @@
+import { RatingBadge } from "@/components/rating-badge";
 import Image from "next/image";
 import Link from "@/components/site-link";
 import { ArrowRight, ArrowUpRight, Monitor, Play, Sparkles } from "lucide-react";
@@ -18,7 +19,7 @@ export function HomeContent() {
             <Link href="/games/bap-ka-rasta" className="featured-visual" aria-label="Discover Bap Ka Rasta. Familiar streets. A little imagination. Concept artwork.">
               <Image src={featuredGame.artwork} alt={featuredGame.artworkAlt} fill sizes="(max-width: 767px) calc(100vw - 42px), (max-width: 1376px) 52vw, 700px" />
               <span className="featured-location"><span aria-hidden="true">↗</span> Familiar streets. A little imagination.</span>
-              <span className="artwork-label">Concept artwork</span>
+              <RatingBadge id={featuredGame.slug} source="officialGames" /><span className="artwork-label">Concept artwork</span>
             </Link>
             <div className="featured-copy">
               <span className="status-badge status-available"><span className="status-dot" aria-hidden="true" />Playable now</span>

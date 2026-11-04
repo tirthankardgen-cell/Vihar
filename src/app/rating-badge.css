@@ -1,0 +1,5 @@
+.game-rating-badge { display: inline-flex; align-items: center; gap: 6px; color: #fff8e8; background: #262029e8; border: 1px solid #ffffff30; padding: 7px 10px; border-radius: 8px; font: 600 12px/1.2 var(--font-dm-sans), sans-serif; backdrop-filter: blur(8px); }
+.community-thumbnail > .game-rating-badge, .community-detail-cover > .game-rating-badge { position: absolute; bottom: 12px; left: 12px; }
+.game-card-link > .game-rating-badge { position: absolute; left: 24px; top: 62px; z-index: 2; }
+.account-game-art > .game-rating-badge { position: absolute; left: 16px; bottom: 16px; z-index: 2; }
+.featured-visual > .game-rating-badge { position: absolute; top: 20px; right: 20px; z-index: 2; }

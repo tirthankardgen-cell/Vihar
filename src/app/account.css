@@ -368,3 +368,15 @@
   .avatar-picker button[aria-pressed='true'], .dashboard-sidebar nav a[aria-current] { outline: 3px solid Highlight; }
   .account-stat, .account-panel, .public-profile-card { border-color: CanvasText; }
 }
+
+/* Desktop dashboard is a workspace: each pane owns its scroll position. */
+@media (min-width: 768px) {
+  body:has(.dashboard-layout) { height: 100dvh; overflow: hidden; }
+  body:has(.dashboard-layout) #main-content { height: calc(100dvh - var(--header-height)); overflow: hidden; }
+  .dashboard-layout { height: 100%; min-height: 0; padding-block: 24px; align-items: stretch; gap: 28px; }
+  .dashboard-sidebar { position: static; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; padding-bottom: 24px; }
+  .dashboard-main { height: 100%; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; padding: 0 16px 40px 4px; }
+}
+@media (min-width: 768px) {
+  body:has(.dashboard-layout) #main-content > .player-theme { height: 100%; min-height: 0; }
+}

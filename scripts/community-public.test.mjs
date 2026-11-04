@@ -28,12 +28,15 @@ test("a successful request still indexes published games and their actual update
     assert.equal(options.next.revalidate, 300);
     assert(options.signal instanceof AbortSignal);
     return Response.json([{ document: { name: "projects/demo-vihar/databases/(default)/documents/communityGames/orbit", fields: {
-      ownerId: { stringValue: "alice" }, title: { stringValue: "Orbit" }, description: { stringValue: "Space game" }, url: { stringValue: "https://example.com/" }, kind: { stringValue: "browser" }, published: { booleanValue: true }, updatedAt: { timestampValue: "2026-11-03T10:00:00Z" },
+      coverUrl: { stringValue: "https://images.example.com/cover.jpg" }, screenshots: { arrayValue: { values: [{ stringValue: "https://images.example.com/play.jpg" }] } }, howToPlay: { stringValue: "Collect stars" }, controls: { stringValue: "WASD" }, requirements: { stringValue: "Modern browser" }, genre: { stringValue: "Adventure" }, ownerId: { stringValue: "alice" }, title: { stringValue: "Orbit" }, description: { stringValue: "Space game" }, url: { stringValue: "https://example.com/" }, kind: { stringValue: "browser" }, published: { booleanValue: true }, updatedAt: { timestampValue: "2026-11-03T10:00:00Z" },
     } } }]);
   };
   const games = await publicGames();
   assert.equal(games.length, 1);
   assert.equal(games[0].id, "orbit");
+  assert.equal(games[0].coverUrl, "https://images.example.com/cover.jpg");
+  assert.deepEqual(games[0].screenshots, ["https://images.example.com/play.jpg"]);
+  assert.equal(games[0].howToPlay, "Collect stars");
   assert.equal(games[0].updatedAt, "2026-11-03T10:00:00Z");
 });
 

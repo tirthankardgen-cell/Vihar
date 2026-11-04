@@ -13,6 +13,7 @@ export function RouteScrollReset() {
     if (previousPath.current === pathname) return;
     previousPath.current = pathname;
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    document.querySelector(".dashboard-main")?.scrollTo({ top: 0, left: 0, behavior: "instant" });
     document.getElementById("main-content")?.focus({ preventScroll: true });
   }, [pathname]);
 

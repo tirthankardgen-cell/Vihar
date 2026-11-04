@@ -3,11 +3,11 @@
 import { cache } from "react";
 import type { CommunityGame } from "@/lib/community";
 
-type PublicDocument = { name: string; fields: Record<string, { stringValue?: string; booleanValue?: boolean; timestampValue?: string }> };
+type PublicDocument = { name: string; fields: Record<string, { stringValue?: string; booleanValue?: boolean; timestampValue?: string; arrayValue?: { values?: { stringValue?: string }[] } }> };
 export type PublicGame = CommunityGame & { updatedAt: string };
 function decode(document: PublicDocument): PublicGame {
   const fields = document.fields;
-  return { id: document.name.split("/").at(-1)!, ownerId: fields.ownerId.stringValue!, title: fields.title.stringValue!, description: fields.description.stringValue!, url: fields.url.stringValue!, kind: fields.kind?.stringValue === "download" ? "download" : "browser", published: fields.published.booleanValue === true, updatedAt: fields.updatedAt.timestampValue! };
+  return { id: document.name.split("/").at(-1)!, ownerId: fields.ownerId.stringValue!, title: fields.title.stringValue!, description: fields.description.stringValue!, url: fields.url.stringValue!, kind: fields.kind?.stringValue === "download" ? "download" : "browser", published: fields.published.booleanValue === true, coverUrl: fields.coverUrl?.stringValue ?? "", screenshots: fields.screenshots?.arrayValue?.values?.map((value) => value.stringValue ?? "").filter(Boolean) ?? [], howToPlay: fields.howToPlay?.stringValue ?? "", controls: fields.controls?.stringValue ?? "", requirements: fields.requirements?.stringValue ?? "", genre: fields.genre?.stringValue ?? "", updatedAt: fields.updatedAt.timestampValue! };
 }
 function endpoint() {
   const project = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
