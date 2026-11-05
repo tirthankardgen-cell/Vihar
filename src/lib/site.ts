@@ -20,6 +20,10 @@ export const site = {
     process.env.BAP_KA_RASTA_URL || "https://rasta.vihar.online",
     "BAP_KA_RASTA_URL",
   ),
+  gulamChorUrl: httpsUrl(
+    process.env.GULAM_CHOR_URL || "https://gulamchor.vihar.online",
+    "GULAM_CHOR_URL",
+  ),
 };
 
 const canonical = new URL(site.url);
@@ -33,9 +37,7 @@ export const publicRoutes = [
   "/about", "/help", "/contact", "/privacy", "/terms", "/guides/bap-ka-rasta-first-drive", "/site-map",
 ] as const;
 
-// The announcement remains accessible and honestly labelled, but is not a
-// finished content page to submit for indexing.
-export const indexableRoutes = publicRoutes.filter((path) => path !== "/games/gulam-chor");
+export const indexableRoutes = publicRoutes;
 
 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(site.email)) {
   throw new Error("SUPPORT_EMAIL must be a valid email address.");

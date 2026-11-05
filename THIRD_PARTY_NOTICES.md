@@ -8,6 +8,8 @@ The [proprietary notice](LICENSE) covers Vihar’s original materials. It does n
 | --- | --- |
 | DM Sans | [Bundled SIL Open Font License](public/fonts/dm-sans-LICENSE.txt) |
 | Newsreader | [Bundled SIL Open Font License](public/fonts/newsreader-LICENSE.txt) |
+| Hind used on the Gulam Chor page | [Bundled SIL Open Font License](public/fonts/gulam-chor/hind-LICENSE.txt) |
+| Yatra One used on the Gulam Chor page | [Bundled SIL Open Font License](public/fonts/gulam-chor/yatra-one-LICENSE.txt) |
 | Barlow used in Bap Ka Rasta branding | [Bundled font license](public/brand/bap-ka-rasta/BARLOW-LICENSE.txt) |
 | Vihar logos, original illustrations, game imagery, and promotional material | Existing rights remain with their respective owners; see [LICENSE](LICENSE) and the asset register in [development.md](development.md) |
 

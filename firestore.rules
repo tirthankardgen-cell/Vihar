@@ -98,7 +98,7 @@ service cloud.firestore {
     }
     // Curated playable game IDs; no client may create or modify official listings.
     match /officialGames/{gameId} {
-      function playable() { return gameId in ['bap-ka-rasta']; }
+      function playable() { return gameId in ['bap-ka-rasta', 'gulam-chor']; }
       allow read, write: if false;
       match /players/{uid} {
         allow read: if playable() && owner(uid);

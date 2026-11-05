@@ -173,3 +173,4 @@ console.log("Generated Vihar logo masters, icons, local fonts, original artwork 
 
 // Preserve the refreshed game exports when rebuilding all assets.
 await import("./refresh-bkr-brand.mjs");
+await import("./refresh-gulam-chor.mjs");

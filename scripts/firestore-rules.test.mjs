@@ -245,7 +245,14 @@ test("official games share review protections without allowing counterfeit games
   await assertFails(setDoc(review(db("bobby")), { ...data(), rating: 5.5 }));
   await assertFails(setDoc(review(db("alice")), data()));
   await assertFails(deleteDoc(review(db("alice"))));
-  await assertFails(setDoc(launch(db("bobby"), "bobby", "gulam-chor"), { startedAt: serverTimestamp() }));
+  await assertFails(setDoc(review(db("bobby"), "bobby", "gulam-chor"), data()));
+  await assertFails(setDoc(launch(anonymous(), "bobby", "gulam-chor"), { startedAt: serverTimestamp() }));
+  await assertSucceeds(setDoc(launch(db("bobby"), "bobby", "gulam-chor"), { startedAt: serverTimestamp() }));
+  await assertSucceeds(setDoc(review(db("bobby"), "bobby", "gulam-chor"), { ...data(), text: "One more round!" }));
+  await assertSucceeds(getDoc(review(anonymous(), "bobby", "gulam-chor")));
+  await assertFails(getDoc(launch(anonymous(), "bobby", "gulam-chor")));
+  await assertFails(setDoc(review(db("alice"), "bobby", "gulam-chor"), data()));
+  await assertFails(deleteDoc(review(db("alice"), "bobby", "gulam-chor")));
   await assertFails(setDoc(launch(db("bobby"), "bobby", "fake-game"), { startedAt: serverTimestamp() }));
   await assertFails(setDoc(doc(db("bobby"), "officialGames", "bap-ka-rasta"), { published: true }));
   await assertSucceeds(deleteDoc(review(db("bobby"))));

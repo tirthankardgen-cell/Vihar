@@ -1,9 +1,10 @@
-import { Compass, Gamepad2, Grid2X2, SlidersHorizontal, UserRound, UsersRound } from "lucide-react";
+import { Compass, Gamepad2, Grid2X2, SlidersHorizontal, Spade, UserRound, UsersRound } from "lucide-react";
 import Link from "@/components/site-link";
 import { gameCategories, type CategoryFilter } from "@/lib/game-categories";
 
 const icons = {
   all: Grid2X2,
+  cards: Spade,
   arcade: Gamepad2,
   "free-roam": Compass,
   teamwork: UsersRound,

@@ -23,6 +23,7 @@ Visit `http://localhost:3000`. Public editorial pages can be developed without F
 | --- | --- |
 | `SITE_URL` | Canonical HTTPS origin; production uses `https://www.vihar.online` |
 | `BAP_KA_RASTA_URL` | Independent playable game deployment |
+| `GULAM_CHOR_URL` | Gulam Chor's independent browser game deployment |
 | `SUPPORT_EMAIL` | Public support contact |
 | `NEXT_PUBLIC_FIREBASE_*` | Firebase web application identifiers |
 | `NEXT_PUBLIC_FIREBASE_EMULATORS` | Local-only emulator switch; keep false in production |

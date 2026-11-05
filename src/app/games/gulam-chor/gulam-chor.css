@@ -1,0 +1,101 @@
+@font-face { font-family: "GC Yatra"; src: url("/fonts/gulam-chor/yatra-one-devanagari.woff2") format("woff2"); font-weight: 400; font-display: swap; unicode-range: U+0900-097F, U+200C-200D, U+25CC; }
+@font-face { font-family: "GC Yatra"; src: url("/fonts/gulam-chor/yatra-one-latin.woff2") format("woff2"); font-weight: 400; font-display: swap; unicode-range: U+0000-00FF; }
+@font-face { font-family: "GC Hind"; src: url("/fonts/gulam-chor/hind-devanagari.woff2") format("woff2"); font-weight: 400; font-display: swap; unicode-range: U+0900-097F, U+200C-200D, U+25CC; }
+@font-face { font-family: "GC Hind"; src: url("/fonts/gulam-chor/hind-latin.woff2") format("woff2"); font-weight: 400; font-display: swap; unicode-range: U+0000-00FF; }
+
+.gc-page { --gc-cream: #f5e6c5; --gc-gold: #dfb36d; --ink: var(--gc-cream); --muted: #decca9; --line: #dfb36d40; --serif: Georgia, serif; color: var(--gc-cream); background: #23382f; font-family: "GC Hind", Arial, sans-serif; }
+.gc-page :focus-visible { outline-color: var(--gc-gold); }
+.gc-page h2 { font-size: clamp(36px, 4.5vw, 62px); letter-spacing: -.035em; }
+.gc-page h2 em { color: var(--gc-gold); }
+.gc-page h3 { font-family: Georgia, serif; font-size: 20px; font-weight: 400; }
+.gc-page p { line-height: 1.65; }
+.gc-page .gc-eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 2.4px; color: var(--gc-gold); margin-bottom: 20px; }
+.gc-hero { position: relative; isolation: isolate; min-height: max(720px, calc(100svh - var(--header-height))); display: flex; flex-direction: column; }
+.gc-hero .gc-courtyard { z-index: -2; object-fit: cover; object-position: center 56%; height: 100%; }
+.gc-hero-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, #14291e66, #24291f59 35%, #24291f99 72%, #16251be8); }
+.gc-hero-top { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 24px 40px; font-size: 13px; }
+.gc-back { display: flex; align-items: center; gap: 9px; }
+.gc-back:hover { color: #fff4da; }
+.gc-live { display: flex; align-items: center; gap: 8px; border: 1px solid #f5e6c550; border-radius: 30px; background: #23382f99; padding: 5px 13px; white-space: nowrap; }
+.gc-live > span { width: 6px; height: 6px; border-radius: 50%; background: #d2dca4; }
+.gc-hero-copy { display: flex; align-items: center; flex-direction: column; flex: 1; justify-content: center; padding: 15px 20px 40px; text-align: center; }
+.gc-hero-copy > img { margin-bottom: 15px; }
+.gc-hero-copy .gc-eyebrow { color: #ffedc7; margin-bottom: 22px; }
+.gc-hero h1 { font-family: "GC Yatra", Georgia, serif; font-size: clamp(98px, 14svh, 146px); line-height: 1.04; letter-spacing: -4px; color: #fff4da; }
+.gc-hero h1 > span:not(.sr-only) { display: block; }
+.gc-title-dot { color: #e5b268; }
+.gc-roman { text-transform: uppercase; letter-spacing: 7px; font-size: 13px; margin: 15px 0 18px; }
+.gc-hindi { font-size: 23px; }
+.gc-tagline { font-family: Georgia, serif; font-style: italic; font-size: 16px; margin-top: 5px; }
+.gc-play { position: relative; display: inline-flex; align-items: center; justify-content: space-between; gap: 22px; min-height: 76px; margin-top: 27px; padding: 13px 24px; border-radius: 5px; border: 1px solid #ffe7b7; background: #edcd93; color: #3e3525; box-shadow: 0 5px 0 #735235, 0 16px 35px #151e2055; transition: transform 180ms, background 180ms; }
+.gc-play::before { content: ""; position: absolute; inset: 4px; border: 1px solid #94724450; border-radius: 2px; pointer-events: none; }
+.gc-play:hover { background: #f9ddaa; transform: translateY(-3px); }
+.gc-play > svg:first-child { color: #914d35; }
+.gc-play > span:not(.sr-only) { font-size: 21px; line-height: 1.25; text-align: left; }
+.gc-play small { display: block; font-size: 14px; color: #69563b; margin-top: 5px; }
+.gc-preview { font-size: 12px; color: #f0ddbc; margin-top: 20px; }
+.gc-hero-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 18px; padding: 20px 40px; font-size: 12px; }
+.gc-hero-footer > span:first-child { display: flex; align-items: center; gap: 9px; }
+.gc-hero-footer p { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; }
+.gc-hero-footer i { font-style: normal; color: var(--gc-gold); padding-inline: 14px; }
+.gc-section { width: min(1200px, calc(100% - 80px)); margin-inline: auto; padding-block: 90px; }
+.gc-intro { display: grid; grid-template-columns: .85fr 1.3fr; gap: 60px; align-items: center; }
+.gc-intro p:not(.gc-eyebrow) { margin-top: 22px; color: #decca9; }
+.gc-text-link { display: inline-flex; gap: 16px; margin-top: 25px; color: var(--gc-gold); border-bottom: 1px solid #dfb36d70; }
+.gc-table-preview img { width: 100%; border: 1px solid #dfb36d55; border-radius: 8px; }
+.gc-table-preview figcaption { text-align: center; font-size: 12px; color: #decca9; margin-top: 12px; }
+.gc-family-section { border-block: 1px solid #dfb36d30; text-align: center; }
+.gc-section-lede { margin-top: 18px; color: #decca9; }
+.gc-family { list-style: none; display: grid; grid-template-columns: repeat(6, 1fr); gap: 25px; margin-top: 48px; }
+.gc-family img { margin-inline: auto; width: 130px; height: 130px; }
+.gc-family h3 { margin-top: 18px; font-size: 21px; }
+.gc-family h3 span { display: block; font-family: "GC Hind", sans-serif; font-size: 14px; color: var(--gc-gold); margin-top: 5px; }
+.gc-family p { font-size: 13px; color: #decca9; margin-top: 9px; }
+.gc-rules-section { display: grid; grid-template-columns: .85fr 1.3fr; gap: 60px; }
+.gc-rules-heading > img { margin-top: 32px; transform: rotate(-8deg); }
+.gc-rules { list-style: none; display: grid; gap: 26px; }
+.gc-rules li { display: flex; gap: 24px; padding-bottom: 24px; border-bottom: 1px solid #dfb36d30; }
+.gc-rules li > span { color: var(--gc-gold); font-size: 13px; }
+.gc-rules p { margin-top: 10px; color: #decca9; }
+.gc-gallery { display: grid; grid-template-columns: 2.4fr 1fr; gap: 32px; margin-top: 36px; align-items: start; }
+.gc-gallery img { width: 100%; border-radius: 8px; border: 1px solid #dfb36d50; }
+.gc-gallery a { display: block; }
+.gc-gallery figcaption { display: flex; flex-direction: column; gap: 7px; margin-top: 17px; }
+.gc-gallery figcaption strong { font-weight: 400; font-size: 19px; }
+.gc-gallery figcaption span { font-size: 13px; color: #decca9; }
+.gc-play-notes { border-block: 1px solid #dfb36d30; display: grid; grid-template-columns: .85fr 1.3fr; gap: 60px; }
+.gc-play-notes p { color: #decca9; margin-top: 15px; }
+.gc-play-notes h3:not(:first-child) { margin-top: 30px; }
+.gc-play-notes p a { color: var(--gc-gold); text-decoration: underline; text-underline-offset: 4px; }
+.gc-reviews .button-dark { background: #edcd93; color: #3e3525; border-color: #ffe7b7; }
+.gc-reviews .community-reviews { margin-top: 40px; }
+.gc-reviews :is(input, textarea) { background: #f5e6c5; color: #293d35; }
+.gc-reviews .rating-picker span { color: var(--gc-cream); }
+.gc-reviews .rating-picker input:checked + span { color: #293d35; background: #edcd93; }
+
+@media (max-width: 1000px) {
+  .gc-family { grid-template-columns: repeat(3, 1fr); row-gap: 35px; }
+  .gc-intro, .gc-rules-section, .gc-play-notes { gap: 35px; }
+  .gc-hero-footer > span:last-child { display: none; }
+}
+@media (max-width: 767px) {
+  .gc-hero { min-height: max(750px, calc(100svh - var(--header-height))); }
+  .gc-hero-top { padding: 20px; font-size: 12px; }
+  .gc-hero-copy { padding-bottom: 30px; }
+  .gc-hero h1 { font-size: 115px; }
+  .gc-hero-copy .gc-eyebrow { font-size: 9px; letter-spacing: 1.7px; }
+  .gc-hindi { font-size: 20px; }
+  .gc-tagline { font-size: 14px; }
+  .gc-play { gap: 17px; padding-inline: 20px; }
+  .gc-hero-footer { justify-content: center; padding: 18px 20px; gap: 12px; }
+  .gc-hero-footer > span:first-child { width: 100%; justify-content: center; }
+  .gc-hero-footer p { font-size: 9px; letter-spacing: 1px; }
+  .gc-hero-footer i { padding-inline: 8px; }
+  .gc-section { width: calc(100% - 40px); padding-block: 60px; }
+  .gc-intro, .gc-rules-section, .gc-play-notes { grid-template-columns: 1fr; }
+  .gc-family { grid-template-columns: repeat(2, 1fr); gap: 30px 18px; }
+  .gc-rules-heading > img { width: 95px; height: auto; }
+  .gc-gallery { grid-template-columns: 1fr; gap: 35px; }
+  .gc-gallery figure:last-child { width: min(280px, 100%); margin-inline: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .gc-play { transition: none; } }

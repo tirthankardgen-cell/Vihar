@@ -8,6 +8,7 @@
 | Repository | `https://github.com/tirthankardgen-cell/Vihar` |
 | Production branch | `main` |
 | Game deployment | `https://rasta.vihar.online` (separate from this website) |
+| Gulam Chor deployment | `https://gulamchor.vihar.online` (separate from this website) |
 | Hosting | Vercel, Next.js preset |
 | Node.js | `26.x` |
 | Install / build | `npm ci` / `npm run build` |

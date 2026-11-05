@@ -1,4 +1,5 @@
 export const gameCategories = [
+  { id: "cards", label: "Cards" },
   { id: "arcade", label: "Arcade" },
   { id: "free-roam", label: "Free roam" },
   { id: "teamwork", label: "Teamwork" },

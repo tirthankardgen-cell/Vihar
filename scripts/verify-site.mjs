@@ -15,12 +15,13 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const base = "http://127.0.0.1:" + (process.env.VERIFY_PORT || "4179");
 const canonical = new URL(process.env.SITE_URL || "https://www.vihar.online");
 const gameUrl = process.env.BAP_KA_RASTA_URL || "https://rasta.vihar.online";
+const gulamUrl = process.env.GULAM_CHOR_URL || "https://gulamchor.vihar.online";
 const email = process.env.SUPPORT_EMAIL || "contact@vihar.online";
 const preview = process.env.VERCEL_ENV === "preview";
 const guidePath = "/guides/bap-ka-rasta-first-drive";
 const galleryPath = "/games/bap-ka-rasta/screenshots";
 const routes = ["/", "/games", "/games/bap-ka-rasta", "/games/gulam-chor", "/about", "/help", "/contact", "/privacy", "/terms", guidePath, galleryPath, "/site-map"];
-const indexableRoutes = routes.filter((route) => route !== "/games/gulam-chor");
+const indexableRoutes = routes;
 const server = spawn(process.execPath, [require.resolve("next/dist/bin/next"), "start", "--hostname", "127.0.0.1", "--port", new URL(base).port], {
   cwd: root,
   env: { ...process.env, NODE_ENV: "production" },
@@ -152,7 +153,7 @@ try {
       const buffer = Buffer.from(await response.arrayBuffer());
       const metadata = await sharp(buffer).metadata();
       assert.equal(metadata.width, Number.parseInt(descriptor), "Hero srcset must describe its actual width");
-      assert(Math.abs(metadata.height - metadata.width * originalMetadata.height / originalMetadata.width) <= 1, "Hero sources must keep their original proportions");
+      assert(Math.abs(metadata.height - metadata.width * originalMetadata.height / originalMetadata.width) <= 1, `Hero sources must keep their original proportions: ${original} (${originalMetadata.width}×${originalMetadata.height} → ${metadata.width}×${metadata.height})`);
       formatBudgets.set(format, formatBudgets.get(format) + buffer.length);
     }
   }
@@ -197,7 +198,7 @@ try {
   if (!preview) assert(robots.includes(new URL("/sitemap.xml", canonical).href));
   const sitemap = await (await get("/sitemap.xml")).text();
   const locations = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => new URL(match[1]).pathname);
-  assert.deepEqual([...locations].sort(), [...indexableRoutes].sort(), "Sitemap must contain completed pages, excluding the upcoming announcement");
+  assert.deepEqual([...locations].sort(), [...indexableRoutes].sort(), "Sitemap must contain all completed game and information pages");
   assert(sitemap.includes('xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"'), "Image sitemap namespace");
   const imageLocations = [...sitemap.matchAll(/<image:loc>(.*?)<\/image:loc>/g)].map((match) => new URL(decode(match[1])));
   assert(imageLocations.length >= 10, "Relevant pages need image sitemap entries");
@@ -222,7 +223,19 @@ try {
   for (const route of ["/games/bap-ka-rasta", guidePath]) assert(pages.get(route).includes(`href="${galleryPath}"`), "Gallery must be linked from " + route);
   assert(pages.get("/").includes('href="' + gameUrl + '"'), "Homepage must use the configured game URL");
   assert(pages.get("/games/bap-ka-rasta").includes('href="' + gameUrl + '"'), "Game detail must use the configured game URL");
-  assert(!pages.get("/games/gulam-chor").includes('href="' + gameUrl + '"'), "Upcoming game must not have a launch link");
+  const gulam = pages.get("/games/gulam-chor");
+  assert(gulam.includes('href="' + gulamUrl + '"'), "Gulam Chor must launch its configured independent website");
+  assert(!gulam.includes('href="' + gameUrl + '"'), "Gulam Chor must not launch Bap Ka Rasta");
+  assert(!gulam.includes("Coming soon"), "Released Gulam Chor must not be labelled coming soon");
+  const gulamSchema = [...gulam.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)]
+    .map((match) => JSON.parse(match[1])).find((data) => data["@type"] === "VideoGame");
+  assert.equal(gulamSchema?.offers.url, gulamUrl, "Gulam Chor game schema must use its own play destination");
+  assert.equal(gulamSchema?.playMode, "SinglePlayer", "Virtual family preview must describe the supported player mode");
+  assert.equal(gulamSchema?.screenshot.length, 2, "Gulam Chor needs desktop and mobile gameplay captures");
+  for (const shot of gulamSchema.screenshot) {
+    assert(gulam.includes(`href="${new URL(shot.contentUrl).pathname}"`), "Gameplay screenshots need full-size links");
+    assert(imageLocations.some((url) => url.href === shot.contentUrl), "Gulam Chor screenshots must be included in the image sitemap");
+  }
   for (const [oldPath, newPath] of [["/games/ekka-chor", "/games/gulam-chor"], ["/images/ekka-chor.webp", "/images/gulam-chor.webp"], ["/images/social-ekka-chor.png", "/images/social-gulam-chor.png"]]) {
     const response = await get(oldPath);
     assert.equal(response.status, 308, "Renamed content must redirect permanently: " + oldPath);

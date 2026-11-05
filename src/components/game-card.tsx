@@ -14,7 +14,7 @@ export function GameCard({ game, eager = false }: { game: Game; eager?: boolean 
           <span className={`status-badge ${game.status === "playable" ? "status-available" : "status-upcoming"}`}>
             <span className="status-dot" aria-hidden="true" />{game.status === "playable" ? "Playable now" : "Coming soon"}
           </span>
-          <span className="game-card-artwork-label">Concept artwork</span>
+          <span className="game-card-artwork-label">{game.artworkLabel}</span>
         </div>
         <RatingBadge id={game.slug} source="officialGames" upcoming={game.status !== "playable"} />
         <div className="game-card-content">

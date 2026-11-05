@@ -6,7 +6,7 @@ export const siteDirectory = [
   { path: "/games/bap-ka-rasta", name: "Bap Ka Rasta", description: "Free-roaming driving, rides, cities, characters, gameplay and controls." },
   { path: "/games/bap-ka-rasta/screenshots", name: "Screenshots and gallery", description: "Gameplay, the playable map, landmarks, characters and concept previews." },
   { path: "/guides/bap-ka-rasta-first-drive", name: "First-drive guide", description: "Your first route, gears, cameras, touch controls and recovery." },
-  { path: "/games/gulam-chor", name: "Gulam Chor — coming soon", description: "Meet the card game taking shape next. No release date announced." },
+  { path: "/games/gulam-chor", name: "Gulam Chor", description: "Play the family card game, meet the virtual family, and learn the rules." },
   { path: "/about", name: "Our story", description: "The idea behind Vihar, our name and our emblem." },
   { path: "/help", name: "Help and FAQs", description: "Playing, supported devices, downloads and Vihar ID." },
   { path: "/contact", name: "Contact", description: "Get in touch with feedback or a support question." },

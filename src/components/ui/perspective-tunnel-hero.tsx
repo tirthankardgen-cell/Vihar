@@ -34,7 +34,7 @@ const WORLD_CARDS: WorldCard[] = [
     href: "/games/bap-ka-rasta/screenshots",
   },
   {
-    src: "/images/gulam-chor.webp", title: "Gulam Chor", caption: "Coming soon · Concept artwork",
+    src: "/images/gulam-chor/landing.webp", title: "Gulam Chor", caption: "Playable now · Family card game",
     href: "/games/gulam-chor",
   },
   {
