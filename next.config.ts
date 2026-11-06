@@ -12,6 +12,14 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Vercel connects the apex directly to Production; www redirects to it.
+      // SITE_URL controls metadata and this redirect together to avoid split canonicals.
+      ...(new URL(process.env.SITE_URL || "https://vihar.online").origin === "https://vihar.online" ? [{
+        source: "/:path*",
+        has: [{ type: "host" as const, value: "www.vihar.online" }],
+        destination: "https://vihar.online/:path*",
+        permanent: true,
+      }] : []),
       { source: "/games/ekka-chor", destination: "/games/gulam-chor", permanent: true },
       { source: "/images/ekka-chor.webp", destination: "/images/gulam-chor.webp", permanent: true },
       { source: "/images/social-ekka-chor.png", destination: "/images/social-gulam-chor.png", permanent: true },

@@ -31,7 +31,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: { default: "Vihar — Original Browser Games | A space to play.", template: "%s | Vihar" },
   description: site.description,
-  verification: { google: process.env.GOOGLE_SITE_VERIFICATION || undefined },
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+    other: process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : {},
+  },
   other: adsense.publisherId && !isPreview ? { "google-adsense-account": adsense.publisherId } : {},
   applicationName: site.name,
   authors: [{ name: site.name, url: site.url }],

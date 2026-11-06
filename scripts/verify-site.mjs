@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { get as httpGet } from "node:http";
 import { readFile } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
@@ -13,7 +14,7 @@ import sharp from "sharp";
 const require = createRequire(import.meta.url);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const base = "http://127.0.0.1:" + (process.env.VERIFY_PORT || "4179");
-const canonical = new URL(process.env.SITE_URL || "https://www.vihar.online");
+const canonical = new URL(process.env.SITE_URL || "https://vihar.online");
 const gameUrl = process.env.BAP_KA_RASTA_URL || "https://rasta.vihar.online";
 const gulamUrl = process.env.GULAM_CHOR_URL || "https://gulamchor.vihar.online";
 const email = process.env.SUPPORT_EMAIL || "contact@vihar.online";
@@ -51,6 +52,19 @@ try {
     await delay(500);
   }
   assert(ready, "Production server did not become ready.\n" + log);
+  if (canonical.origin === "https://vihar.online") {
+    // Node fetch does not preserve a custom Host; use HTTP directly for host routing.
+    const redirect = await new Promise((resolve, reject) => {
+      const request = httpGet(new URL("/games/gulam-chor?source=domain-check", base), { headers: { Host: "www.vihar.online" } }, (response) => {
+        response.resume();
+        resolve({ status: response.statusCode, location: response.headers.location });
+      });
+      request.on("error", reject);
+      request.setTimeout(20000, () => request.destroy(new Error("Domain redirect timed out")));
+    });
+    assert.equal(redirect.status, 308, "www must permanently redirect when apex is configured");
+    assert.equal(redirect.location, "https://vihar.online/games/gulam-chor?source=domain-check", "Domain redirect preserves paths and queries");
+  }
   const titles = new Set();
   const descriptions = new Set();
   const localLinks = new Set();
@@ -64,6 +78,7 @@ try {
     assert(!response.headers.has("x-powered-by"));
     const html = await response.text();
     pages.set(route, html);
+    assert.equal(attribute(html, "meta", "name", "msvalidate.01"), process.env.BING_SITE_VERIFICATION || undefined, route + " Bing verification");
     assert.equal([...html.matchAll(/<h1(?:\s|>)/g)].length, 1, route + " needs exactly one h1");
     const title = html.match(/<title>(.*?)<\/title>/)?.[1];
     const description = attribute(html, "meta", "name", "description");
@@ -199,6 +214,16 @@ try {
   const sitemap = await (await get("/sitemap.xml")).text();
   const locations = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => new URL(match[1]).pathname);
   assert.deepEqual([...locations].sort(), [...indexableRoutes].sort(), "Sitemap must contain all completed game and information pages");
+  const sitemapEntries = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)].map((match) => match[1]);
+  assert(sitemapEntries.length > 0, "Sitemap must contain URL entries");
+  for (const entry of sitemapEntries) {
+    assert(entry.includes("<changefreq>daily</changefreq>"), "Every public entry has the requested daily hint");
+    assert(entry.includes("<priority>1</priority>"), "Every public entry has maximum priority");
+  }
+  const gulamEntry = sitemapEntries.find((entry) => entry.includes(`<loc>${canonical.origin}/games/gulam-chor</loc>`));
+  assert(gulamEntry, "The playable Gulam Chor page must be discoverable");
+  assert(gulamEntry.includes("<lastmod>2026-11-05T00:00:00+05:30</lastmod>"), "Preserve the actual game-content date, not the request date");
+  assert(gulamEntry.includes("/images/social-gulam-chor.png"), "Gulam Chor sharing artwork is discoverable");
   assert(sitemap.includes('xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"'), "Image sitemap namespace");
   const imageLocations = [...sitemap.matchAll(/<image:loc>(.*?)<\/image:loc>/g)].map((match) => new URL(decode(match[1])));
   assert(imageLocations.length >= 10, "Relevant pages need image sitemap entries");
@@ -309,6 +334,8 @@ try {
   const actualIcon = await sharp(await readFile(path.join(root, "public/brand/favicon-48.png"))).raw().toBuffer();
   assert.deepEqual(actualIcon, expectedIcon, "Favicon must match the original emblem pixels");
   assert.deepEqual(await sharp(iconBytes).raw().toBuffer(), await sharp(original).resize(192, 192, { fit: "contain" }).raw().toBuffer(), "Search favicon must match the original emblem pixels");
+  const unavailableGame = await get("/community/invalid.game.id");
+  assert.equal(unavailableGame.status, 404, "Unavailable game pages must return a real 404");
   const missing = await get("/this-page-does-not-exist");
   assert.equal(missing.status, 404, "Unknown pages must return HTTP 404");
   const missingHtml = await missing.text();
@@ -320,6 +347,12 @@ try {
     assert.equal(response.status, 200, route + " must be reachable");
     const html = await response.text();
     assert(attribute(html, "meta", "name", "robots")?.includes("noindex"), route + " must not be indexed");
+    const title = html.match(/<title>(.*?)<\/title>/)?.[1];
+    const description = attribute(html, "meta", "name", "description");
+    assert(title && !titles.has(title), route + " needs its own title");
+    assert(description && !descriptions.has(description), route + " needs its own description");
+    titles.add(title);
+    descriptions.add(description);
     assert(!html.includes("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"), route + " must not load advertising");
     assert(!locations.includes(route), route + " must stay out of the public sitemap");
     assert.equal(response.headers.get("cross-origin-opener-policy"), "same-origin-allow-popups", "Google sign-in popup must be supported");

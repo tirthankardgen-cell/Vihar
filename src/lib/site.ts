@@ -11,7 +11,7 @@ function httpsUrl(value: string, name: string): string {
 export const site = {
   name: "Vihar",
   tagline: "A space to play.",
-  url: httpsUrl(process.env.SITE_URL || "https://www.vihar.online", "SITE_URL"),
+  url: httpsUrl(process.env.SITE_URL || "https://vihar.online", "SITE_URL"),
   instagram: "https://www.instagram.com/vihar.world",
   email: process.env.SUPPORT_EMAIL || "contact@vihar.online",
   description:

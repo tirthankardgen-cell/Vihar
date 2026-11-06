@@ -49,7 +49,7 @@
     "tailwindcss": "4.3.3",
     "typescript": "^5.9.3"
   },
-  "homepage": "https://www.vihar.online",
+  "homepage": "https://vihar.online",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tirthankardgen-cell/Vihar.git"

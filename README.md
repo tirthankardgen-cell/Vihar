@@ -8,7 +8,7 @@
 
 Discover original browser games, explore independent creations, and share the worlds you build.
 
-[Visit Vihar](https://www.vihar.online) · [Explore games](https://www.vihar.online/games) · [Creator studio](https://www.vihar.online/dashboard/publish) · [Instagram](https://www.instagram.com/vihar.world)
+[Visit Vihar](https://vihar.online) · [Explore games](https://vihar.online/games) · [Creator studio](https://vihar.online/dashboard/publish) · [Instagram](https://www.instagram.com/vihar.world)
 
 [![Website checks](https://github.com/tirthankardgen-cell/Vihar/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/tirthankardgen-cell/Vihar/actions/workflows/ci.yml)
 ![Node.js 26](https://img.shields.io/badge/Node.js-26-417E38?logo=nodedotjs&logoColor=white)
@@ -31,7 +31,7 @@ Vihar brings games from Vihar and independent creators into one discovery platfo
 | Create a profile, save favourites, and connect with friends | Preview a listing, save drafts, publish, and edit |
 | Rate and review released games after opening them | View unique game opens, average ratings, and written feedback |
 
-- **Production:** [https://www.vihar.online](https://www.vihar.online)
+- **Production:** [https://vihar.online](https://vihar.online)
 - **Playable Vihar game:** [Bap Ka Rasta](https://rasta.vihar.online)
 - **Contact:** [contact@vihar.online](mailto:contact@vihar.online)
 
@@ -113,7 +113,7 @@ docs/              Setup, architecture, and production operations
 
 ## Production
 
-The canonical website is **[www.vihar.online](https://www.vihar.online)**. Vercel uses the Next.js preset, Node.js 26.x, `npm ci`, and `npm run build`. Pushes to the connected `main` branch can trigger production deployment.
+The canonical website is **[vihar.online](https://vihar.online)**. Vercel uses the Next.js preset, Node.js 26.x, `npm ci`, and `npm run build`. Pushes to the connected `main` branch can trigger production deployment.
 
 Deploy compatible Firestore rules **before** releasing features that depend on them. A website build does not deploy Firebase rules. Follow the [deployment guide](docs/DEPLOYMENT.md) and verify the Vercel deployment result rather than treating a successful Git push as a successful release.
 

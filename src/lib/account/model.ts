@@ -77,7 +77,7 @@ export function accountError(error: unknown): string {
     "auth/requires-recent-login": "Sign out and sign in again before making this change.",
     "auth/expired-action-code": "This link has expired. Request a new email and try again.",
     "auth/invalid-action-code": "This link has already been used or is invalid. Request a new email.",
-    "auth/unauthorized-domain": "Sign-in is not enabled at this website address yet. Please use www.vihar.online.",
+    "auth/unauthorized-domain": "Sign-in is not enabled at this website address yet. Please use vihar.online.",
     "auth/operation-not-allowed": "This sign-in method is not available yet. Please try again later.",
     "auth/user-disabled": "This account is disabled. Please contact Vihar support.",
     "permission-denied": "This action isn’t available. Check that you’re signed in and your email is verified.",

@@ -4,7 +4,7 @@
 
 | Setting | Value |
 | --- | --- |
-| Website | `https://www.vihar.online` |
+| Website | `https://vihar.online` |
 | Repository | `https://github.com/tirthankardgen-cell/Vihar` |
 | Production branch | `main` |
 | Game deployment | `https://rasta.vihar.online` (separate from this website) |
@@ -54,6 +54,6 @@ Use the existing Vercel project to restore a known-good deployment if a release 
 The intended GitHub About values are:
 
 - **Description:** Discover, play, and share games. Vihar brings original browser games, independent creators, player profiles, and community reviews together.
-- **Website:** `https://www.vihar.online`
+- **Website:** `https://vihar.online`
 
 Repository administrators can edit these fields from the gear beside About on the repository homepage. They are GitHub settings, not values controlled by a README commit or `package.json`.

@@ -21,7 +21,8 @@ Visit `http://localhost:3000`. Public editorial pages can be developed without F
 
 | Group | Purpose |
 | --- | --- |
-| `SITE_URL` | Canonical HTTPS origin; production uses `https://www.vihar.online` |
+| `SITE_URL` | Canonical HTTPS origin; production uses `https://vihar.online`; see domain settings in developer.md |
+| `BING_SITE_VERIFICATION` | Optional public Bing Webmaster Tools msvalidate.01 token |
 | `BAP_KA_RASTA_URL` | Independent playable game deployment |
 | `GULAM_CHOR_URL` | Gulam Chor's independent browser game deployment |
 | `SUPPORT_EMAIL` | Public support contact |

@@ -4,15 +4,15 @@ This is the single developer handoff, operational guide, asset register and chan
 
 ## Current configuration
 
-- Canonical site: https://www.vihar.online; preserve the apex-to-www redirect in Vercel.
+- Canonical site: https://vihar.online. Vercel connects the apex to Production and permanently redirects www to apex. Set Production SITE_URL to the apex and authorize that domain in Firebase Authentication.
 - Node.js 26.x in package.json, .nvmrc and Vercel; npm ci; npm run check; npm run verify. GitHub Actions reads .nvmrc. Build before verify.
 - AdSense publisher: ca-pub-6693217545827146, explicitly supplied by the owner. This is a public identifier, not a secret.
 - Default mode: review-only. Keep the public ownership meta tag and /ads.txt, but do not load advertising. ADSENSE_ENABLED=true, ADSENSE_SITE_APPROVED=true and ADSENSE_CONSENT_READY=true are ALL required before the loader appears, and Vercel previews always suppress it. The approval and consent flags record account-side checks; they do not grant approval or collect consent. An old deployment with ADSENSE_ENABLED=true alone now fails closed. This supersedes earlier all-page loader instructions.
 - The completed /guides/bap-ka-rasta-first-drive article is the only advertising candidate. Root layout, home, catalogue/search, game launch/detail, upcoming, support, legal and 404 pages never render the loader. SiteLink uses full-document navigation into/out of the article so Google scripts and inserted ads cannot persist on excluded pages. Other links retain Next.js navigation. The script is async and hoisted by React to the head only on a successful article render. A hydrated article error leaves the document for the ad-free Help page.
-- The upcoming Gulam Chor announcement remains accessible and correctly labelled, but is noindex and omitted from the sitemap and llms.txt until substantive gameplay information is available. This is an editorial choice, not a claim that noindex exempts a page from Google's policies.
+- Gulam Chor is now playable and its substantive catalogue page is indexable and included in the XML/HTML sitemaps. Historical notes below describing an upcoming noindex announcement are superseded.
 - ADSENSE_PUBLISHER_ID overrides the default; explicitly empty with ADSENSE_ENABLED=false disables account metadata/declaration. Invalid IDs fail the build. Preview builds omit the publisher declaration and loader.
 - GOOGLE_SITE_VERIFICATION optionally adds the Search Console HTML verification tag. The owner has not supplied a token. DNS verification can be used instead.
-- Submit https://www.vihar.online/sitemap.xml to Search Console after deployment. Review robots.txt, manifest.webmanifest, ads.txt and llms.txt. Search Console submission and AdSense review remain account-side actions; code does not guarantee approval, indexing or ranking.
+- Submit https://vihar.online/sitemap.xml to Search Console after deployment. Review robots.txt, manifest.webmanifest, ads.txt and llms.txt. Search Console submission and AdSense review remain account-side actions; code does not guarantee approval, indexing or ranking.
 - Sitemap and robots already existed and are retained as Next.js metadata routes, avoiding duplicate static files. llms.txt is an optional factual discovery aid, not a recognized ranking guarantee. Visible FAQ answers and FAQPage JSON-LD share one source; Google generally restricts FAQ rich results to eligible government/health sites. Do not promise them for this game catalogue. Use accurate prose instead of keyword stuffing, fake reviews or fabricated ratings.
 
 ## AdSense review and account setup
@@ -56,7 +56,7 @@ Use this editorial routine; it is an operating checklist, not an automatic publi
 - **Every game release:** compare the deployed game with its catalogue description, Help, guide, screenshots and availability labels. Update affected copy and the guide's visible and structured-data dates together. Confirm phone instructions and Play destinations against the actual build. Add new guides only when they answer a distinct player need; review content and placements before changing the advertising allowlist.
 - **Monthly and after substantial UI/ad changes:** run `npm run check` and `npm run verify`, inspect desktop/mobile navigation, and run Lighthouse against production. Review Search Console coverage/Core Web Vitals, the current Google policies and AdSense site status. Recheck privacy disclosures whenever data handling changes, and real consent/ad placements before enabling serving.
 
-Fresh content is not generated or scheduled by the site. There is currently one dedicated first-drive article and one playable game; more useful guides and real development updates remain ongoing editorial work. Content quality, ownership and Google approval cannot be certified by a build, a page count, a publishing interval or an SEO score. Review user-submitted public profile names/bios when reported, using the existing Terms and Contact flow; those account pages remain ad-free and noindex.
+Fresh content is not generated or scheduled by the site. There is currently one dedicated first-drive article and two playable games; more useful guides and real development updates remain ongoing editorial work. Content quality, ownership and Google approval cannot be certified by a build, a page count, a publishing interval or an SEO score. Review user-submitted public profile names/bios when reported, using the existing Terms and Contact flow; those account pages remain ad-free and noindex.
 
 ## Vihar ID configuration and operations
 
@@ -78,7 +78,7 @@ Web API keys identify a Firebase application; they are not a substitute for auth
 
 - `/signup`, `/login`, `/forgot-password`, `/auth/action`: Google/email sign-in, registration, email verification and password recovery.
 - `/dashboard`, `/dashboard/games`, `/dashboard/friends`, `/dashboard/settings`: account onboarding, overview, saved games, friend requests, profile editing, provider linking and JSON data export. Unauthenticated visits return to login with an allowlisted local destination. Changing UID clears the previous account's profile and subscriptions.
-- `/u/{username}`: a public profile link with avatar, display name, bio and published game statistics. Email stays in Firebase Authentication. Sharing uses the native share sheet where available, then clipboard, then a selectable link fallback. All account/profile routes are noindex, absent from the sitemap and advertising-free.
+- `/u/{username}`: a public profile link with avatar, display name, bio and published game statistics. Email stays in Firebase Authentication. Sharing uses the native share sheet where available, then clipboard, then a selectable link fallback. Account/profile routes remain noindex, absent from the sitemap and advertising-free, as clarified by the owner.
 
 | Path | Visibility and allowed writes |
 | --- | --- |
@@ -130,6 +130,29 @@ Use Node 26 and Java 21 or newer. Run `npm ci`, then `npm run test:rules` for th
 Auth listens on `127.0.0.1:9099`, Firestore on `127.0.0.1:8080`. Emulator verification/reset messages are available in terminal output. Do not run the rules suite while relying on a manual emulator session: it clears the demo Firestore database between tests. Browser QA scripts, synthetic account details, screenshots and Java runtime downloads live under ignored `output/`; `.env.local`, `.firebase` and emulator logs must remain ignored.
 
 ## Change history
+
+### Public indexing, Bing verification and canonical domain — 2026-11-06 16:00 UTC
+
+Author: Codex. Implements the owner’s final clarification: index public content, keep account/private/preview pages noindex, and use the non-www domain.
+
+- Preserved account/dashboard/profile/card and hero-preview noindex directives, authentication, and Firestore rules. Unavailable community games now return a real 404 instead of a 200 error shell.
+- Kept production robots permissive with the canonical sitemap; deployment previews remain blocked. Verified unique titles and descriptions across public and account routes.
+- Added optional BING_SITE_VERIFICATION metadata (msvalidate.01). The owner is creating their Bing account; actual verification and sitemap submission remain pending their public token.
+- Changed the canonical default and active documentation to https://vihar.online. Added a SITE_URL-gated 308 www redirect preserving paths and query strings. Live checks confirmed apex HTTP 200 and Vercel www HTTP 301 to apex; 301 is also a valid permanent redirect. Production SITE_URL and Firebase authorized domains remain account-side configuration.
+- Clarified scorebadge.com is an external SEO/speed/security/AI-readiness audit service with an embeddable badge. Removed the provisional scroll-progress interpretation. No badge score, login or service verification was fabricated.
+- Validation: `npm run check` passed (lint, 14 unit tests, type checking and production build); `npm run verify` passed for 12 public and 10 noindex account routes, canonical URLs, path/query-preserving 308 redirect, robots/sitemap, metadata, FAQ parity and original-logo favicon. Earlier local Bing-token and preview-mode verification passed; the unchanged Firestore emulator suite passed 21 tests.
+
+### Sitemap discovery hints and Gulam Chor audit — 2026-11-06 14:28:32 IST (UTC+05:30)
+
+Author: Codex. Request: verify the newly added game, set maximum priority and daily hints, check favicon discovery, and push to GitHub. Synced with main at 64bcdbb before editing.
+
+- Confirmed Gulam Chor already exists in the canonical sitemap and returns index/follow metadata. Kept all completed public pages and published community listings; excluded private account/dashboard routes as before.
+- Added priority 1.0 and changeFrequency daily to both core and community URL entries. Google explicitly ignores these hints; assigning equal priority is not a ranking boost or crawl schedule. Preserved five-minute on-demand revalidation and authentic content/Firestore lastmod dates. No daily timestamp fabrication, cron cost or retired sitemap ping.
+- Added Gulam Chor sharing artwork to its image sitemap entry. Existing screenshots, icons and gallery coverage remain. Kept the stable 192px original-logo favicon rather than changing its URL and restarting discovery.
+- Live pre-change checks: canonical homepage, Gulam Chor page, robots.txt and favicon returned HTTP 200. Homepage/game were index/follow with matching canonicals; image response had no noindex/noimageindex header. This does not prove Google's actual index state or access from Google's infrastructure. The owner reported Search Console status “Discovered — currently not indexed”: Google knows the URL but has not crawled it yet. The displayed report date is not a monthly crawl instruction. URL Inspection remains necessary to track actual Google fetch/index status.
+- Google reference: https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap ; favicon guidance: https://developers.google.com/search/docs/appearance/favicon-in-search . After deployment submit https://vihar.online/sitemap.xml, inspect the homepage and Gulam Chor canonical URL, and request indexing once when eligible. Google controls inclusion and favicon appearance; no deadline is promised.
+- Validation: included in the successful final checks recorded above.
+
 
 ### AdSense email checklist audit and content refresh — 2026-11-02
 
@@ -259,7 +282,7 @@ Added `/games/bap-ka-rasta/screenshots`: four visible, captioned images with des
 
 Live inspection found no robots/noindex/canonical block on the main website: apex redirects to www and completed pages have crawlable HTML. The separate game still identified its old Vercel domain and returned an empty application root. The paired Game 1 changes correct its canonical, social, structured-data and sitemap references to `https://rasta.vihar.online`, and prerender the existing landing component during the Vite build for browser hydration. Gameplay remains client-rendered. These fixes improve crawlability and consistency; they do not establish why Google deferred the main site's crawl.
 
-After both projects are published, verify the live HTML and image sitemaps, submit `https://www.vihar.online/sitemap.xml` and `https://rasta.vihar.online/sitemap.xml` in the relevant Search Console property, and use URL Inspection → Test live URL → Request indexing for the homepage, game page, gallery and game origin. Do not repeatedly request the same URL. Google documents that crawling can take days to weeks and submission does not guarantee inclusion. “Discovered” means Google knows the URL but has not crawled it; code cannot force indexing. The Search Console account actions and an actual indexed result remain external work.
+After both projects are published, verify the live HTML and image sitemaps, submit `https://vihar.online/sitemap.xml` and `https://rasta.vihar.online/sitemap.xml` in the relevant Search Console property, and use URL Inspection → Test live URL → Request indexing for the homepage, game page, gallery and game origin. Do not repeatedly request the same URL. Google documents that crawling can take days to weeks and submission does not guarantee inclusion. “Discovered” means Google knows the URL but has not crawled it; code cannot force indexing. The Search Console account actions and an actual indexed result remain external work.
 
 References: [Google crawl requests](https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl), [image guidance](https://developers.google.com/search/docs/appearance/google-images), [image sitemaps](https://developers.google.com/search/docs/crawling-indexing/sitemaps/image-sitemaps), [canonical consolidation](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls).
 
@@ -345,7 +368,7 @@ Author: Codex. Executed on Linux with Node.js 22.23.4 using the existing lockfil
 
 ## Historical reference (preserved from the previous commit)
 
-The sections below record earlier work, not freshly executed tests. Their claims about no advertising and redrawn favicons are superseded by Current configuration and the change history above. Historical screenshots/Lighthouse values were reported by that implementation and are not new measurements.
+The sections below record earlier work, not freshly executed tests. Their earlier www canonical/redirect instructions and claims about no advertising and redrawn favicons are superseded by Current configuration and the change history above. Historical screenshots/Lighthouse values were reported by that implementation and are not new measurements.
 
 
 ### Archived source: docs/deployment.md
@@ -423,7 +446,7 @@ Live inspection before this change confirmed HTTP 200 for both canonical homepag
 
 After deployment, submit both sitemaps in the matching Search Console domain properties:
 
-- `https://www.vihar.online/sitemap.xml` under `vihar.online`.
+- `https://vihar.online/sitemap.xml` under `vihar.online`.
 - `https://rasta.vihar.online/sitemap.xml` under `rasta.vihar.online`.
 
 Use URL Inspection → Test live URL → Request indexing for `https://www.vihar.online/` and `https://rasta.vihar.online/`, and inspect the new public directory and game guide. Google fetches the favicon from the homepage declaration; request indexing for the homepage rather than submitting the icon as a page. Recrawling may take days or weeks and favicon display is not guaranteed. These authenticated Search Console actions require the owner's account and are separate from the code changes and GitHub push.
@@ -433,7 +456,7 @@ Validation on Node.js 22.23.4: `npm run check` passed (lint, advertising/account
 After the custom domain is live, verify ownership in Google Search Console and submit:
 
 ~~~text
-https://www.vihar.online/sitemap.xml
+https://vihar.online/sitemap.xml
 ~~~
 
 This requires access to the owner’s Search Console account and DNS or an approved verification method. The site does not invent a verification token. Indexing timing and search rankings are controlled by search engines, not guaranteed by the code.
