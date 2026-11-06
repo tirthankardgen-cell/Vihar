@@ -2,6 +2,13 @@
 
 Notable repository changes are recorded here. Entries describe source changes; they do not independently confirm production deployment. See [GitHub history](https://github.com/tirthankardgen-cell/Vihar/commits/main/) and [development.md](development.md) for detailed implementation evidence.
 
+## 2026-11-06 — Interactive Vihar ID
+
+- Replaced the dashboard ID with a two-sided player card using the supplied Kokonut UI Flick Card interaction.
+- Added the same card to public profiles, with player details and a working profile link on the back.
+- Supported drag, tap, keyboard, an explicit flip button, reduced motion, and narrow mobile layouts.
+- Preserved photo sharing and PNG downloads and recorded the component's MIT attribution.
+
 ## 2026-11-04 — Repository documentation
 
 - Reorganized the README around the product, production URL, setup, and documentation.

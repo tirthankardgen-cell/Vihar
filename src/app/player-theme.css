@@ -100,12 +100,6 @@ body:has(.player-theme) .skip-link { background: var(--player-accent); color: #1
 .player-theme .dashboard-welcome h2 { font-size: clamp(30px, 3.3vw, 42px); line-height: 1.15; }
 .player-theme .dashboard-welcome h2 em { color: var(--player-accent); }
 .player-theme .dashboard-welcome p:not(.eyebrow) { color: var(--muted); }
-.player-theme .dashboard-id-card { background: #22211f; border-color: #5d5140; color: var(--ink); box-shadow: none; border-radius: 10px; }
-.player-theme .dashboard-id-card:hover { border-color: var(--player-accent); }
-.player-theme .dashboard-id-card b { color: var(--player-accent); }
-.player-theme .dashboard-id-card > span, .player-theme .dashboard-id-card small { color: #c6bfb5; }
-.player-theme .dashboard-id-card > span:first-child { color: var(--player-accent); }
-.player-theme .dashboard-id-card small { border-color: #4a4339; }
 
 .player-theme :is(.account-stat, .account-panel, .account-game-card, .friend-row, .onboarding-card, .public-profile-card) { background: var(--player-surface); border-color: var(--line); }
 .player-theme .account-stat { border-radius: 11px; }
@@ -159,7 +153,6 @@ body:has(.player-theme) .skip-link { background: var(--player-accent); color: #1
 .player-theme .public-profile-cover > span { position: relative; z-index: 1; }
 .player-theme .public-profile-cover > span:first-child { color: #f1c58e; font-weight: 600; }
 .player-theme .public-profile-cover > span:last-child { color: #c8c0b4; }
-.player-theme .public-profile-identity > .player-avatar { border-color: var(--player-surface); box-shadow: 0 0 0 1px #655744; }
 .player-theme .public-profile-stats .account-stat { background: var(--player-inset); }
 .player-theme .public-profile-bottom { background: var(--player-inset); border-color: var(--line); }
 

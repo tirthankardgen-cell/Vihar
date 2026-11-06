@@ -8,11 +8,11 @@ import { useState } from "react";
 import { ArrowRight, ArrowUpRight, Check, Clock3, Gamepad2, Heart, LockKeyhole, Play, Sparkles, Trophy, Users } from "lucide-react";
 import Link from "@/components/site-link";
 import { games } from "@/lib/games";
-import { accountError, memberSince, playTime, type GameStats } from "@/lib/account/model";
+import { accountError, playTime, type GameStats } from "@/lib/account/model";
 import { setFavorite } from "@/lib/account/data";
 import { useAuth } from "./auth-provider";
 import { useAccountData } from "./account-shell";
-import { Avatar } from "./avatar";
+import { ViharIdCard } from "./vihar-id-card";
 import { ShareProfile } from "./share-profile";
 import { PlayActivity } from "./play-activity";
 
@@ -45,7 +45,7 @@ export function Dashboard() {
   const sessions = stats.reduce((sum, game) => sum + (game.sessions || 0), 0);
   const recent = [...stats].filter((game) => game.sessions > 0).sort((a, b) => (b.lastPlayedAt?.toMillis() || 0) - (a.lastPlayedAt?.toMillis() || 0));
   return <><div className="dashboard-heading"><div><p className="eyebrow">Your space to play</p><h1>Hello, <em>{profile.displayName}.</em></h1><p className="account-muted">Your profile, games and connections. All together.</p></div><ShareProfile username={profile.username} version={profile.updatedAt?.toMillis() || 0} /></div>
-    <section className="dashboard-welcome"><div><p className="eyebrow"><span aria-hidden="true">✳</span> Your player hub</p><h2>Your games.<br /><em>Your identity.</em></h2><p>Your games, your people, your next adventure.</p><Link href="/dashboard/games" className="text-link">Find your next game <ArrowUpRight size={17} aria-hidden="true" /></Link></div><Link href={`/u/${profile.username}`} className="dashboard-id-card" aria-label="View your public Vihar ID"><span>VIHAR <b>ID</b><ArrowUpRight size={16} aria-hidden="true" /></span><Avatar id={profile.avatarId} size={92} /><strong>{profile.displayName}</strong><span>@{profile.username}</span><small>Member since {memberSince(profile.createdAt)}</small></Link></section>
+    <section className="dashboard-welcome"><div className="dashboard-welcome-copy"><p className="eyebrow"><span aria-hidden="true">✳</span> Your player hub</p><h2>Your games.<br /><em>Your identity.</em></h2><p>Your games, your people, your next adventure.</p><Link href="/dashboard/games" className="text-link">Find your next game <ArrowUpRight size={17} aria-hidden="true" /></Link><Link href={`/u/${profile.username}`} className="text-link">View your public profile <ArrowUpRight size={17} aria-hidden="true" /></Link></div><ViharIdCard profile={profile} /></section>
     <section aria-label="Your game statistics"><StatTiles stats={stats} loading={loading} /><p className="stats-note">Your stats will appear as games connect to Vihar ID. Current games can still be played as a guest.</p></section>
     <PlayActivity />
     <section className="dashboard-section" aria-labelledby="next-adventure"><div className="account-section-heading"><h2 id="next-adventure">Ready to play?</h2><Link href="/dashboard/games" className="text-link">All games <ArrowRight size={15} aria-hidden="true" /></Link></div><AccountGames compact /></section>
