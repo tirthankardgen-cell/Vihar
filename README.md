@@ -60,6 +60,8 @@ npm run dev
 
 Open `http://localhost:3000`. Configure the Firebase web values in `.env.local` for account features, or use the local emulators described in [Getting started](docs/GETTING_STARTED.md). Never commit credentials or enable emulators in production.
 
+On Windows, the project folder can show the website's icon using the included `desktop.ini`. After cloning, run `attrib +r .` and `attrib +h +s desktop.ini` from the project directory, then refresh File Explorer. The folder references `public/favicon.ico`, so it stays aligned with the website's favicon.
+
 ### Quality checks
 
 ```sh
