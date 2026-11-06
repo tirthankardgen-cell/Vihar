@@ -11,6 +11,7 @@ import styles from "./perspective-tunnel-hero.module.css";
 
 interface WorldCard {
   src: string;
+  alt: string;
   title: string;
   caption: string;
   href: string;
@@ -19,38 +20,47 @@ interface WorldCard {
 const WORLD_CARDS: WorldCard[] = [
   {
     src: "/images/bap-ka-rasta-cover.webp", title: "Bap Ka Rasta", caption: "Concept artwork",
+    alt: "Promotional concept art of SUVs, a scooter, motorcycle and rickshaws on an Indian city avenue",
     href: "/games/bap-ka-rasta",
   },
   {
     src: "/images/courtyard.webp", title: "A little wonder", caption: "Original illustration",
+    alt: "Illustrated courtyard with an archway, potted palms, steps and a flying kite",
     href: "/about",
   },
   {
     src: "/images/bap-ka-rasta-gameplay.webp", title: "Take the long way", caption: "Updated browser gameplay",
+    alt: "A black-and-yellow auto rickshaw beside the sea, with pedestrians and driving controls visible",
     href: "/games/bap-ka-rasta/screenshots",
   },
   {
     src: "/images/bap-ka-rasta-mumbai-chowk.webp", title: "Streets worth wandering", caption: "Updated game world render",
+    alt: "Game world render of the central Mumbai Chowk roundabout and its connected roads",
     href: "/games/bap-ka-rasta/screenshots",
   },
   {
     src: "/images/gulam-chor/landing.webp", title: "Gulam Chor", caption: "Playable now · Family card game",
+    alt: "Gulam Chor illustrated courtyard with its Hindi title and an invitation to play",
     href: "/games/gulam-chor",
   },
   {
     src: "/images/bap-ka-rasta/thar-model.webp", title: "Your city. Your ride.", caption: "Actual vehicle model",
+    alt: "Orange three-door Thar model with a black hardtop and round headlights",
     href: "/games/bap-ka-rasta",
   },
   {
     src: "/images/bap-ka-rasta-seafront.webp", title: "Meet me by the sea", caption: "Earlier-build gameplay",
+    alt: "Bap Ka Rasta gameplay along a Mumbai-inspired seafront",
     href: "/games/bap-ka-rasta/screenshots",
   },
   {
     src: "/images/playground.webp", title: "Made for a little escape", caption: "Original illustration",
+    alt: "Illustrated courtyard play board with a kite and colourful game pieces",
     href: "/about",
   },
   {
     src: "/images/bap-ka-rasta-mumbai-map.webp", title: "Find your own way", caption: "The playable game map",
+    alt: "Bap Ka Rasta road map with numbered destinations, connected avenues, neighbourhood lanes and roundabouts",
     href: "/games/bap-ka-rasta/screenshots",
   },
 ];
@@ -141,7 +151,7 @@ function TunnelCard({ card, progress, pointer }: {
   return (
     <motion.div className={styles.card} style={{ ...positioning, transform, opacity, visibility }} data-world-card={card.index}>
       <Link href={card.href} className={styles.cardLink}>
-        <Image src={card.src} alt="" fill sizes="(max-width: 767px) 180px, (max-width: 1100px) 240px, 320px" loading={card.index < 2 ? "eager" : "lazy"} draggable={false} className={styles.cardImage} />
+        <Image src={card.src} alt={card.alt} fill sizes="(max-width: 767px) 180px, (max-width: 1100px) 240px, 320px" loading={card.index < 2 ? "eager" : "lazy"} draggable={false} className={styles.cardImage} />
         <span className={styles.cardNumber} aria-hidden="true">0{card.index + 1}</span>
         <span className={styles.cardArrow} aria-hidden="true"><ArrowUpRight size={16} /></span>
         <span className={styles.cardCaption}><span>{card.caption}</span><strong>{card.title}</strong></span>

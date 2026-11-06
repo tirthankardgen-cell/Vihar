@@ -150,6 +150,8 @@ try {
   assert(hero.includes('href="' + gameUrl + '"'), "The hero must use the configured play URL");
   const formatBudgets = new Map([["image/avif", 0], ["image/webp", 0]]);
   for (const image of heroImages) {
+    const alt = image.match(/\balt="([^"]*)"/i)?.[1];
+    assert(alt?.trim(), "Every homepage tunnel image needs descriptive alt text");
     const srcset = image.match(/\bsrcSet="([^"]+)"/i)?.[1];
     assert(srcset && image.includes('sizes="'), "Every hero image needs responsive sizing");
     const candidates = decode(srcset).split(",").map((candidate) => candidate.trim().split(/\s+/));
