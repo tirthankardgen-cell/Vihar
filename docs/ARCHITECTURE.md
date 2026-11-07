@@ -26,6 +26,7 @@ The editor collects details, images and play instructions, previews the page, th
 | --- | --- |
 | `profiles/{uid}` and `usernames/{username}` | Public identity and unique username allocation |
 | `players/{uid}/favorites/{gameId}` | Private favourites |
+| `players/{uid}/activity/{eventId}` | Private immutable website opens with server timestamps |
 | `friendships/{id}` | Participant-scoped requests and connections |
 | `communityGames/{id}` | Owner-managed draft or published listing |
 | `communityGames/{id}/players/{uid}` | Immutable signed-in launch receipt |
@@ -35,7 +36,7 @@ The editor collects details, images and play instructions, previews the page, th
 
 Firestore rules enforce schema, ownership, publication visibility, and review eligibility. Clients cannot rewrite receipt counters or award themselves trusted game statistics. Official game IDs must also be allowed in the rules; adding a catalogue entry alone does not enable reviews.
 
-“Unique game opens” means distinct signed-in accounts that opened a game or download page from Vihar, excluding the creator. These are browser-originated signals, not proof of gameplay. Rating badges use aggregate reads; review panels subscribe to feedback updates. Creators cannot edit other players’ reviews.
+“Unique game opens” means distinct signed-in accounts that opened a game or download page from Vihar, excluding the creator. These are browser-originated signals, not proof of gameplay. Rating badges use aggregate reads; review panels subscribe to feedback updates. Creators cannot edit other players’ reviews. Each signed-in launch atomically creates a private activity event and, when absent, the first-launch receipt. The dashboard subscribes to the last 365 UTC days of events; repeat launches count as separate opens. Opens are never added to trusted sessions or play time. Guest sign-in continuity restores only review eligibility, not dated activity. Account exports include the full private activity history.
 
 ## Public data and search
 

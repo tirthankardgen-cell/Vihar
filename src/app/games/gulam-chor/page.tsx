@@ -33,6 +33,7 @@ export default function GulamChorPage() {
             <ArrowUpRight size={22} aria-hidden="true" /><span className="sr-only"> — play Gulam Chor in a new tab</span>
           </OfficialPlayLink>
           <p className="gc-preview">A playable preview · You &amp; the virtual family</p>
+          <a className="gc-review-link" href="#reviews-gulam-chor">★ Played already? Rate & review ↓</a>
         </div>
         <div className="gc-hero-footer"><span><Coffee size={16} aria-hidden="true" />Best served with chai.</span><p>2–6 seats <i>✦</i> 51 cards <i>✦</i> One unlucky Jack</p><span lang="hi">बस, गुलाम तुम्हारे पास न रह जाए।</span></div>
       </section>
@@ -59,7 +60,7 @@ export default function GulamChorPage() {
       </section>
       <section className="gc-section gc-play-notes" aria-labelledby="gc-before-play">
         <div><p className="gc-eyebrow">Make yourself at home</p><h2 id="gc-before-play">A browser.<br /><em>A little free time.</em></h2></div>
-        <div><h3>Click, or tap.</h3><p>Pick a face-down card when it’s your turn. On a phone, tap to draw. Use Table settings to choose 2–6 seats and a leisurely or quicker round.</p><h3>No download. No account needed.</h3><p>Play opens on <a href={site.gulamChorUrl}>gulamchor.vihar.online ↗</a>. This preview is you against virtual players. Choose your gathering, toggle sounds, and deal another round whenever you like.</p></div>
+        <div><h3>Click, or tap.</h3><p>Pick a face-down card when it’s your turn. On a phone, tap to draw. Use Table settings to choose 2–6 seats and a leisurely or quicker round.</p><h3>No download. No account needed.</h3><p>Play opens on <OfficialPlayLink id="gulam-chor">gulamchor.vihar.online ↗</OfficialPlayLink>. This preview is you against virtual players. Choose your gathering, toggle sounds, and deal another round whenever you like.</p></div>
       </section>
       <div className="gc-section gc-reviews"><OfficialGameReviews id="gulam-chor" /></div>
       <BreadcrumbData items={[{ name: "Games", path: "/games" }, { name: "Gulam Chor", path: "/games/gulam-chor" }]} />

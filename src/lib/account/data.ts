@@ -1,10 +1,10 @@
 import {
   collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, query,
-  runTransaction, serverTimestamp, updateDoc, where,
+  runTransaction, serverTimestamp, updateDoc, where, orderBy, Timestamp,
 } from "firebase/firestore";
 import type { User } from "firebase/auth";
 import { getFirebase } from "../firebase/client";
-import { normalizeUsername, usernameError, type AvatarId, type Friendship, type GameStats, type PlayerProfile } from "./model";
+import { normalizeUsername, usernameError, type AvatarId, type Friendship, type GameLaunch, type GameStats, type PlayerProfile } from "./model";
 
 export function watchProfile(uid: string, receive: (profile: PlayerProfile | null) => void, fail: (error: unknown) => void) {
   return onSnapshot(doc(getFirebase().db, "profiles", uid), (snapshot) => receive(snapshot.exists() ? snapshot.data() as PlayerProfile : null), fail);
@@ -46,6 +46,14 @@ export async function editProfile(uid: string, values: Pick<PlayerProfile, "disp
 export function watchStats(uid: string, receive: (stats: GameStats[]) => void, fail: (error: unknown) => void) {
   return onSnapshot(collection(getFirebase().db, "profiles", uid, "stats"), (snapshot) => receive(snapshot.docs.map((entry) => ({ ...entry.data(), gameId: entry.id }) as GameStats)), fail);
 }
+export function watchActivity(uid: string, receive: (activity: GameLaunch[]) => void, fail: (error: unknown) => void) {
+  const start = new Date();
+  start.setUTCHours(0, 0, 0, 0);
+  start.setUTCDate(start.getUTCDate() - 364);
+  return onSnapshot(query(collection(getFirebase().db, "players", uid, "activity"), where("startedAt", ">=", Timestamp.fromDate(start)), orderBy("startedAt", "desc")), (snapshot) => {
+    receive(snapshot.docs.map((entry) => ({ ...entry.data(), id: entry.id }) as GameLaunch).filter((entry) => entry.startedAt));
+  }, fail);
+}
 export function watchFavorites(uid: string, receive: (ids: string[]) => void, fail: (error: unknown) => void) {
   return onSnapshot(collection(getFirebase().db, "players", uid, "favorites"), (snapshot) => receive(snapshot.docs.map((entry) => entry.id)), fail);
 }
@@ -82,11 +90,12 @@ export async function acceptFriendRequest(id: string) {
 export async function removeFriendship(id: string) { await deleteDoc(doc(getFirebase().db, "friendships", id)); }
 export async function exportAccount(user: User, profile: PlayerProfile) {
   const { db } = getFirebase();
-  const [stats, favorites, friends] = await Promise.all([
+  const [stats, favorites, friends, activity] = await Promise.all([
     getDocs(collection(db, "profiles", user.uid, "stats")),
     getDocs(collection(db, "players", user.uid, "favorites")),
     getDocs(query(collection(db, "friendships"), where("members", "array-contains", user.uid))),
+    getDocs(collection(db, "players", user.uid, "activity")),
   ]);
   const rows = (snapshot: typeof stats) => snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
-  return { exportedAt: new Date().toISOString(), account: { uid: user.uid, email: user.email, emailVerified: user.emailVerified }, profile, stats: rows(stats), favorites: rows(favorites), friendships: rows(friends) };
+  return { exportedAt: new Date().toISOString(), account: { uid: user.uid, email: user.email, emailVerified: user.emailVerified }, profile, stats: rows(stats), favorites: rows(favorites), friendships: rows(friends), activity: rows(activity) };
 }

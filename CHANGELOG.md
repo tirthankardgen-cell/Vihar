@@ -2,6 +2,13 @@
 
 Notable repository changes are recorded here. Entries describe source changes; they do not independently confirm production deployment. See [GitHub history](https://github.com/tirthankardgen-cell/Vihar/commits/main/) and [development.md](development.md) for detailed implementation evidence.
 
+## 2026-11-08 — Reviews and recorded play activity
+
+- Fixed official-game sign-in return paths and retained review eligibility after guest play in the same tab.
+- Made reviews more visible, added a dismissible post-play invitation, and closed the editor after successful saves.
+- Recorded private, server-timestamped game opens from play links and displayed live dashboard totals, calendar days and recent activity.
+- Kept game opens separate from trusted in-game sessions and time; added authorization and date-boundary coverage.
+
 ## 2026-11-06 — Interactive Vihar ID
 
 - Replaced the dashboard ID with a two-sided player card using the supplied Kokonut UI Flick Card interaction.

@@ -6,14 +6,14 @@ import { reload, sendEmailVerification, signOut } from "firebase/auth";
 import { ArrowUpRight, Gamepad2, LayoutGrid, LogOut, Mail, Settings, Users } from "lucide-react";
 import Link from "@/components/site-link";
 import { getFirebase } from "@/lib/firebase/client";
-import { watchFavorites, watchFriends, watchStats } from "@/lib/account/data";
-import { accountError, type Friendship, type GameStats } from "@/lib/account/model";
+import { watchActivity, watchFavorites, watchFriends, watchStats } from "@/lib/account/data";
+import { accountError, type Friendship, type GameLaunch, type GameStats } from "@/lib/account/model";
 import { useAuth } from "./auth-provider";
 import { Avatar } from "./avatar";
 import { Onboarding } from "./onboarding";
 
-type AccountData = { stats: GameStats[]; favorites: string[]; friendships: Friendship[]; loading: boolean; error: string };
-const DataContext = createContext<AccountData>({ stats: [], favorites: [], friendships: [], loading: true, error: "" });
+type AccountData = { stats: GameStats[]; activity: GameLaunch[]; favorites: string[]; friendships: Friendship[]; loading: boolean; error: string };
+const DataContext = createContext<AccountData>({ stats: [], activity: [], favorites: [], friendships: [], loading: true, error: "" });
 export function useAccountData() { return useContext(DataContext); }
 export function AccountLoading({ title = "Loading your Vihar ID…" }: { title?: string }) { return <div className="account-loading container" role="status"><span className="account-loading-spark" aria-hidden="true">✳</span><h1>{title}</h1><p className="account-muted">Getting your account ready.</p></div>; }
 export function VerificationBanner() {
@@ -37,19 +37,19 @@ function AccountBody({ children }: { children: React.ReactNode }) {
   const uid = user!.uid;
   const pathname = usePathname();
   const router = useRouter();
-  const [data, setData] = useState<AccountData & { uid: string }>({ uid, stats: [], favorites: [], friendships: [], loading: true, error: "" });
+  const [data, setData] = useState<AccountData & { uid: string }>({ uid, stats: [], activity: [], favorites: [], friendships: [], loading: true, error: "" });
   const [signingOut, setSigningOut] = useState(false);
   const [logoutError, setLogoutError] = useState("");
   useEffect(() => {
     let active = true;
     const loaded = new Set<string>();
-    const publish = (key: "stats" | "favorites" | "friendships", value: GameStats[] | string[] | Friendship[]) => {
+    const publish = (key: "stats" | "activity" | "favorites" | "friendships", value: GameStats[] | GameLaunch[] | string[] | Friendship[]) => {
       if (!active) return;
       loaded.add(key);
-      setData((previous) => ({ ...previous, uid, [key]: value, loading: loaded.size < 3 }));
+      setData((previous) => ({ ...previous, uid, [key]: value, loading: loaded.size < 4 }));
     };
     const fail = (failure: unknown) => { if (active) setData((previous) => ({ ...previous, uid, loading: false, error: accountError(failure) })); };
-    const stop = [watchStats(uid, (value) => publish("stats", value), fail), watchFavorites(uid, (value) => publish("favorites", value), fail), watchFriends(uid, (value) => publish("friendships", value), fail)];
+    const stop = [watchStats(uid, (value) => publish("stats", value), fail), watchActivity(uid, (value) => publish("activity", value), fail), watchFavorites(uid, (value) => publish("favorites", value), fail), watchFriends(uid, (value) => publish("friendships", value), fail)];
     return () => { active = false; stop.forEach((unsubscribe) => unsubscribe()); };
   }, [uid]);
   const incoming = data.friendships.filter((friend) => friend.status === "pending" && friend.to === uid).length;

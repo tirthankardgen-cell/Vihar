@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { accountError, avatars, normalizeUsername, playTime, safeReturnPath, usernameError } from "../src/lib/account/model.ts";
-import { buildPlayActivity } from "../src/lib/account/activity.ts";
+import { buildLaunchActivity, buildPlayActivity } from "../src/lib/account/activity.ts";
 
 test("usernames have one canonical, reserved-aware identity", () => {
   assert.equal(normalizeUsername(" @Sunny_Road "), "sunny_road");
@@ -9,8 +9,22 @@ test("usernames have one canonical, reserved-aware identity", () => {
   for (const name of ["", "aa", "UPPER", "1player", "hello.world", "hello/world", "éclair", "a".repeat(21), "admin", "vihar", "support", "system"]) assert.equal(typeof usernameError(name), "string", name);
 });
 test("login return paths cannot navigate to external or arbitrary pages", () => {
-  for (const path of ["/dashboard", "/dashboard/friends", "/dashboard/settings", "/dashboard/games", "/dashboard/publish", "/community/AbC123_game", "/u/sunny_road"]) assert.equal(safeReturnPath(path), path);
+  for (const path of ["/dashboard", "/dashboard/friends", "/dashboard/settings", "/dashboard/games", "/dashboard/publish", "/community/AbC123_game", "/u/sunny_road", "/games/gulam-chor", "/games/bap-ka-rasta"]) assert.equal(safeReturnPath(path), path);
   for (const path of [null, "https://evil.example", "//evil.example", "/\\evil.example", "javascript:alert(1)", "/%2f%2fevil.example", "/auth/action?oobCode=stolen", "/dashboard?redirect=https://evil.example", "/u/admin", "/u/x", " /dashboard", "/community/../dashboard", "/community/id?redirect=https://evil.example"]) assert.equal(safeReturnPath(path), "/dashboard");
+});
+
+test("activity counts persisted game opens on their UTC date, excluding pending and out-of-range events", () => {
+  const launch = (date) => ({ startedAt: date ? { toMillis: () => Date.parse(date) } : null });
+  const result = buildLaunchActivity([
+    launch("2026-11-07T23:59:59Z"), launch("2026-11-08T00:00:00Z"),
+    launch("2026-11-08T12:00:00Z"), launch(null), launch("invalid"),
+    launch("2026-11-09T00:00:00Z"), launch("2025-01-01T00:00:00Z"),
+  ], "2026-11-08", 90);
+  assert.deepEqual(result.days.slice(-2), [{ date: "2026-11-07", count: 1 }, { date: "2026-11-08", count: 2 }]);
+  assert.equal(result.days.reduce((sum, day) => sum + day.count, 0), 3);
+  assert.equal(buildLaunchActivity([], "2026-11-08", 365).hasDailyData, false);
+  assert.equal(safeReturnPath("/games/fake-game"), "/dashboard");
+  assert.equal(safeReturnPath("/games/gulam-chor?redirect=//evil.example"), "/dashboard");
 });
 test("auth errors do not reveal whether a sign-in email exists", () => {
   assert.equal(accountError({ code: "auth/user-not-found" }), accountError({ code: "auth/wrong-password" }));

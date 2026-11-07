@@ -48,7 +48,7 @@ export default function BapKaRastaPage() {
 
     <section className="container bkr-panel viewport-section" id="rides" aria-labelledby="rides-title">
       <div className="bkr-section-heading"><div><p className="eyebrow">01 / The garage</p><h2 id="rides-title">Pick your kind of <span>swag.</span></h2></div><p>13 original vehicle models. Find your kind of ride.</p></div>
-      <VehicleShowcase playUrl={featuredGame.playUrl} />
+      <VehicleShowcase />
       <p className="bkr-section-note">Scroll the garage to explore all 13 models from the game’s vehicle library. Each card shows player availability; the full line-up appears in city traffic.</p>
     </section>
 

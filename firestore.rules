@@ -54,6 +54,27 @@ service cloud.firestore {
       allow delete: if owner(uid);
       allow update: if false;
     }
+    // Private, immutable website opens. These are not scores or in-game sessions.
+    match /players/{uid}/activity/{eventId} {
+      function validGame(data) {
+        return (data.source == 'officialGames'
+          && ((data.gameId == 'bap-ka-rasta' && data.title == 'Bap Ka Rasta')
+            || (data.gameId == 'gulam-chor' && data.title == 'Gulam Chor')))
+          || (data.source == 'communityGames'
+            && get(/databases/$(database)/documents/communityGames/$(data.gameId)).data.published == true
+            && get(/databases/$(database)/documents/communityGames/$(data.gameId)).data.ownerId != uid
+            && data.title == get(/databases/$(database)/documents/communityGames/$(data.gameId)).data.title);
+      }
+      allow read: if owner(uid);
+      allow create: if owner(uid)
+        && request.resource.data.keys().hasAll(['gameId', 'source', 'title', 'startedAt'])
+        && request.resource.data.keys().hasOnly(['gameId', 'source', 'title', 'startedAt'])
+        && request.resource.data.gameId is string && request.resource.data.gameId.matches('^[A-Za-z0-9_-]{1,128}$')
+        && request.resource.data.startedAt == request.time
+        && validGame(request.resource.data)
+        && existsAfter(/databases/$(database)/documents/$(request.resource.data.source)/$(request.resource.data.gameId)/players/$(uid));
+      allow update, delete: if false;
+    }
     match /friendships/{id} {
       function participant() { return signedIn() && request.auth.uid in resource.data.members; }
       // Missing documents must be readable for atomic reciprocal-request checks.

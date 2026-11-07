@@ -14,6 +14,44 @@ beforeEach(async () => environment.clearFirestore());
 after(async () => environment?.cleanup());
 const db = (uid, verified = true) => environment.authenticatedContext(uid, { email: `${uid}@example.test`, email_verified: verified }).firestore();
 const anonymous = () => environment.unauthenticatedContext().firestore();
+const activityRef = (database, uid = "bobby", id = "open-one") => doc(database, "players", uid, "activity", id);
+const activityData = (extra = {}) => ({ source: "officialGames", gameId: "gulam-chor", title: "Gulam Chor", startedAt: serverTimestamp(), ...extra });
+
+test("game opens and review eligibility save atomically, with private immutable server timestamps", async () => {
+  const database = db("bobby", false);
+  await assertFails(setDoc(activityRef(database), activityData()));
+  const batch = writeBatch(database);
+  batch.set(doc(database, "officialGames", "gulam-chor", "players", "bobby"), { startedAt: serverTimestamp() });
+  batch.set(activityRef(database), activityData());
+  await assertSucceeds(batch.commit());
+  await assertSucceeds(setDoc(doc(database, "officialGames", "gulam-chor", "reviews", "bobby"), { rating: 4, text: "A lovely round", updatedAt: serverTimestamp() }));
+  await assertSucceeds(getDocs(collection(database, "players", "bobby", "activity")));
+  await assertFails(getDoc(activityRef(anonymous())));
+  await assertFails(getDoc(activityRef(db("alice"))));
+  await assertFails(getDocs(collection(db("alice"), "players", "bobby", "activity")));
+  await assertFails(setDoc(activityRef(db("alice")), activityData()));
+  await assertFails(updateDoc(activityRef(database), { startedAt: serverTimestamp() }));
+  await assertFails(deleteDoc(activityRef(database)));
+  await assertSucceeds(setDoc(activityRef(database, "bobby", "open-two"), activityData()));
+  for (const extra of [{ startedAt: new Date(0) }, { gameId: "fake-game" }, { title: "Fake title" }, { source: "profiles" }, { playSeconds: 999 }, { gameId: "../gulam-chor" }]) {
+    await assertFails(setDoc(activityRef(database, "bobby", "invalid"), activityData(extra)));
+  }
+  await assertFails(setDoc(doc(database, "profiles", "bobby", "stats", "gulam-chor"), { sessions: 99 }));
+});
+
+test("community activity requires a published game, its real title and a non-creator launch", async () => {
+  await publishGame();
+  const database = db("bobby");
+  const data = activityData({ source: "communityGames", gameId: "orbit", title: "Orbit" });
+  const batch = writeBatch(database);
+  batch.set(doc(database, "communityGames", "orbit", "players", "bobby"), { startedAt: serverTimestamp() });
+  batch.set(activityRef(database), data);
+  await assertSucceeds(batch.commit());
+  await assertFails(setDoc(activityRef(db("alice"), "alice"), data));
+  await updateDoc(doc(db("alice"), "communityGames", "orbit"), { published: false, updatedAt: serverTimestamp() });
+  await assertFails(setDoc(activityRef(database, "bobby", "hidden"), data));
+  await assertSucceeds(getDoc(activityRef(database)));
+});
 const profile = (uid, username = uid, extra = {}) => ({ uid, username, displayName: "A player", bio: "Here to wander.", avatarId: "sun", createdAt: serverTimestamp(), updatedAt: serverTimestamp(), ...extra });
 async function claim(uid, username = uid, extra = {}, database = db(uid)) {
   const batch = writeBatch(database);

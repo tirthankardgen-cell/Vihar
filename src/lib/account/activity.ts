@@ -1,8 +1,20 @@
-import type { GameStats } from "./model";
+import type { GameLaunch, GameStats } from "./model";
 
 const DAY = 86_400_000;
 export type ActivityRange = 90 | 365;
 export type PlayActivityDay = { date: string; count: number };
+
+/** Count only persisted server timestamps; pending writes never become activity. */
+export function buildLaunchActivity(launches: GameLaunch[], endDate: string, range: ActivityRange) {
+  const dailySessions: Record<string, number> = {};
+  for (const launch of launches) {
+    const time = launch.startedAt?.toMillis();
+    if (time === undefined || !Number.isFinite(time)) continue;
+    const date = new Date(time).toISOString().slice(0, 10);
+    dailySessions[date] = (dailySessions[date] || 0) + 1;
+  }
+  return buildPlayActivity([{ gameId: "opens", sessions: 0, playSeconds: 0, lastPlayedAt: null, dailySessions }], endDate, range);
+}
 
 /** Read only daily totals. Aggregate sessions/lastPlayedAt cannot reconstruct a calendar. */
 export function buildPlayActivity(stats: GameStats[], endDate: string, range: ActivityRange) {

@@ -28,6 +28,14 @@ export type GameStats = {
   /** Trusted game backends may publish session totals keyed by UTC YYYY-MM-DD. */
   dailySessions?: Record<string, number>;
 };
+/** Private website activity, distinct from trusted in-game statistics. */
+export type GameLaunch = {
+  id: string;
+  gameId: string;
+  source: "officialGames" | "communityGames";
+  title: string;
+  startedAt: StoredTime;
+};
 export type Friendship = {
   id: string;
   from: string;
@@ -46,7 +54,7 @@ export function usernameError(value: string): string | null {
   return null;
 }
 export function safeReturnPath(value: string | null | undefined) {
-  if (!value || !/^(\/dashboard(?:\/(?:friends|settings|games|publish))?|\/community\/[A-Za-z0-9_-]{1,128}|\/u\/[a-z][a-z0-9_]{2,19})$/.test(value)) return "/dashboard";
+  if (!value || !/^(\/dashboard(?:\/(?:friends|settings|games|publish))?|\/games\/(?:bap-ka-rasta|gulam-chor)|\/community\/[A-Za-z0-9_-]{1,128}|\/u\/[a-z][a-z0-9_]{2,19})$/.test(value)) return "/dashboard";
   return value.startsWith("/u/") && usernameError(value.slice(3)) ? "/dashboard" : value;
 }
 export function playTime(seconds: number) {

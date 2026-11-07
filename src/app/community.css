@@ -135,3 +135,46 @@
 .player-theme .community-reviews blockquote { background: #27221b; border-color: #ad8559; }
 .player-theme .community-reviews blockquote strong { color: var(--player-accent); }
 .player-theme .rating-picker input:checked + span { background: var(--player-accent); color: #201910; border-color: var(--player-accent); }
+
+/* Player feedback has its own readable surface on every game theme. */
+.community-reviews { --review-bg: #fffaf1; --review-card: #fff; --review-ink: #302b24; --review-muted: #655c4e; --review-line: #ded3be; --review-accent: #8c611f; background: var(--review-bg); color: var(--review-ink); border: 1px solid var(--review-line); border-radius: 24px; padding: clamp(20px, 4vw, 40px); scroll-margin-top: calc(var(--header-height, 80px) + 20px); }
+.review-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+.review-heading .eyebrow { display: flex; align-items: center; gap: 8px; color: var(--review-accent); margin-bottom: 10px; }
+.review-heading h2 { font-size: clamp(28px, 4vw, 42px); color: var(--review-ink); }
+.review-heading p:last-child { margin-top: 10px; color: var(--review-muted); }
+.review-heading-star { flex-shrink: 0; color: var(--review-accent); fill: #efd4a1; }
+.review-invitation { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px; border-radius: 16px; background: var(--review-card); border: 1px solid var(--review-line); }
+.review-invitation h3 { margin: 0 0 8px; }
+.review-invitation p, .review-empty { color: var(--review-muted); }
+.review-invitation .button { flex-shrink: 0; }
+.review-editor { max-width: none; padding: 24px; border: 1px solid var(--review-accent); border-radius: 16px; background: var(--review-card); }
+.review-editor textarea { background: var(--review-bg); color: var(--review-ink); border-color: var(--review-line); resize: vertical; }
+.review-editor textarea::placeholder { color: var(--review-muted); }
+.review-editor-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.review-delete { padding: 12px; text-decoration: underline; color: var(--review-muted); }
+.review-play-note { border-left: 3px solid var(--review-accent); padding-left: 14px; }
+.community-reviews .rating-picker { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); max-width: 340px; }
+.community-reviews .rating-picker span { text-align: center; padding-inline: 4px; }
+.community-reviews .rating-picker span { color: var(--review-ink); border-color: var(--review-line); }
+.community-reviews .rating-picker input:checked + span { background: var(--review-accent); color: #fff; border-color: var(--review-accent); }
+.rating-distribution > div > span { white-space: nowrap; }
+.community-reviews .review-list blockquote { background: var(--review-card); color: var(--review-ink); border-color: var(--review-line); padding: 20px; }
+.community-reviews .review-list blockquote strong { color: var(--review-accent); }
+.community-reviews .review-list blockquote p { white-space: pre-wrap; margin-top: 10px; }
+.community-reviews .review-list .review-mine { border-color: var(--review-accent); }
+.review-empty { margin-top: 24px; }
+.review-success:not(:empty) { padding: 14px 18px; margin-top: 20px; border-radius: 12px; background: #e3efdb; color: #25451e; }
+.review-return-prompt { position: fixed; z-index: 60; bottom: 24px; right: 24px; width: min(480px, calc(100% - 32px)); display: flex; align-items: center; flex-wrap: wrap; gap: 14px; padding: 22px 42px 22px 22px; border: 1px solid #d6b272; border-radius: 18px; background: #fff4db; color: #302b24; box-shadow: 0 12px 50px #0003; }
+.review-return-prompt p { font-size: 13px; }
+.review-prompt-dismiss { position: absolute; top: 4px; right: 4px; width: 36px; height: 36px; font-size: 24px; }
+.community-reviews button:disabled { opacity: .6; cursor: not-allowed; }
+.player-theme .community-reviews { --review-bg: #25211c; --review-card: #302a22; --review-ink: #f5eadb; --review-muted: #c9bda9; --review-line: #5a4e3c; --review-accent: #e8b97b; }
+.player-theme .community-reviews .rating-picker input:checked + span { color: #201910; }
+@media (max-width: 600px) {
+  .review-invitation { align-items: flex-start; flex-direction: column; padding: 18px; gap: 16px; }
+  .review-editor { padding: 18px; }
+  .review-heading-star { width: 28px; }
+  .community-reviews .rating-picker { gap: 6px; }
+  .community-reviews .rating-picker span { padding: 10px 2px; }
+  .review-return-prompt { bottom: 16px; right: 16px; }
+}

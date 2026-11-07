@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { HomeContent } from "@/components/home-content";
 import PerspectiveTunnelHero from "@/components/ui/perspective-tunnel-hero";
-import { featuredGame } from "@/lib/games";
 import "../../home.css";
 
 export const metadata: Metadata = {
@@ -12,5 +11,5 @@ export const metadata: Metadata = {
 };
 
 export default function ViharWorldPreview() {
-  return <><PerspectiveTunnelHero playUrl={featuredGame.playUrl} /><HomeContent /></>;
+  return <><PerspectiveTunnelHero /><HomeContent /></>;
 }

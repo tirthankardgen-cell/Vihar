@@ -1,5 +1,7 @@
 "use client";
 
+import { OfficialPlayLink } from "@/components/official-play-link";
+
 import Image from "next/image";
 import Link from "@/components/site-link";
 import { ArrowUpRight, CirclePause, Play, Sparkles } from "lucide-react";
@@ -160,7 +162,7 @@ function TunnelCard({ card, progress, pointer }: {
   );
 }
 
-export default function PerspectiveTunnelHero({ playUrl }: { playUrl: string }) {
+export default function PerspectiveTunnelHero() {
   const containerRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const reduce = useSyncExternalStore(subscribeToMotionPreference, readMotionPreference, readServerMotionPreference);
@@ -221,7 +223,7 @@ export default function PerspectiveTunnelHero({ playUrl }: { playUrl: string }) 
           </div>
           <div className={styles.actions}>
             <Link href="/games" className={styles.enterButton}>Enter the world <ArrowUpRight size={18} aria-hidden="true" /></Link>
-            <a href={playUrl} target="_blank" rel="noopener noreferrer" className={styles.playButton}><Play size={12} fill="currentColor" aria-hidden="true" /> Play Bap Ka Rasta<span className="sr-only"> — opens the game in a new tab</span></a>
+            <OfficialPlayLink id="bap-ka-rasta" className={styles.playButton}><Play size={12} fill="currentColor" aria-hidden="true" /> Play Bap Ka Rasta<span className="sr-only"> — opens the game in a new tab</span></OfficialPlayLink>
           </div>
         </div>
 

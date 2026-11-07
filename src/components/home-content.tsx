@@ -1,3 +1,4 @@
+import { OfficialPlayLink } from "@/components/official-play-link";
 import { RatingBadge } from "@/components/rating-badge";
 import Image from "next/image";
 import Link from "@/components/site-link";
@@ -26,7 +27,7 @@ export function HomeContent() {
               <div><p className="eyebrow featured-genre">{featuredGame.categories.slice(0, 2).map(categoryLabel).join(" · ")}</p><h2 id="featured-title">Bap Ka<br /><em>Rasta.</em></h2></div>
               <p>Familiar cities. Different rides. Your own sweet time. Bap Ka Rasta is a free-roaming driving game about exploring Indian streets and seeing where the road takes you.</p>
               <p className="hinglish">Apna sheher. Apni sawaari. Apna rasta.</p>
-              <div className="featured-actions"><a href={featuredGame.playUrl} target="_blank" rel="noopener noreferrer" className="button button-dark"><Play size={14} fill="currentColor" aria-hidden="true" />Play now<span className="sr-only"> — opens Bap Ka Rasta in a new tab</span><ArrowUpRight size={17} aria-hidden="true" /></a><Link href="/games/bap-ka-rasta" className="text-link">Meet the game <ArrowRight size={16} aria-hidden="true" /></Link></div>
+              <div className="featured-actions"><OfficialPlayLink id="bap-ka-rasta" className="button button-dark"><Play size={14} fill="currentColor" aria-hidden="true" />Play now<span className="sr-only"> — opens Bap Ka Rasta in a new tab</span><ArrowUpRight size={17} aria-hidden="true" /></OfficialPlayLink><Link href="/games/bap-ka-rasta" className="text-link">Meet the game <ArrowRight size={16} aria-hidden="true" /></Link></div>
               <div className="featured-details"><span><Monitor size={14} aria-hidden="true" />Browser</span><span>Single player</span><span>Early build</span></div>
             </div>
           </div>

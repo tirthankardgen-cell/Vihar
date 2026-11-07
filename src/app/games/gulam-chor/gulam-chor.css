@@ -70,8 +70,11 @@
 .gc-reviews .button-dark { background: #edcd93; color: #3e3525; border-color: #ffe7b7; }
 .gc-reviews .community-reviews { margin-top: 40px; }
 .gc-reviews :is(input, textarea) { background: #f5e6c5; color: #293d35; }
-.gc-reviews .rating-picker span { color: var(--gc-cream); }
+.gc-reviews .rating-picker span { color: #293d35; }
 .gc-reviews .rating-picker input:checked + span { color: #293d35; background: #edcd93; }
+.gc-review-link { margin-top: 18px; padding: 8px 16px; border: 1px solid #dfb36d80; border-radius: 30px; color: #ffedc7; background: #23382fcc; font-size: 14px; text-underline-offset: 4px; }
+.gc-review-link:hover { text-decoration: underline; }
+.gc-reviews .community-reviews { --review-ink: #293d35; --review-accent: #75531e; box-shadow: 0 20px 60px #0b201d40; }
 
 @media (max-width: 1000px) {
   .gc-family { grid-template-columns: repeat(3, 1fr); row-gap: 35px; }
