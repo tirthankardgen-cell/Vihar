@@ -1,5 +1,6 @@
 @font-face { font-family: "BKR Barlow"; src: url("/brand/bap-ka-rasta/barlow-condensed-latin-800-normal.woff2") format("woff2"); font-weight: 800; font-display: swap; }
 .bkr-page { --bkr-accent: #ac542b; --bkr-yellow: #ffcc37; --bkr-dark: #23281f; }
+.bkr-page .community-reviews { --review-accent: var(--bkr-accent); --review-line: #e4ded3; --review-ink: var(--bkr-dark); }
 .bkr-page h1, .bkr-page h2 { font-family: "BKR Barlow", Arial, sans-serif; font-weight: 800; letter-spacing: -.015em; line-height: 1.08; }
 .bkr-page h2 span, .bkr-media-intro h1 span { color: var(--bkr-accent); }
 .bkr-page :focus-visible { outline-color: #ac542b; }

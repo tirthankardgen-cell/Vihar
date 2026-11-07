@@ -6,6 +6,7 @@ Notable repository changes are recorded here. Entries describe source changes; t
 
 - Fixed official-game sign-in return paths and retained review eligibility after guest play in the same tab.
 - Made reviews more visible, added a dismissible post-play invitation, and closed the editor after successful saves.
+- Matched rating bars to both game themes: gold/cream for Gulam Chor and rust/stone for Bap Ka Rasta, with consistent rounded shapes and accessible values.
 - Recorded private, server-timestamped game opens from play links and displayed live dashboard totals, calendar days and recent activity.
 - Kept game opens separate from trusted in-game sessions and time; added authorization and date-boundary coverage.
 

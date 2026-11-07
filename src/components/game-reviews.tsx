@@ -103,7 +103,20 @@ function ReviewPanel({ id, source = "communityGames", ownerId, published = true,
   return <section ref={section} className="community-reviews" id={`reviews-${id}`} aria-labelledby={`reviews-title-${id}`}>
     <div className="review-heading"><div><p className="eyebrow"><MessageSquare size={15} aria-hidden="true" />The player perspective</p><h2 id={`reviews-title-${id}`}>Ratings & reviews</h2><p>Played a round? Tell us what you loved and what could be better.</p></div><Star className="review-heading-star" size={42} aria-hidden="true" /></div>
     {loadError ? <p role="alert">Reviews are unavailable right now. <button className="text-link" onClick={() => setAttempt((value) => value + 1)}>Try again</button></p> : !loaded ? <p role="status">Loading reviews…</p> : <>
-      <div className="review-overview"><div><strong className="review-score">{reviews.length ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1) : "—"}</strong><p>out of 5 · {reviews.length} {reviews.length === 1 ? "review" : "reviews"}</p></div><div className="rating-distribution">{[5, 4, 3, 2, 1].map((rating) => <div key={rating}><span>{rating} ★</span><meter min={0} max={Math.max(reviews.length, 1)} value={reviews.filter((review) => review.rating === rating).length} aria-label={`${rating} star reviews`} /><span>{reviews.filter((review) => review.rating === rating).length}</span></div>)}</div></div>
+      <div className="review-overview">
+        <div><strong className="review-score">{reviews.length ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1) : "—"}</strong><p>out of 5 · {reviews.length} {reviews.length === 1 ? "review" : "reviews"}</p></div>
+        <div className="rating-distribution">{[5, 4, 3, 2, 1].map((rating) => {
+          const count = reviews.filter((review) => review.rating === rating).length;
+          const total = Math.max(reviews.length, 1);
+          return <div key={rating}>
+            <span>{rating} ★</span>
+            <span className="rating-meter" role="meter" aria-valuemin={0} aria-valuemax={total} aria-valuenow={count} aria-valuetext={`${count} of ${reviews.length} reviews`} aria-label={`${rating} star reviews`}>
+              <span className="rating-meter-fill" aria-hidden="true" style={{ width: `${count / total * 100}%` }} />
+            </span>
+            <span>{count}</span>
+          </div>;
+        })}</div>
+      </div>
       {canWrite && <div className="review-invitation"><div><h3>{mine ? "Thanks for sharing your experience." : prompt ? "How was your game?" : "Your next move? Leave a review."}</h3><p>{mine ? "Your review helps other players choose their next game." : "A quick, honest review helps players and makes the next update better."}</p></div>{authLoading ? <p role="status">Checking sign-in…</p> : !user ? <Link className="button button-dark" href={`/login?next=${encodeURIComponent(path)}`}>Sign in to review</Link> : <button ref={action} type="button" className="button button-dark" disabled={busy || editing} onClick={() => { setError(""); setMessage(""); setEditing(true); }}>{mine ? "Edit your review" : "Write a review"}</button>}</div>}
       {canWrite && user && editing && <form className="community-form review-editor" onSubmit={save} aria-label={mine ? "Edit your review" : "Write a review"}>
         <h3>{mine ? "Edit your review" : "How was your game?"}</h3>
