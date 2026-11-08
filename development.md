@@ -360,6 +360,15 @@ Maintainers may edit or remove harmful content, ask participants to change their
 
 ## Change log
 
+### 2026-11-08 — README appearance across GitHub themes
+
+- **Author:** Codex.
+- **Request:** Finish the professional README presentation with readable branding in both light and dark viewing themes.
+- **Changes:** Added a theme-aware picture element using the existing official inverse wordmark for dark mode and the original wordmark for light mode.
+- **Decisions:** Reuse the official assets rather than recoloring the logo or adding a new generated image. This keeps the README concise and preserves brand proportions.
+- **Validation:** Both referenced SVG assets exist in the tracked production brand directory. Reviewed the picture/source markup and checked the development-log gate and Git whitespace validation. Application code is unchanged from the verified `e6a26aa` release.
+- **Release:** Documentation-only change on `main`; no environment, data or runtime migration.
+
 ### 2026-11-08 — Production verification and cleanup confirmation
 
 - **Author:** Codex.

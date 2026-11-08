@@ -1,6 +1,9 @@
 <div align="center">
 
-<img src="public/brand/vihar-horizontal.svg" alt="Vihar" width="230" />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="public/brand/vihar-horizontal-inverse.svg" />
+  <img src="public/brand/vihar-horizontal.svg" alt="Vihar" width="230" />
+</picture>
 
 # A space to play.
 
