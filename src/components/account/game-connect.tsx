@@ -8,7 +8,7 @@ import { getFirebase } from "@/lib/firebase/client";
 import { accountIdAction } from "@/lib/vihar-id/client";
 import { useAuth } from "./auth-provider";
 import { AuthForm } from "./auth-form";
-import { Avatar } from "./avatar";
+import { CompactViharIdCard } from "./vihar-id-card";
 import { Onboarding } from "./onboarding";
 
 type ConnectRequest = { gameId: string; origin: string; challenge: string; state: string };
@@ -58,6 +58,7 @@ export function GameConnect() {
     finally { setBusy(false); }
   }
 
+  const consentReady = !loading && !authError && !!user && !!profile && game?.uid === user.uid && !error;
   return <div className="id-flow">
     <div className="id-flow-card">
       <div className="id-flow-brand"><span><Emblem /> <strong>Vihar <b>ID</b></strong></span><span className="id-secure"><LockKeyhole size={12} aria-hidden="true" />Secure sign-in</span></div>
@@ -68,7 +69,7 @@ export function GameConnect() {
         </> : !profile ? <Onboarding compact /> : game?.uid === user.uid && !error ? <section className="id-consent" aria-labelledby="connect-title">
           <h1 id="connect-title">Connect to {game.title}</h1>
           <p className="id-description id-game-origin">{game.origin}<ArrowUpRight size={14} aria-hidden="true" /></p>
-          <div className="id-player"><Avatar id={profile.avatarId} size={36} /><div><strong>{profile.displayName}</strong><span>@{profile.username}</span></div><button type="button" className="id-text-button" disabled={busy} onClick={() => void switchAccount()}>Switch</button></div>
+          <div className="id-player"><CompactViharIdCard profile={profile} action={<button type="button" disabled={busy} onClick={() => void switchAccount()}>Switch account</button>} /></div>
           <p className="id-permissions-title">This game will be able to:</p>
           <ul className="id-permissions">
             <li><UserRound size={18} aria-hidden="true" /><span>Read your player ID, name, username and avatar</span></li>
@@ -76,11 +77,11 @@ export function GameConnect() {
             <li><Gamepad2 size={18} aria-hidden="true" /><span>Add its play time to your Vihar dashboard</span></li>
           </ul>
           <p className="id-private-note"><LockKeyhole size={15} aria-hidden="true" /><span>Your email, password, friends and other games’ saves stay private. Disconnect any time in your dashboard.</span></p>
-          <button type="button" className="button button-dark id-allow" disabled={busy} onClick={() => void decide(true)}>{busy ? "Connecting…" : "Allow & return to game"}</button>
+          <div className="id-decision"><button type="button" className="button button-outline" disabled={busy} onClick={() => void decide(false)}>Cancel</button><button type="button" className="button button-dark id-allow" disabled={busy} onClick={() => void decide(true)}>{busy ? "Connecting…" : "Allow & return to game"}</button></div>
         </section> : !error ? <p className="id-wait" role="status">Checking the game connection…</p> : <h1>Unable to connect</h1>}
         {(error || authError) && <p className="account-error" role="alert">{error || authError}</p>}
         {authError && <button type="button" className="id-text-button" onClick={retry}>Retry sign-in</button>}
-        {request && <button type="button" className="id-cancel" disabled={busy} onClick={() => void decide(false)}>Cancel</button>}
+        {request && !consentReady && <button type="button" className="id-cancel" disabled={busy} onClick={() => void decide(false)}>Cancel</button>}
       </>}
       <div className="id-legal"><a href="/help/game-permissions" target="_blank" rel="noopener noreferrer">Permissions</a><span aria-hidden="true">·</span><a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy</a></div>
     </div>

@@ -14,7 +14,7 @@
     "test:account": "node --experimental-strip-types --test scripts/account.test.mjs",
     "test:rules": "firebase emulators:exec --project demo-vihar --only firestore \"node --test scripts/firestore-rules.test.mjs\"",
     "emulators": "firebase emulators:start --project demo-vihar --only auth,firestore",
-    "playground": "node scripts/dev-vihar-playground.mjs",
+    "check:log": "node scripts/verify-development-log.mjs",
     "check": "npm run lint && npm run test:adsense && npm run test:account && npm run test:community && npm run test:vihar-id && npm run typecheck && npm run build",
     "assets:avatars": "node scripts/generate-avatars.mjs",
     "assets": "node scripts/generate-assets.mjs",

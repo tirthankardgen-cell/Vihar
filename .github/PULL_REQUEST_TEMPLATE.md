@@ -10,6 +10,7 @@ List the checks you ran and their outcomes. Explain anything blocked or not appl
 - [ ] Visual changes checked on mobile and desktop, including keyboard use.
 - [ ] Firestore rule changes tested for authorized and unauthorized access, if applicable.
 - [ ] Documentation and third-party notices updated where needed.
+- [ ] `development.md` includes this change's request, changes, decisions, validation and release status; `npm run check:log` passes.
 - [ ] No credentials or private user data included.
 
 ## Release considerations

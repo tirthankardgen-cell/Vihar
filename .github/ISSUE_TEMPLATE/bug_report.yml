@@ -4,12 +4,12 @@ title: "[Bug]: "
 body:
   - type: markdown
     attributes:
-      value: "For vulnerabilities, follow SECURITY.md. Never include credentials or private account data."
+      value: "For vulnerabilities, follow the private reporting guidance in development.md#security-and-support. Never include credentials or private account data."
   - type: input
     id: location
     attributes:
       label: Affected page or component
-      placeholder: https://www.vihar.online/games
+      placeholder: https://vihar.online/games
     validations:
       required: true
   - type: textarea

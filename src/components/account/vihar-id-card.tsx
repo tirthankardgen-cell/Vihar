@@ -13,6 +13,19 @@ type ViharIdCardProps = {
   profile: Pick<PlayerProfile, "displayName" | "username" | "avatarId" | "createdAt">;
 };
 
+export function CompactViharIdCard({ profile, action }: ViharIdCardProps & { action?: React.ReactNode }) {
+  return <div className={styles.compact} role="group" aria-label={`${profile.displayName}’s Vihar ID`}>
+    <div className={styles.top}>
+      <span className={styles.brand}><Image src="/brand/vihar-emblem-inverse.svg" width={16} height={16} alt="" /><span>VIHAR <b>ID</b></span></span>
+      {action || <span className={styles.edition}>PLAYER CARD</span>}
+    </div>
+    <div className={styles.compactIdentity}>
+      <div className={styles.portrait}><Avatar id={profile.avatarId} size={40} /></div>
+      <div className={styles.compactText}><strong className={styles.name}>{profile.displayName}</strong><span className={styles.username}>@{profile.username}</span></div>
+    </div>
+  </div>;
+}
+
 export function ViharIdCard({ profile }: ViharIdCardProps) {
   const [flipped, setFlipped] = useState(false);
   const joined = memberSince(profile.createdAt);

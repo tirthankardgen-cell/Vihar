@@ -37,3 +37,15 @@
   .controls button { border-color: ButtonText; color: ButtonText; }
   .profileLink:focus-visible { outline-color: Highlight; }
 }
+.compact { width: 100%; padding: 12px 14px; border: 1px solid #685239; border-radius: 12px; background: radial-gradient(ellipse at 20% 0%, #45372880, transparent 70%), #211e19; color: #f4efe4; font-family: var(--font-dm-sans), Arial, sans-serif; line-height: 1.4; }
+.compact .top { padding-bottom: 9px; }
+.compact .brand { font-size: 10px; gap: 7px; }
+.compact .brand b { font-size: 9px; }
+.compact .top > button { min-height: 24px; padding: 0 2px; border: 0; background: none; color: #e5b47c; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; }
+.compact .top > button:focus-visible { outline: 2px solid #e5b47c; outline-offset: 3px; border-radius: 2px; }
+.compactIdentity { display: flex; align-items: center; gap: 11px; padding-top: 10px; }
+.compact .portrait { padding: 3px; margin: 0; }
+.compact .portrait img { width: 40px; height: 40px; }
+.compactText { flex: 1; min-width: 0; }
+.compact .name { display: block; font-size: 16px; line-height: 1.25; }
+.compact .username { display: block; font-size: 11px; margin-top: 3px; }

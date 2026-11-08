@@ -6,7 +6,7 @@ import {fileURLToPath} from 'node:url';
 import sharp from 'sharp';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE || '@playwright/test');
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const at=p=>path.join(root,p);const out=at('launch-kit');await mkdir(out,{recursive:true});
+const at=p=>path.join(root,p);const out=at('output/launch-kit');await mkdir(out,{recursive:true});
 const data=async(p,mime)=>`data:${mime};base64,${(await readFile(at(p))).toString('base64')}`;
 const br=await data('public/brand/bap-ka-rasta/br-mark.svg','image/svg+xml');
 const vihar=await data('public/brand/vihar-horizontal.svg','image/svg+xml');
