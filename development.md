@@ -112,7 +112,7 @@ At integration delivery, all twelve host entries report availability planned and
 
 The typed registry in src/lib/quick-play.ts owns each stable ID, verified individual /{id}/play address, exact origin, provenance, genres, artwork, instructions and release state. A playable release must supply verifiedAt, tested modes, tested devices and controls. Run **npm run verify:quick-play-host** before enabling one: the live manifest must report playable, the listed modes and embedVersion 1, and framing headers must allow Vihar. Browser-test the real game and its SDK lifecycle as well; the preflight does not prove gameplay. Update that entry's release field and this record together, then deploy the website. No environment variable, query parameter or browser message bypasses this gate.
 
-The shared detail route uses QuickPlayExperience and a lazily imported EmbeddedPlayer. Pressing Play preserves the Vihar URL, mounts only that game's iframe and gives the existing SiteFrame a route-scoped lease to remove navigation, footer and the skip link. Details/reviews unmount during play. A ready handshake, rather than iframe load, reveals the game. Loading expires after 15 seconds; errors offer Retry and Back to details. Exit requests a game-owned session flush, waits at most 1.5 seconds, unmounts the frame, restores scrolling and focuses Play. Browser history is never trapped. Dynamic viewport height, safe areas, reduced motion and keyboard recovery are supported. Card, catalogue, detail and player styles are separate so the homepage retains its existing CSS budget.
+The shared detail route uses QuickPlayExperience and a lazily imported EmbeddedPlayer. Pressing Play preserves the Vihar URL, mounts only that game's iframe and gives the existing SiteFrame a route-scoped lease to remove navigation, footer and the skip link. Details/reviews unmount during play. A ready handshake, rather than iframe load, reveals the game. Loading expires after 15 seconds; errors offer Retry and Back to details. Exit requests a game-owned session flush, waits at most 1.5 seconds, unmounts the frame, restores scrolling and focuses Play. Browser history is never trapped. Dynamic viewport height, safe areas, reduced motion and keyboard recovery are supported. Card, catalogue, detail and player styles are separate so the homepage retains its existing CSS budget. Quick Play cards use flexible column heights and wrapping footers; status badges stay on one line with enough space below them at every catalogue breakpoint.
 
 ### Game-host integration contract
 
@@ -425,6 +425,15 @@ Maintainers may edit or remove harmful content, ask participants to change their
 
 
 ## Change log
+
+### 2026-11-09 — Fix clipped Quick Play status badges
+
+- **Author:** Codex.
+- **Request:** Fix the clipped Not released tags on the Quick Play cards shown in the owner's screenshot and push the completed fix to GitHub main.
+- **Changes:** Replaced the card link's calculated height with a flexible column layout. The footer now sizes itself from its contents and can wrap its attribution and status into separate rows. Status badges retain their intrinsic width, right alignment and single-line text. The shared CSS fixes the homepage, Games page and Quick Play collection.
+- **Decisions:** Let content determine footer height across responsive breakpoints. Preserve the existing card artwork, labels and release state. Keep the change in the Quick Play CSS module; no account, game engine or database migration is required. Preserve unrelated local development-record edits outside the commit.
+- **Validation:** Read the installed Next.js CSS guide. The live 1280px reproduction showed all three status labels wrapping to two lines and extending 7px below their cards. npm run build and npm run lint passed. npm run verify passed 42 public and 10 account routes with 65,481 bytes of homepage CSS, within the unchanged 65,536-byte budget. An initial fixed-column footer still collided at the 1001px three-column breakpoint; a wrapping footer resolved it. Playwright checked all cards on /, /games and /games/quick-play at widths 320, 390, 640, 768, 1000, 1001, 1280, 1440 and 1920: all 27 layouts passed badge containment, single-line status text, attribution separation and page-overflow checks. Desktop and mobile screenshots were reviewed. Development-log and diff gates run before commit.
+- **Release:** Prepared for the authorized main push and deployment through the existing Vercel project. Confirm the pushed SHA, GitHub checks, canonical production assignment and live badge layout after deployment; record that result in this file.
 
 ### 2026-11-09 — Verify Quick Play production release
 

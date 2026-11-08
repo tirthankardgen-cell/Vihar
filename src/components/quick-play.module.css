@@ -1,6 +1,6 @@
 .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
-.card { min-width: 0; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #fffdf8; }
-.cardLink { display: block; color: inherit; height: calc(100% - 51px); }
+.card { display: flex; flex-direction: column; min-width: 0; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #fffdf8; }
+.cardLink { display: block; flex: 1; color: inherit; }
 .cardLink:hover h3 { color: #99492f; }
 .cardLink:focus-visible { outline-offset: -4px; }
 .cardArt { position: relative; aspect-ratio: 1200 / 630; background: #eee7d9; overflow: hidden; }
@@ -12,8 +12,9 @@
 .cardCopy h3 { display: flex; justify-content: space-between; align-items: start; gap: 12px; margin: 9px 0 10px; font-family: var(--font-newsreader), Georgia, serif; font-size: 28px; font-weight: 400; line-height: 1.1; }
 .cardCopy h3 svg { flex-shrink: 0; margin-top: 4px; }
 .cardCopy > p { font-size: 13px; line-height: 1.7; color: var(--muted); max-width: 34ch; }
-.cardFooter { position: relative; display: flex; align-items: center; justify-content: space-between; min-height: 51px; padding: 0 22px 14px; }
-.cardFooter :global(.game-rating-badge) { position: static; font-size: 10px; background: #f2eee4; color: #6c685e; border-color: #e6dfd1; }
+.cardFooter { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 0 22px 14px; }
+.cardFooter > :first-child { flex: 1; }
+.cardFooter :global(.game-rating-badge) { position: static; flex: none; margin-left: auto; white-space: nowrap; font-size: 10px; background: #f2eee4; color: #6c685e; border-color: #e6dfd1; }
 .modes { display: flex; flex-wrap: wrap; gap: 7px; margin: 18px 0 0; }
 .modes span { border: 1px solid #d8dece; border-radius: 6px; color: #52624c; font-size: 11px; padding: 5px 9px; }
 .section { margin-block: 72px; }
