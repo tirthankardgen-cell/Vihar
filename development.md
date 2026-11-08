@@ -426,14 +426,23 @@ Maintainers may edit or remove harmful content, ask participants to change their
 
 ## Change log
 
+### 2026-11-09 — Verify the card badge production fix
+
+- **Author:** Codex.
+- **Request:** Finish the requested main release of the Quick Play card status fix.
+- **Changes:** Recorded the verified deployment of the CSS fix and completed cleanup of this fix's seven temporary scripts, candidate record and screenshots after review. This follow-up changes only the development record.
+- **Decisions:** Keep the fix scoped to card layout, preserve existing unreleased game labels, and retain the unrelated pre-existing local operations notes unstaged.
+- **Validation:** All five checks in [GitHub run 42517532367](https://github.com/tirthankardgen-cell/Vihar/actions/runs/42517532367) passed for 5d997863488c288034df7311e3d0491e6b7e7364. Vercel API readback reported READY for deployment dpl_4zaG1wNzhYVnPHfpJ2V1XYA9JY78 at that exact SHA, and the canonical vihar.online lookup resolved to it. Live Playwright checks passed all 27 route/width combinations used locally: status text remains on one line, badges remain inside the cards, attribution does not overlap, and pages do not overflow horizontally. The production mobile screenshot was reviewed. The live smoke check passed 28 canonical routes/assets and two read-only database-backed API probes without production writes. npm run check:log and git diff --cached --check passed before the source commit. The owned local server and browser session were stopped, and the seven reviewed files created for this fix were removed with explicit literal paths; previous-task output was left untouched.
+- **Release:** CSS fix 5d997863488c288034df7311e3d0491e6b7e7364 is pushed to main and live at https://vihar.online/games. This documentation-only confirmation carries the same application code.
+
 ### 2026-11-09 — Fix clipped Quick Play status badges
 
 - **Author:** Codex.
 - **Request:** Fix the clipped Not released tags on the Quick Play cards shown in the owner's screenshot and push the completed fix to GitHub main.
 - **Changes:** Replaced the card link's calculated height with a flexible column layout. The footer now sizes itself from its contents and can wrap its attribution and status into separate rows. Status badges retain their intrinsic width, right alignment and single-line text. The shared CSS fixes the homepage, Games page and Quick Play collection.
 - **Decisions:** Let content determine footer height across responsive breakpoints. Preserve the existing card artwork, labels and release state. Keep the change in the Quick Play CSS module; no account, game engine or database migration is required. Preserve unrelated local development-record edits outside the commit.
-- **Validation:** Read the installed Next.js CSS guide. The live 1280px reproduction showed all three status labels wrapping to two lines and extending 7px below their cards. npm run build and npm run lint passed. npm run verify passed 42 public and 10 account routes with 65,481 bytes of homepage CSS, within the unchanged 65,536-byte budget. An initial fixed-column footer still collided at the 1001px three-column breakpoint; a wrapping footer resolved it. Playwright checked all cards on /, /games and /games/quick-play at widths 320, 390, 640, 768, 1000, 1001, 1280, 1440 and 1920: all 27 layouts passed badge containment, single-line status text, attribution separation and page-overflow checks. Desktop and mobile screenshots were reviewed. Development-log and diff gates run before commit.
-- **Release:** Prepared for the authorized main push and deployment through the existing Vercel project. Confirm the pushed SHA, GitHub checks, canonical production assignment and live badge layout after deployment; record that result in this file.
+- **Validation:** Read the installed Next.js CSS guide. The live 1280px reproduction showed all three status labels wrapping to two lines and extending 7px below their cards. npm run build and npm run lint passed. npm run verify passed 42 public and 10 account routes with 65,481 bytes of homepage CSS, within the unchanged 65,536-byte budget. An initial fixed-column footer still collided at the 1001px three-column breakpoint; a wrapping footer resolved it. Playwright checked all cards on /, /games and /games/quick-play at widths 320, 390, 640, 768, 1000, 1001, 1280, 1440 and 1920: all 27 layouts passed badge containment, single-line status text, attribution separation and page-overflow checks. Desktop and mobile screenshots were reviewed. npm run check:log and git diff --cached --check passed before commit.
+- **Release:** Pushed as 5d997863488c288034df7311e3d0491e6b7e7364. All five GitHub checks passed; Vercel deployment dpl_4zaG1wNzhYVnPHfpJ2V1XYA9JY78 reached READY and serves the canonical site. The live badge layout passed the same responsive checks; see the release verification entry above.
 
 ### 2026-11-09 — Verify Quick Play production release
 
