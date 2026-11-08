@@ -367,6 +367,16 @@ Maintainers may edit or remove harmful content, ask participants to change their
 
 ## Change log
 
+### 2026-11-08 — Quick Play embedded-games specification
+
+- **Author:** Codex, 18:16 UTC.
+- **Request:** Create a Markdown file for another agent describing twelve games, individual detail pages and same-page iframe play with Vihar chrome hidden; push to main.
+- **Changes:** Added `plans/embedded-games.md` with the initial roster, collection design, page states, registry, existing identity/tracking/review integration, agent responsibilities and acceptance checks.
+- **Decisions:** The owner's explicit request for this separate specification overrides the usual single-handoff-file convention for this document only. It is planned work, not a completed integration. Latest supplied host games.vihr.online differs from the established vihar.online domain and must be verified before wiring; individual routes are unconfirmed. Preserve independent existing games and reuse Vihar ID rather than inventing duplicate tracking.
+- **Validation:** Markdown structure and twelve-game roster checks, `git diff --check` and `npm run check:log` passed. No application code changed; build/browser/gameplay checks are for the implementation phase.
+- **Release:** Prepared for authorized push to main. Only documentation is delivered; gameplay integration remains pending.
+
+
 ### 2026-11-08 — Investigate AdSense ads.txt Not found
 
 - **Author:** Codex, 15:20 UTC.
