@@ -232,6 +232,13 @@ On 2026-11-08, requests to the production homepage, sitemap, robots file and log
 
 ## Production operations
 
+### AdSense ads.txt status troubleshooting
+
+The root declaration is served by `src/app/ads.txt/route.ts`; keep it available while ad serving is disabled for review. Run `npm run verify:ads-live` (Node and curl required) to check the public publisher entry, text/plain response, canonical destination and HTTP/www redirects, including requests with Google ad-crawler user agents. This read-only diagnostic targets the real production domain; it is separate from local build verification and does not prove requests from Google's network succeed.
+
+If AdSense says “Not found” while these checks pass, open the Vihar site details in AdSense and use the ads.txt check/update option if available. Allow Google to recrawl; do not delete/re-add the site, duplicate ads.txt in public/, or enable ads merely to change the status. Check Vercel firewall/bot logs if the status persists. “Getting ready” is site review, separate from ads.txt discovery. Neither a deploy nor a passing diagnostic guarantees approval or an immediate dashboard update.
+
+
 The existing Vercel project uses Node.js 26.x, `npm ci`, `npm run build` and the default Next.js output directory. Apex `vihar.online` serves Production; www permanently redirects to it. Set `SITE_URL=https://vihar.online`, authorize the apex in Firebase Authentication, and keep Google/email providers enabled. Do not create a replacement hosting or Firebase project for routine releases.
 
 Production Vihar ID requires encrypted server variables `FIREBASE_ADMIN_PROJECT_ID`, `FIREBASE_ADMIN_CLIENT_EMAIL`, `FIREBASE_ADMIN_PRIVATE_KEY`, and **`NODE_OPTIONS=--experimental-require-module`**. The Admin 14 JWKS dependency loads ESM-only `jose` from CommonJS; Vercel's serverless runtime needs the Node override or API startup fails with `ERR_REQUIRE_ESM` despite a successful build. Preserve other required Node options. The dedicated service account is `vihar-id-runtime@vihar-27.iam.gserviceaccount.com`, with `roles/datastore.user` and `roles/firebaseauth.viewer`. Keys are encrypted in Vercel, not stored in this repository. Escaped PEM newlines are supported. Keep `VIHAR_ID_EMULATOR` unset/false and `NEXT_PUBLIC_FIREBASE_EMULATORS=false` in deployments.
@@ -359,6 +366,16 @@ Maintainers may edit or remove harmful content, ask participants to change their
 
 
 ## Change log
+
+### 2026-11-08 — Investigate AdSense ads.txt Not found
+
+- **Author:** Codex, 15:20 UTC.
+- **Request:** Investigate the owner's AdSense screenshot for vihar.online and push the update to GitHub main.
+- **Changes:** Added `npm run verify:ads-live`, a repeatable read-only production diagnostic for the root declaration, redirects, content type and crawler user agents; documented account-side follow-up here.
+- **Decisions:** Preserved the working ads.txt route and approval/consent advertising gates. Live HTTPS already returned HTTP 200 and the exact authorized publisher declaration. No missing-file code defect was reproduced; the screenshot's Not found status is not evidence the current file is missing. Google's actual fetch history remains unknown.
+- **Validation:** `npm run verify:ads-live` passed all six live checks; `npm run check:log`, Node syntax check, targeted ESLint and `git diff --check` passed. Production robots.txt permits ads.txt. No application/runtime code changed, so the full application build and Firebase suites were not rerun.
+- **Release:** Prepared for the owner's authorized push to main. AdSense recrawl and site approval remain controlled by Google; no account settings changed.
+
 
 ### 2026-11-08 — README appearance across GitHub themes
 
