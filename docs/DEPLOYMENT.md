@@ -18,7 +18,7 @@ Keep the Vercel project rooted at this repository’s root. Configure the produc
 
 ## Before release
 
-1. Run `npm run check`, `npm run test:rules`, and `npm run verify`.
+1. Run `npm run check`, `npm run test:rules`, `npm run test:integration`, and `npm run verify`.
 2. Review environment changes against [`.env.example`](../.env.example). Keep `NEXT_PUBLIC_FIREBASE_EMULATORS=false` in production.
 3. Confirm any Firebase schema/rules dependency and the target Firebase project. The repository’s `.firebaserc` records the existing default; verify it against the intended deployment account.
 4. Deploy compatible Firestore rules before publishing dependent UI changes, using the authenticated Firebase CLI and the explicitly verified project:
@@ -35,6 +35,16 @@ Keep the Vercel project rooted at this repository’s root. Configure the produc
 Do not enable advertising merely to pass a check. Existing serving controls require approval and consent readiness; preview deployments remain ad-free and noindex according to the application’s current safeguards.
 
 ## Production smoke check
+
+### Vihar ID server setup
+
+Before releasing community identity/tracking, configure `FIREBASE_ADMIN_PROJECT_ID`, `FIREBASE_ADMIN_CLIENT_EMAIL` and `FIREBASE_ADMIN_PRIVATE_KEY` as encrypted Production variables in the existing Vercel project. Use a dedicated service account in `vihar-27` with `roles/datastore.user` and `roles/firebaseauth.viewer`. The private key supports escaped newline characters. Do not place it in any `NEXT_PUBLIC_` variable, source file, build log or studio example. Keep `VIHAR_ID_EMULATOR` unset/false on Vercel; the runtime rejects emulator mode there.
+
+`SITE_URL` must match the canonical Vihar origin. The studio registers its own exact HTTPS origin through Creator studio; it never receives server credentials. The registration/test APIs require the new server setup, while Firestore rules enforce publication readiness. Deploy compatible rules before the website. Existing published listings remain readable; new listings start as private drafts.
+
+Test the SDK from an independent origin, including popup approval, guest direct play, start/pause/end, save/load, conflicts, sign-out and settings disconnect. Read-only production checks can verify `/help/browser-sdk`, `/sdk/vihar-id.js`, noindex API responses and production function health without creating public test listings. Rotate service-account keys by updating the encrypted variable, deploying and verifying before deleting the old key.
+
+### Website checks
 
 - Confirm the canonical domain loads over HTTPS and public navigation works.
 - Check `/games`, the playable Vihar game page, and a known published community listing.

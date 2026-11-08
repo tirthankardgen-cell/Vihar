@@ -14,12 +14,14 @@
     "test:account": "node --experimental-strip-types --test scripts/account.test.mjs",
     "test:rules": "firebase emulators:exec --project demo-vihar --only firestore \"node --test scripts/firestore-rules.test.mjs\"",
     "emulators": "firebase emulators:start --project demo-vihar --only auth,firestore",
-    "check": "npm run lint && npm run test:adsense && npm run test:account && npm run test:community && npm run typecheck && npm run build",
+    "check": "npm run lint && npm run test:adsense && npm run test:account && npm run test:community && npm run test:vihar-id && npm run typecheck && npm run build",
     "assets:avatars": "node scripts/generate-avatars.mjs",
     "assets": "node scripts/generate-assets.mjs",
     "verify": "node scripts/verify-site.mjs",
     "test:community": "node --experimental-strip-types --test scripts/community-public.test.mjs scripts/game-publishing.test.mjs scripts/community-ranking.test.mjs",
-    "submit:indexnow": "node scripts/submit-indexnow.mjs"
+    "submit:indexnow": "node scripts/submit-indexnow.mjs",
+    "test:vihar-id": "node --import tsx --test scripts/vihar-id.test.mjs scripts/vihar-id-sdk.test.mjs",
+    "test:integration": "firebase emulators:exec --project demo-vihar --only auth,firestore \"node --import tsx --test scripts/vihar-id-service.test.mjs\""
   },
   "engines": {
     "node": "26.x"
@@ -28,7 +30,9 @@
     "@grpc/grpc-js": "1.14.7"
   },
   "dependencies": {
+    "@google-cloud/firestore": "^9.4.0",
     "firebase": "12.19.0",
+    "firebase-admin": "^14.5.0",
     "lucide-react": "1.65.0",
     "motion": "14.9.0",
     "next": "16.4.3",
@@ -48,6 +52,7 @@
     "firebase-tools": "15.34.2",
     "sharp": "0.35.5",
     "tailwindcss": "4.3.3",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.3"
   },
   "homepage": "https://vihar.online",

@@ -45,7 +45,7 @@ Vihar brings games from Vihar and independent creators into one discovery platfo
 - **Focused dashboard:** independent navigation and content scrolling on desktop; a natural mobile layout with no dashboard footer.
 - **Search foundations:** server-rendered public listings, canonical metadata, structured data, and a sitemap that refreshes community listings every five minutes.
 
-Games and downloads remain on their creators’ hosting. Images are supplied as public HTTPS URLs. “Unique game opens” counts signed-in accounts opening a game or download page from Vihar; it does not represent concurrent players, completed downloads, or verified gameplay. Integrations for in-game statistics are separate from this website.
+Games and downloads remain on their creators’ hosting. Images are supplied as public HTTPS URLs. “Unique game opens” counts signed-in accounts opening a game or download page from Vihar. Connected games separately report session counts and active play time through the Vihar ID SDK. Account and saved-progress games offer Vihar ID sign-in on the studio's own website; direct-play games use tracking without requiring in-game login. See the [integration guide](docs/VIHAR_ID.md).
 
 ## Start developing
 
@@ -68,6 +68,7 @@ On Windows, the project folder can show the website's icon using the included `d
 ```sh
 npm run check       # Lint, unit tests, TypeScript, and production build
 npm run test:rules  # Firestore authorization tests; requires Java 21+
+npm run test:integration # Vihar ID API against Auth and Firestore emulators
 npm run verify     # HTTP, assets, SEO, and policy checks against the built site
 ```
 
@@ -103,6 +104,7 @@ docs/              Setup, architecture, and production operations
 | --- | --- |
 | [Getting started](docs/GETTING_STARTED.md) | Local setup, environment values, emulators, and commands |
 | [Architecture](docs/ARCHITECTURE.md) | Application boundaries, publishing, ratings, and data access |
+| [Vihar ID integration](docs/VIHAR_ID.md) | Studio sign-in, SDK, tracking, cloud saves, permissions and tests |
 | [Discovery and indexing](docs/DISCOVERY_AND_INDEXING.md) | Collections, ranking rules, crawler access and IndexNow |
 | [Deployment](docs/DEPLOYMENT.md) | Vercel configuration, Firebase rules, release checks, and rollback |
 | [Contributing](CONTRIBUTING.md) | Contribution process, standards, and validation |

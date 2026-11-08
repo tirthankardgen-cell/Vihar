@@ -185,3 +185,9 @@
   .community-reviews .rating-picker span { padding: 10px 2px; }
   .review-return-prompt { bottom: 16px; right: 16px; }
 }
+
+.integration-panel { margin-top: 24px; padding-top: 22px; border-top: 1px solid var(--line); min-width: 0; }
+.integration-panel p, .community-play p { font-size: 13px; line-height: 1.8; margin-block: 12px; overflow-wrap: anywhere; }
+.integration-panel code { overflow-wrap: anywhere; }
+.integration-code { max-width: 100%; overflow: auto; padding: 16px; border-radius: 12px; background: #252922; color: #f3eddc; font: 12px/1.8 monospace; margin-block: 18px; white-space: pre; }
+.creator-card { min-width: 0; }

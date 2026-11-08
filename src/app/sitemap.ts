@@ -1,3 +1,4 @@
+import { helpUpdated } from "@/lib/help";
 import { publicGames } from "@/lib/community-public";
 import type { MetadataRoute } from "next";
 import { indexableRoutes, site } from "@/lib/site";
@@ -39,6 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [...indexableRoutes.map((path) => ({
     url: site.url + (path === "/" ? "" : path),
     ...discoveryHints,
+    ...(path.startsWith("/help/") ? { lastModified: helpUpdated } : {}),
     images: pageImages[path]?.map((image) => site.url + image),
     ...(discoveryPages.has(path) ? { lastModified: ["/", "/games", "/games/community", "/site-map"].includes(path) ? latestDiscovery : discoveryUpdated } : path === "/games/gulam-chor" ? { lastModified: gulamUpdated } : updatedContent.has(path) ? { lastModified: ["/games/bap-ka-rasta", galleryPath, "/guides/bap-ka-rasta-first-drive"].includes(path) ? "2026-11-03T00:00:00+05:30" : creatorUpdated } : {}),
   })), ...community.map((game) => ({ url: `${site.url}/community/${game.id}`, ...discoveryHints, lastModified: game.updatedAt, images: [...new Set([game.coverUrl, ...(game.screenshots ?? [])].filter((url): url is string => !!url && url.startsWith("https://")))] }))];

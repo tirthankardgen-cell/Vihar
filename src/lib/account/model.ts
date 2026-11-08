@@ -9,6 +9,7 @@ export const avatars = [
 
 export type AvatarId = (typeof avatars)[number]["id"];
 export type StoredTime = { toMillis(): number; toDate(): Date } | null;
+export type ConnectedGameStats = { id: string; title: string; sessions: number; playMilliseconds: number; lastPlayedAt: StoredTime; dailySessions?: Record<string, number>; test?: boolean };
 export type PlayerProfile = {
   uid: string;
   username: string;
@@ -54,6 +55,7 @@ export function usernameError(value: string): string | null {
   return null;
 }
 export function safeReturnPath(value: string | null | undefined) {
+  if (value === "/auth/connect") return value;
   if (!value || !/^(\/dashboard(?:\/(?:friends|settings|games|publish))?|\/games\/(?:bap-ka-rasta|gulam-chor)|\/community\/[A-Za-z0-9_-]{1,128}|\/u\/[a-z][a-z0-9_]{2,19})$/.test(value)) return "/dashboard";
   return value.startsWith("/u/") && usernameError(value.slice(3)) ? "/dashboard" : value;
 }

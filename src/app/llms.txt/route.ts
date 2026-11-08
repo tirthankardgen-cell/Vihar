@@ -1,3 +1,4 @@
+import { helpArticles } from "@/lib/help";
 import { site } from "@/lib/site";
 export const dynamic = "force-static";
 export function GET() {
@@ -13,6 +14,12 @@ Vihar is a game discovery and publishing platform, rooted in India and open to p
 - Community Games are published by independent creators and players. The Community Game badge identifies these listings; the publisher’s profile is linked when available. Community submissions are not presented as VIHAR creations.
 - Community rankings use real player ratings, with review count as the tie-breaker. Unrated games do not receive a rank. Recommendations are discovery selections, not a claim of personalized tracking.
 - Reviews include a star rating and written comments or feedback. A signed-in player must open a game from Vihar before posting a review; a community publisher cannot review their own game.
+
+## Vihar ID for community games
+A community game that uses login or saved player progress must offer Sign in with Vihar ID on the studio’s own website. A game without either can start directly. All new published community games must test gameplay reporting. Account identity and game-scoped cloud saves require player approval; direct-play launch tickets permit activity only. Private activity, sessions and saves appear in the player dashboard. The SDK is available at ${site.url}/sdk/vihar-id.js.
+
+## Step-by-step help
+${helpArticles.map((article) => `- [${article.title}](${site.url}/help/${article.slug}): ${article.description}`).join("\n")}
 
 ## Public information
 - [Site map](${site.url}/site-map): all public pages and game resources.

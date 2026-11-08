@@ -4,7 +4,7 @@ import {
 } from "firebase/firestore";
 import type { User } from "firebase/auth";
 import { getFirebase } from "../firebase/client";
-import { normalizeUsername, usernameError, type AvatarId, type Friendship, type GameLaunch, type GameStats, type PlayerProfile } from "./model";
+import { normalizeUsername, usernameError, type AvatarId, type ConnectedGameStats, type Friendship, type GameLaunch, type GameStats, type PlayerProfile } from "./model";
 
 export function watchProfile(uid: string, receive: (profile: PlayerProfile | null) => void, fail: (error: unknown) => void) {
   return onSnapshot(doc(getFirebase().db, "profiles", uid), (snapshot) => receive(snapshot.exists() ? snapshot.data() as PlayerProfile : null), fail);
@@ -45,6 +45,10 @@ export async function editProfile(uid: string, values: Pick<PlayerProfile, "disp
 }
 export function watchStats(uid: string, receive: (stats: GameStats[]) => void, fail: (error: unknown) => void) {
   return onSnapshot(collection(getFirebase().db, "profiles", uid, "stats"), (snapshot) => receive(snapshot.docs.map((entry) => ({ ...entry.data(), gameId: entry.id }) as GameStats)), fail);
+}
+/** Private activity belongs only in the authenticated account, never public profiles. */
+export function watchConnectedStats(uid: string, receive: (stats: ConnectedGameStats[]) => void, fail: (error: unknown) => void) {
+  return onSnapshot(collection(getFirebase().db, "players", uid, "gameStats"), (snapshot) => receive(snapshot.docs.map((entry) => ({ ...entry.data(), id: entry.id }) as ConnectedGameStats).filter((game) => !game.test).sort((a, b) => (b.lastPlayedAt?.toMillis() || 0) - (a.lastPlayedAt?.toMillis() || 0))), fail);
 }
 export function watchActivity(uid: string, receive: (activity: GameLaunch[]) => void, fail: (error: unknown) => void) {
   const start = new Date();
@@ -90,12 +94,13 @@ export async function acceptFriendRequest(id: string) {
 export async function removeFriendship(id: string) { await deleteDoc(doc(getFirebase().db, "friendships", id)); }
 export async function exportAccount(user: User, profile: PlayerProfile) {
   const { db } = getFirebase();
-  const [stats, favorites, friends, activity] = await Promise.all([
+  const [stats, favorites, friends, activity, connectedStats, sessions, connections, saves] = await Promise.all([
     getDocs(collection(db, "profiles", user.uid, "stats")),
     getDocs(collection(db, "players", user.uid, "favorites")),
     getDocs(query(collection(db, "friendships"), where("members", "array-contains", user.uid))),
     getDocs(collection(db, "players", user.uid, "activity")),
+    ...["gameStats", "sessions", "connections", "saves"].map((name) => getDocs(collection(db, "players", user.uid, name))),
   ]);
   const rows = (snapshot: typeof stats) => snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
-  return { exportedAt: new Date().toISOString(), account: { uid: user.uid, email: user.email, emailVerified: user.emailVerified }, profile, stats: rows(stats), favorites: rows(favorites), friendships: rows(friends), activity: rows(activity) };
+  return { exportedAt: new Date().toISOString(), account: { uid: user.uid, email: user.email, emailVerified: user.emailVerified }, profile, stats: rows(stats), favorites: rows(favorites), friendships: rows(friends), activity: rows(activity), connectedStats: rows(connectedStats), sessions: sessions.docs.map((item) => { const data = item.data(); delete data.tokenHash; return { id: item.id, ...data }; }), connections: rows(connections), saves: saves.docs.map((item) => ({ id: item.id, revision: item.data().revision, updatedAt: item.data().updatedAt, data: JSON.parse(item.data().json) })) };
 }

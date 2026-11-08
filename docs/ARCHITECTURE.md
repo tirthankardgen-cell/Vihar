@@ -16,11 +16,16 @@ Vihar’s catalogue and creator studio are separate from game hosting. Game and 
 | `/dashboard` | Signed-in player workspace |
 | `/dashboard/publish` | Creator editor, content management, and analytics |
 | `/u/{username}` | Public player profile |
+| `/auth/connect` | Player approval popup for a studio's Vihar ID connection |
+| `/api/vihar-id/{action}` | Server-validated registration, tokens, identity, saves and activity |
+| `/help` and `/help/{slug}` | Searchable support library and indexed step-by-step guides |
 | `/sitemap.xml` and `/site-map` | Canonical pages and published community discovery |
 
 ## Publishing and feedback
 
 The editor collects details, images and play instructions, previews the page, then saves visibility. Drafts are private to their owner. Published listings are discoverable. The editor requires a cover and play guide for publication; optional fields remain backward compatible with older records.
+
+New community games must first save a draft, register their hosted origin and pass an owner SDK test. Publication rules require enabled, verified integration settings matching the URL and player-access mode. Login and saved-progress games use Vihar ID on the studio website; direct-play games use activity-only launch connections. Server-written `gameStats`, `sessions`, `connections` and `saves` under each player are private. Creator metrics expose aggregate sessions and play time. See [Vihar ID](VIHAR_ID.md) for the protocol and data lifecycle.
 
 | Data | Role |
 | --- | --- |

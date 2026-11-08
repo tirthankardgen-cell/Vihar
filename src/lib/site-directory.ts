@@ -1,6 +1,8 @@
+import { helpArticles } from "./help";
 import { publicRoutes } from "@/lib/site";
 
 export const siteDirectory = [
+  ...helpArticles.map((article) => ({ path: `/help/${article.slug}`, name: article.title, description: article.description })),
   { path: "/", name: "Vihar home", description: "VIHAR Originals, Community Games and a little room for wonder." },
   { path: "/games", name: "All games", description: "Browse playable games and upcoming adventures." },
   { path: "/games/originals", name: "VIHAR Originals", description: "Games created by the VIHAR team, with artwork, play guides and player reviews." },

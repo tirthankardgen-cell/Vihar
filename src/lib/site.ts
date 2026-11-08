@@ -1,3 +1,4 @@
+import { helpPaths } from "./help";
 import type { Metadata } from "next";
 
 function httpsUrl(value: string, name: string): string {
@@ -34,7 +35,7 @@ if (canonical.pathname !== "/" || canonical.search || canonical.hash) {
 export const isPreview = process.env.VERCEL_ENV === "preview";
 export const publicRoutes = [
   "/", "/games", "/games/originals", "/games/community", "/games/bap-ka-rasta", "/games/bap-ka-rasta/screenshots", "/games/gulam-chor",
-  "/about", "/help", "/contact", "/privacy", "/terms", "/guides/bap-ka-rasta-first-drive", "/site-map",
+  ...helpPaths, "/about", "/help", "/contact", "/privacy", "/terms", "/guides/bap-ka-rasta-first-drive", "/site-map",
 ] as const;
 
 export const indexableRoutes = publicRoutes;

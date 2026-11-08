@@ -7,8 +7,8 @@ export default function robots(): MetadataRoute.Robots {
     // Keep pages, original artwork and Next's image renderer crawlable. Account
     // pages use noindex metadata; blocking them here would hide that directive.
     rules: [
-      { userAgent: "*", allow: "/" },
-      { userAgent: ["bingbot", "BingPreview", "Googlebot", "Googlebot-Image", "OAI-SearchBot", "ChatGPT-User", "PerplexityBot"], allow: "/" },
+      { userAgent: "*", allow: "/", disallow: ["/api/"] },
+      { userAgent: ["bingbot", "BingPreview", "Googlebot", "Googlebot-Image", "OAI-SearchBot", "ChatGPT-User", "PerplexityBot"], allow: "/", disallow: ["/api/"] },
     ],
     sitemap: site.url + "/sitemap.xml",
     host: site.url,

@@ -54,6 +54,15 @@ service cloud.firestore {
       allow delete: if owner(uid);
       allow update: if false;
     }
+    // Private connected-game records. All writes are validated by the server.
+    match /players/{uid}/{collection}/{recordId} {
+      allow read: if collection in ['gameStats', 'sessions', 'connections', 'saves'] && owner(uid);
+      allow write: if false;
+    }
+    match /gameIntegrations/{gameId} {
+      allow read: if owner(get(/databases/$(database)/documents/communityGames/$(gameId)).data.ownerId);
+      allow write: if false;
+    }
     // Private, immutable website opens. These are not scores or in-game sessions.
     match /players/{uid}/activity/{eventId} {
       function validGame(data) {
@@ -136,11 +145,18 @@ service cloud.firestore {
       }
     }
     match /communityGames/{gameId} {
+      function readyToPublish(data) {
+        let integration = get(/databases/$(database)/documents/gameIntegrations/$(gameId)).data;
+        return integration.enabled == true && integration.verified == true
+          && integration.url == data.url && integration.authMode == data.authMode
+          && data.coverUrl.size() > 0 && data.howToPlay.size() > 0;
+      }
       function ownsGame() { return owner(resource.data.ownerId); }
       function published() { return resource.data.published == true; }
       function validGame(data) {
         return data.keys().hasAll(['ownerId', 'title', 'description', 'url', 'kind', 'published', 'createdAt', 'updatedAt'])
-          && data.keys().hasOnly(['ownerId', 'title', 'description', 'url', 'kind', 'published', 'createdAt', 'updatedAt', 'coverUrl', 'screenshots', 'howToPlay', 'controls', 'requirements', 'genre'])
+          && data.keys().hasOnly(['ownerId', 'title', 'description', 'url', 'kind', 'published', 'createdAt', 'updatedAt', 'coverUrl', 'screenshots', 'howToPlay', 'controls', 'requirements', 'genre', 'authMode'])
+          && (!('authMode' in data) || data.authMode in ['none', 'vihar-id'])
           && (!('coverUrl' in data) || data.coverUrl == '' || validImage(data.coverUrl))
           && (!('screenshots' in data) || validScreenshots(data.screenshots))
           && (!('howToPlay' in data) || (data.howToPlay is string && data.howToPlay.size() <= 3000))
@@ -156,10 +172,16 @@ service cloud.firestore {
       allow read: if published() || ownsGame();
       allow create: if signedIn() && request.resource.data.ownerId == request.auth.uid
         && exists(/databases/$(database)/documents/profiles/$(request.auth.uid))
-        && validGame(request.resource.data) && request.resource.data.createdAt == request.time;
+        && validGame(request.resource.data) && request.resource.data.createdAt == request.time
+        && request.resource.data.published == false;
       allow update: if ownsGame() && validGame(request.resource.data)
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['title', 'description', 'url', 'kind', 'published', 'updatedAt', 'coverUrl', 'screenshots', 'howToPlay', 'controls', 'requirements', 'genre']);
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['title', 'description', 'url', 'kind', 'published', 'updatedAt', 'coverUrl', 'screenshots', 'howToPlay', 'controls', 'requirements', 'genre', 'authMode'])
+        && (request.resource.data.published == false || readyToPublish(request.resource.data));
       allow delete: if false;
+      match /metrics/{id} {
+        allow read: if owner(get(/databases/$(database)/documents/communityGames/$(gameId)).data.ownerId);
+        allow write: if false;
+      }
       match /players/{uid} {
         function game() { return get(/databases/$(database)/documents/communityGames/$(gameId)).data; }
         allow read: if owner(uid) || owner(game().ownerId);

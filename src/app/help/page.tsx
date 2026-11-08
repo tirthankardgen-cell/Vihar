@@ -1,3 +1,5 @@
+import { HelpTopics } from "@/components/help-topics";
+import "./help.css";
 import { DiscoveryFaq } from "@/components/discovery-faq";
 import Link from "@/components/site-link";
 import { ArrowUpRight, MessageCircle } from "lucide-react";
@@ -8,7 +10,7 @@ import { pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata(
   "Help & support",
-  "Get help with Vihar browser games: launching Bap Ka Rasta, keyboard and phone controls, graphics, sound, and common loading problems.",
+  "Step-by-step help for Vihar ID, community game publishing, studio sign-in integration, cloud saves, play activity, permissions and troubleshooting.",
   "/help",
 );
 
@@ -18,8 +20,9 @@ function Faq({ question, children }: { question: string; children: ReactNode }) 
 
 export default function HelpPage() {
   return (
-    <div className="container">
-      <PageIntro eyebrow="A little help along the way" title="Let’s get you playing." description="A few useful answers, so you can get back to the good part." />
+    <div className="container help-page">
+      <PageIntro eyebrow="A little help along the way" title="Let’s get you playing." description="One player identity. Independent game worlds. Find detailed guides for playing, publishing and connecting your studio’s game." />
+      <HelpTopics />
       <div className="help-layout">
         <div>
           <DiscoveryFaq />

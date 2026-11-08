@@ -196,16 +196,27 @@ test("all unrecognized collections are denied by default", async () => {
   await assertFails(setDoc(doc(db("alice"), "profiles", "alice", "achievements", "winner"), { unlocked: true }));
 });
 
-const communityGame = (extra = {}) => ({ ownerId: "alice", title: "Orbit", kind: "browser", description: "A little space game", url: "https://games.example.com/orbit/", published: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp(), ...extra });
+const communityGame = (extra = {}) => ({ ownerId: "alice", title: "Orbit", kind: "browser", description: "A little space game", url: "https://games.example.com/orbit/", published: true, authMode: "none", coverUrl: "https://images.example.com/cover.jpg", howToPlay: "Play a round", createdAt: serverTimestamp(), updatedAt: serverTimestamp(), ...extra });
 async function publishGame(extra = {}) {
   await claim("alice");
-  await setDoc(doc(db("alice"), "communityGames", "orbit"), communityGame(extra));
+  await setDoc(doc(db("alice"), "communityGames", "orbit"), communityGame({ ...extra, published: false }));
+  await verifyIntegration(extra);
+  await updateDoc(doc(db("alice"), "communityGames", "orbit"), { published: true, updatedAt: serverTimestamp() });
 }
+async function verifyIntegration(extra = {}) {
+  const game = communityGame(extra);
+  await environment.withSecurityRulesDisabled(async (context) => setDoc(doc(context.firestore(), "gameIntegrations", "orbit"), { ownerId: "alice", url: game.url, authMode: game.authMode, enabled: true, verified: true }));
+}
+
 test("community listings enforce ownership, schema and safe URLs", async () => {
   await claim("alice");
   for (const database of [anonymous(), db("bobby")]) await assertFails(setDoc(doc(database, "communityGames", "orbit"), communityGame()));
   for (const extra of [{ url: "javascript:alert(1)" }, { url: "http://games.example.com/" }, { url: "https://user:pass@example.com/" }, { title: "" }, { description: "" }, { published: "yes" }, { kind: "unknown" }, { plays: 999 }]) await assertFails(setDoc(doc(db("alice"), "communityGames", "orbit"), communityGame(extra)));
-  await assertSucceeds(setDoc(doc(db("alice"), "communityGames", "orbit"), communityGame()));
+  await assertFails(setDoc(doc(db("alice"), "communityGames", "orbit"), communityGame()));
+  await assertSucceeds(setDoc(doc(db("alice"), "communityGames", "orbit"), communityGame({ published: false })));
+  await assertFails(updateDoc(doc(db("alice"), "communityGames", "orbit"), { published: true, updatedAt: serverTimestamp() }));
+  await verifyIntegration();
+  await assertSucceeds(updateDoc(doc(db("alice"), "communityGames", "orbit"), { published: true, updatedAt: serverTimestamp() }));
   await assertSucceeds(getDoc(doc(anonymous(), "communityGames", "orbit")));
   await assertFails(updateDoc(doc(db("bobby"), "communityGames", "orbit"), { title: "Stolen", updatedAt: serverTimestamp() }));
   await assertFails(updateDoc(doc(db("alice"), "communityGames", "orbit"), { ownerId: "bobby", updatedAt: serverTimestamp() }));
@@ -263,7 +274,7 @@ test("rich game details accept safe media and reject injected or oversized value
   for (const extra of [{ coverUrl: "javascript:alert(1)" }, { coverUrl: 5 }, { screenshots: ["http://unsafe.example.com/image.jpg"] }, { screenshots: Array(7).fill("https://images.example.com/play.jpg") }, { screenshots: "not a list" }, { howToPlay: "x".repeat(3001) }, { controls: 7 }, { requirements: "x".repeat(1001) }, { genre: "x".repeat(61) }]) {
     await assertFails(updateDoc(ref, { ...extra, updatedAt: serverTimestamp() }));
   }
-  await assertSucceeds(updateDoc(ref, { coverUrl: "", screenshots: [], updatedAt: serverTimestamp() }));
+  await assertSucceeds(updateDoc(ref, { published: false, coverUrl: "", screenshots: [], updatedAt: serverTimestamp() }));
   await assertFails(updateDoc(doc(db("bobby"), "communityGames", "orbit"), { coverUrl: "https://images.example.com/fake.jpg", updatedAt: serverTimestamp() }));
 });
 
@@ -294,4 +305,33 @@ test("official games share review protections without allowing counterfeit games
   await assertFails(setDoc(launch(db("bobby"), "bobby", "fake-game"), { startedAt: serverTimestamp() }));
   await assertFails(setDoc(doc(db("bobby"), "officialGames", "bap-ka-rasta"), { published: true }));
   await assertSucceeds(deleteDoc(review(db("bobby"))));
+});
+
+
+test("private integration records deny client writes and cross-player reads", async () => {
+  await publishGame();
+  for (const name of ["gameStats", "sessions", "connections", "saves"]) {
+    const ref = doc(db("bobby"), "players", "bobby", name, "orbit");
+    await environment.withSecurityRulesDisabled(async (context) => setDoc(doc(context.firestore(), "players", "bobby", name, "orbit"), { value: 1 }));
+    await assertSucceeds(getDoc(ref));
+    await assertFails(setDoc(ref, { value: 999 }));
+    await assertFails(getDoc(doc(db("alice"), "players", "bobby", name, "orbit")));
+    await assertFails(getDoc(doc(anonymous(), "players", "bobby", name, "orbit")));
+  }
+  await assertFails(setDoc(doc(db("alice"), "gameIntegrations", "orbit"), { verified: true }));
+  await assertSucceeds(getDoc(doc(db("alice"), "gameIntegrations", "orbit")));
+  await assertFails(getDoc(doc(db("bobby"), "gameIntegrations", "orbit")));
+  for (const name of ["gameCodes", "gameTokens", "gameRateLimits"]) {
+    await assertFails(getDoc(doc(db("alice"), name, "anything")));
+    await assertFails(setDoc(doc(db("alice"), name, "anything"), { uid: "alice" }));
+  }
+});
+
+test("publishing rejects changed origins, changed access modes and missing guide content", async () => {
+  await publishGame();
+  const ref = doc(db("alice"), "communityGames", "orbit");
+  for (const extra of [{ url: "https://other.example.com/" }, { authMode: "vihar-id" }, { coverUrl: "" }, { howToPlay: "" }]) {
+    await assertFails(updateDoc(ref, { ...extra, updatedAt: serverTimestamp() }));
+  }
+  await assertSucceeds(updateDoc(ref, { published: false, url: "https://other.example.com/", updatedAt: serverTimestamp() }));
 });

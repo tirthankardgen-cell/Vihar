@@ -45,6 +45,18 @@ const nextConfig: NextConfig = {
           { key: "Cache-Control", value: "private, no-store" },
         ],
       },
+      // A provider popup must retain its cross-origin game opener throughout
+      // login/sign-up. Tokens are delivered only to a validated exact origin.
+      ...["/auth/connect", "/login", "/signup", "/forgot-password"].map((source) => ({ source, headers: [
+        { key: "Cross-Origin-Opener-Policy", value: "unsafe-none" },
+        { key: "Referrer-Policy", value: "no-referrer" },
+        { key: "Cache-Control", value: "private, no-store" },
+      ] })),
+      { source: "/sdk/:path*", headers: [
+        { key: "Access-Control-Allow-Origin", value: "*" },
+        { key: "Cross-Origin-Resource-Policy", value: "cross-origin" },
+        { key: "Cache-Control", value: "public, max-age=3600" },
+      ] },
     ];
   },
 };

@@ -21,7 +21,10 @@ const email = process.env.SUPPORT_EMAIL || "contact@vihar.online";
 const preview = process.env.VERCEL_ENV === "preview";
 const guidePath = "/guides/bap-ka-rasta-first-drive";
 const galleryPath = "/games/bap-ka-rasta/screenshots";
-const routes = ["/", "/games", "/games/originals", "/games/community", "/games/bap-ka-rasta", "/games/gulam-chor", "/about", "/help", "/contact", "/privacy", "/terms", guidePath, galleryPath, "/site-map"];
+const helpContent = await readFile(new URL("../src/lib/help.ts", import.meta.url), "utf8");
+const helpRoutes = [...helpContent.matchAll(/slug: "([a-z-]+)"/g)].map((match) => `/help/${match[1]}`);
+assert(helpRoutes.length >= 15, "Include the complete player, creator, developer and support guide library");
+const routes = ["/", "/games", "/games/originals", "/games/community", "/games/bap-ka-rasta", "/games/gulam-chor", "/about", "/help", ...helpRoutes, "/contact", "/privacy", "/terms", guidePath, galleryPath, "/site-map"];
 const indexableRoutes = routes;
 const server = spawn(process.execPath, [require.resolve("next/dist/bin/next"), "start", "--hostname", "127.0.0.1", "--port", new URL(base).port], {
   cwd: root,
@@ -119,6 +122,18 @@ try {
     assert.equal(response.status, 200, "Broken local link: " + href);
     await response.body?.cancel();
   }
+  const sdk = await get("/sdk/vihar-id.js");
+  assert.equal(sdk.status, 200);
+  assert.equal(sdk.headers.get("access-control-allow-origin"), "*");
+  assert((await sdk.text()).includes("export function createViharId"));
+  const connect = await get("/auth/connect");
+  assert.equal(connect.headers.get("cross-origin-opener-policy"), "unsafe-none");
+  assert(attribute(await connect.text(), "meta", "name", "robots")?.includes("noindex"));
+  assert.equal((await get("/help/not-a-real-topic")).status, 404);
+  const invalidApi = await fetch(new URL("/api/vihar-id/not-a-real-action", base), { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
+  assert.equal(invalidApi.status, 404);
+  assert.equal(invalidApi.headers.get("cache-control"), "no-store");
+  assert(invalidApi.headers.get("x-robots-tag")?.includes("noindex"));
   for (const asset of shareImages) {
     const response = await get(asset);
     assert.equal(response.status, 200, "Missing sharing image: " + asset);
@@ -368,7 +383,8 @@ try {
     descriptions.add(description);
     assert(!html.includes("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"), route + " must not load advertising");
     assert(!locations.includes(route), route + " must stay out of the public sitemap");
-    assert.equal(response.headers.get("cross-origin-opener-policy"), "same-origin-allow-popups", "Google sign-in popup must be supported");
+    const gamePopupRoute = ["/login", "/signup", "/forgot-password"].includes(route);
+    assert.equal(response.headers.get("cross-origin-opener-policy"), gamePopupRoute ? "unsafe-none" : "same-origin-allow-popups", "Sign-in must preserve the studio opener while supporting provider popups");
     if (route === "/auth/action") {
       assert.equal(response.headers.get("referrer-policy"), "no-referrer");
       assert.equal(attribute(html, "meta", "name", "referrer"), "no-referrer", "Email action codes must not leak through referrers");
