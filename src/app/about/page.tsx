@@ -8,7 +8,7 @@ import { pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata(
   "Our story — A little room for wonder",
-  "Meet Vihar, a home for original browser games rooted in India and open to everyone. Discover the idea behind our name, our emblem, and our approach to play.",
+  "Meet Vihar, a home for games, independent creators and players rooted in India and open to everyone. Discover the idea behind our name, our emblem, and our approach to play.",
   "/about",
 );
 
@@ -28,8 +28,8 @@ export default function AboutPage() {
           <div><p className="eyebrow"><span className="section-number">01 /</span> A simple idea</p><h2 id="idea-title">Play belongs<br /><em>in the everyday.</em></h2></div>
           <div className="editorial-copy">
             <p>A quick drive after a long day. One more turn before dinner. A new world when the familiar one needs a little pause. Those small moments are where Vihar begins.</p>
-            <p>We’re a home for games from Vihar and independent creators. Create an account to share your self-hosted browser or downloadable game, discover new players, and read their ratings and reviews. Some are inspired by streets and stories close to home in India. Others will wander somewhere entirely different. Each game gets its own personality; Vihar gives them a shared front door.</p>
-            <p>Take a drive through familiar Indian streets in Bap Ka Rasta, or settle into the courtyard for a round of Gulam Chor with the virtual family. Two browser games, small beginnings, plenty of curiosity.</p>
+            <p>Vihar is a game discovery and publishing platform. VIHAR Originals are made by our team; Community Games are published by independent creators and players. Create an account to share your self-hosted browser or downloadable game, discover new players, and read their ratings and reviews. Some are inspired by streets and stories close to home in India. Others will wander somewhere entirely different. Each game gets its own personality; Vihar gives them a shared front door.</p>
+            <p>Take a drive through familiar Indian streets in Bap Ka Rasta, or settle into the courtyard for a round of Gulam Chor with the virtual family. Two VIHAR Originals, with room for many more worlds from the community.</p>
             <Link href="/games" className="text-link">Find your next little escape <ArrowUpRight size={17} aria-hidden="true" /></Link>
           </div>
         </section>
@@ -56,7 +56,7 @@ export default function AboutPage() {
         </section>
         <section className="values-grid viewport-section viewport-grid" aria-label="Our approach to making games">
           <article><Compass size={23} aria-hidden="true" /><h3>Follow the curiosity.</h3><p>Different genres, familiar details, unexpected turns. We leave room for each game to find its own way.</p></article>
-          <article><Heart size={23} aria-hidden="true" /><h3>Keep it welcoming.</h3><p>Clear controls, honest descriptions, and no account needed to browse or try our current game.</p></article>
+          <article><Heart size={23} aria-hidden="true" /><h3>Keep it welcoming.</h3><p>Clear controls, honest descriptions, and no account needed to browse or try VIHAR Originals.</p></article>
           <article><Sparkles size={23} aria-hidden="true" /><h3>Grow with care.</h3><p>We share what’s playable and label what’s still in development. New worlds arrive when they’re ready.</p></article>
         </section>
       </div>

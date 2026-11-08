@@ -1,5 +1,6 @@
 import { OfficialGameReviews, OfficialPlayLink } from "@/components/game-reviews";
 import Image from "next/image";
+import { ViharAttribution } from "@/components/game-origin";
 import Link from "@/components/site-link";
 import { ArrowRight, ArrowUpRight, Check, Gamepad2, Keyboard, LockKeyhole, MapPin, Monitor, Play, SlidersHorizontal, Smartphone } from "lucide-react";
 import "@/app/content.css";
@@ -35,11 +36,12 @@ export default function BapKaRastaPage() {
           <div className="bkr-hero-location"><MapPin size={16} aria-hidden="true" /><span>Mumbai<small>Your first stop.</small></span></div>
         </div>
         <div className="bkr-hero-copy">
+          <ViharAttribution />
           <span className="bkr-badge bkr-hero-status"><span className="status-dot" aria-hidden="true" />Early playable build</span>
           <Image src="/brand/bap-ka-rasta/br-mark.svg" alt="Bap Ka Rasta official BR logo" width={56} height={56} />
           <h1 id="bkr-title">Bap Ka<br /><span>Rasta.</span></h1>
           <p>Apna sheher. Apni sawaari.<br />Apna rasta.</p>
-          <div className="bkr-hero-meta"><span><Monitor size={15} aria-hidden="true" />Browser</span><nav aria-label="Game categories"><Gamepad2 size={16} aria-hidden="true" />{featuredGame.categories.slice(0, 2).map((category) => <Link key={category} href={`/games?category=${category}`}>{categoryLabel(category)}</Link>)}</nav></div>
+          <div className="bkr-hero-meta"><span><Monitor size={15} aria-hidden="true" />Browser</span><nav aria-label="Game categories"><Gamepad2 size={16} aria-hidden="true" />{featuredGame.categories.slice(0, 2).map((category) => <Link key={category} href={`/games/originals?category=${category}`}>{categoryLabel(category)}</Link>)}</nav></div>
           <div className="bkr-hero-launch"><PlayLink /><span>Free to play · No account · Opens a new tab</span></div>
         </div>
       </section>

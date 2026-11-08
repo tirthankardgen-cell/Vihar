@@ -1,5 +1,6 @@
 import { OfficialGameReviews, OfficialPlayLink } from "@/components/game-reviews";
 import Image from "next/image";
+import { ViharAttribution } from "@/components/game-origin";
 import Link from "@/components/site-link";
 import { ArrowLeft, ArrowUpRight, Coffee, Spade } from "lucide-react";
 import { BreadcrumbData, StructuredData } from "@/components/structured-data";
@@ -17,11 +18,12 @@ export default function GulamChorPage() {
         <Image className="gc-courtyard" src="/images/gulam-chor/courtyard.svg" alt="" fill preload sizes="100vw" />
         <div className="gc-hero-shade" />
         <div className="gc-hero-top">
-          <Link href="/games" className="gc-back"><ArrowLeft size={15} aria-hidden="true" />All Vihar games</Link>
+          <Link href="/games/originals" className="gc-back"><ArrowLeft size={15} aria-hidden="true" />VIHAR Originals</Link>
           <span className="gc-live"><span aria-hidden="true" />Playable now</span>
         </div>
         <div className="gc-hero-copy">
           <Image src="/images/gulam-chor/logo.svg" alt="Gulam Chor card emblem" width={48} height={58} />
+          <ViharAttribution />
           <p className="gc-eyebrow">The great Indian family game</p>
           <h1 id="gc-title" lang="hi"><span>गुलाम</span><span>चोर<span className="gc-title-dot">.</span></span><span className="sr-only" lang="en">Gulam Chor</span></h1>
           <p className="gc-roman">Gulam Chor</p>

@@ -9,6 +9,7 @@ import { getFirebase } from "@/lib/firebase/client";
 import { accountError } from "@/lib/account/model";
 import { restoreGuestLaunch, type GameReview, type GameSource } from "@/lib/community";
 import { games } from "@/lib/games";
+import { CommunityCreator } from "./community-creator";
 import { OfficialPlayLink } from "./official-play-link";
 export { OfficialPlayLink } from "./official-play-link";
 import "@/app/community.css";
@@ -101,7 +102,7 @@ function ReviewPanel({ id, source = "communityGames", ownerId, published = true,
   }
 
   return <section ref={section} className="community-reviews" id={`reviews-${id}`} aria-labelledby={`reviews-title-${id}`}>
-    <div className="review-heading"><div><p className="eyebrow"><MessageSquare size={15} aria-hidden="true" />The player perspective</p><h2 id={`reviews-title-${id}`}>Ratings & reviews</h2><p>Played a round? Tell us what you loved and what could be better.</p></div><Star className="review-heading-star" size={42} aria-hidden="true" /></div>
+    <div className="review-heading"><div><p className="eyebrow"><MessageSquare size={15} aria-hidden="true" />The player perspective</p><h2 id={`reviews-title-${id}`}>Ratings & reviews</h2><p>Played a round? Leave a rating, share your comments, and give the creator feedback for their next update.</p></div><Star className="review-heading-star" size={42} aria-hidden="true" /></div>
     {loadError ? <p role="alert">Reviews are unavailable right now. <button className="text-link" onClick={() => setAttempt((value) => value + 1)}>Try again</button></p> : !loaded ? <p role="status">Loading reviews…</p> : <>
       <div className="review-overview">
         <div><strong className="review-score">{reviews.length ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1) : "—"}</strong><p>out of 5 · {reviews.length} {reviews.length === 1 ? "review" : "reviews"}</p></div>
@@ -122,11 +123,11 @@ function ReviewPanel({ id, source = "communityGames", ownerId, published = true,
         <h3>{mine ? "Edit your review" : "How was your game?"}</h3>
         {!eligible && <p className="review-play-note">Open the game with the play button on this page first, then come back to post your review.</p>}
         <fieldset className="rating-picker"><legend>Your rating</legend>{[1, 2, 3, 4, 5].map((rating) => <label key={rating}><input type="radio" name="rating" value={rating} defaultChecked={rating === (mine?.rating ?? 5)} required disabled={busy} /><span>{rating} ★</span></label>)}</fieldset>
-        <label>Your review<textarea ref={editor} name="text" required maxLength={1000} rows={4} defaultValue={mine?.text ?? ""} disabled={busy} placeholder="What did you enjoy? What could be better?" /></label>
+        <label>Your review & feedback<textarea ref={editor} name="text" required maxLength={1000} rows={4} defaultValue={mine?.text ?? ""} disabled={busy} placeholder="What did you enjoy? What could be better?" /></label>
         <div className="review-editor-actions"><button className="button button-dark" disabled={busy || !eligible}>{busy ? "Saving…" : mine ? "Update review" : "Post review"}</button><button type="button" className="button button-outline" disabled={busy} onClick={() => { setError(""); closeEditor(); }}>Cancel</button>{mine && <button className="review-delete" type="button" disabled={busy} onClick={() => void remove()}>Delete my review</button>}</div>
       </form>}
       {!reviews.length && <p className="review-empty">No reviews yet. Yours could start the conversation.</p>}
-      <div className="review-list">{[...reviews].sort((a, b) => Number(b.id === user?.uid) - Number(a.id === user?.uid)).map((review) => <blockquote key={review.id} className={review.id === user?.uid ? "review-mine" : undefined}><strong><span aria-hidden="true">{"★".repeat(review.rating)}</span><span className="sr-only">{review.rating} out of 5</span> · {review.id === user?.uid ? "Your review" : "Player"}</strong><p>{review.text}</p></blockquote>)}</div>
+      <div className="review-list">{[...reviews].sort((a, b) => Number(b.id === user?.uid) - Number(a.id === user?.uid)).map((review) => <blockquote key={review.id} className={review.id === user?.uid ? "review-mine" : undefined}><strong><span aria-hidden="true">{"★".repeat(review.rating)}</span><span className="sr-only">{review.rating} out of 5</span> · {review.id === user?.uid ? "Your review" : "Player"}</strong><CommunityCreator ownerId={review.id} label="Reviewed by" /><p>{review.text}</p></blockquote>)}</div>
     </>}
     {error && <p role="alert" className="account-error">{error}</p>}
     <p className="review-success" role="status">{message}</p>

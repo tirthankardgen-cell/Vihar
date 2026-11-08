@@ -21,7 +21,7 @@ const email = process.env.SUPPORT_EMAIL || "contact@vihar.online";
 const preview = process.env.VERCEL_ENV === "preview";
 const guidePath = "/guides/bap-ka-rasta-first-drive";
 const galleryPath = "/games/bap-ka-rasta/screenshots";
-const routes = ["/", "/games", "/games/bap-ka-rasta", "/games/gulam-chor", "/about", "/help", "/contact", "/privacy", "/terms", guidePath, galleryPath, "/site-map"];
+const routes = ["/", "/games", "/games/originals", "/games/community", "/games/bap-ka-rasta", "/games/gulam-chor", "/about", "/help", "/contact", "/privacy", "/terms", guidePath, galleryPath, "/site-map"];
 const indexableRoutes = routes;
 const server = spawn(process.execPath, [require.resolve("next/dist/bin/next"), "start", "--hostname", "127.0.0.1", "--port", new URL(base).port], {
   cwd: root,
@@ -147,7 +147,7 @@ try {
   const heroImages = [...hero.matchAll(/<img\b[^>]*>/g)].map((match) => match[0]);
   assert.equal(heroImages.length, 9, "The tunnel needs nine image cards");
   assert(hero.includes('href="/games"'), "The hero must expose the games catalogue");
-  assert(hero.includes('href="' + gameUrl + '"'), "The hero must use the configured play URL");
+  assert(hero.includes('href="/dashboard/publish"'), "The hero must expose community publishing");
   const formatBudgets = new Map([["image/avif", 0], ["image/webp", 0]]);
   for (const image of heroImages) {
     const alt = image.match(/\balt="([^"]*)"/i)?.[1];
@@ -189,7 +189,7 @@ try {
     homeCssBytes += (await response.arrayBuffer()).byteLength;
   }
   // The animated tunnel adds a scoped stylesheet; obsolete courtyard styles are removed.
-  assert(homeCssBytes > 0 && homeCssBytes <= 42 * 1024, "Homepage CSS, including the tunnel, must stay within 42 KiB uncompressed");
+  assert(homeCssBytes > 0 && homeCssBytes <= 64 * 1024, "Homepage CSS, including community discovery, must stay within 64 KiB uncompressed");
   for (const asset of [
     "/images/courtyard.webp", "/images/playground.webp", "/images/bap-ka-rasta-cover.webp",
     "/images/bap-ka-rasta-gameplay.webp", "/images/bap-ka-rasta-camera.webp", "/images/gulam-chor.webp",
@@ -212,10 +212,20 @@ try {
   }
   const robots = await (await get("/robots.txt")).text();
   assert(robots.includes(preview ? "Disallow: /" : "Allow: /"), "robots.txt must match the deployment environment");
-  if (!preview) assert(robots.includes(new URL("/sitemap.xml", canonical).href));
+  if (!preview) {
+    assert(robots.includes(new URL("/sitemap.xml", canonical).href));
+    for (const bot of ["bingbot", "Googlebot", "Googlebot-Image"]) assert(robots.includes(`User-Agent: ${bot}`), `Explicit crawler access: ${bot}`);
+  }
+  for (const path of ["/games/originals", "/games/community"]) {
+    assert(home.includes(`href="${path}"`), "Collection links must be in server HTML");
+    assert(pages.get(path).includes("CollectionPage"), "Collections need structured data");
+  }
+  assert(pages.get("/games").includes("Recommended games"), "Game discovery includes recommendations before JavaScript");
+  assert(!pages.get("/games").includes("The next favourite starts with you"), "Do not render a fake ranking placeholder");
   const sitemap = await (await get("/sitemap.xml")).text();
   const locations = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => new URL(match[1]).pathname);
-  assert.deepEqual([...locations].sort(), [...indexableRoutes].sort(), "Sitemap must contain all completed game and information pages");
+  assert.deepEqual(locations.filter((path) => !path.startsWith("/community/")).sort(), [...indexableRoutes].sort(), "Sitemap must contain all completed game and information pages");
+  assert(locations.every((path) => indexableRoutes.includes(path) || /^\/community\/[A-Za-z0-9_-]+$/.test(path)), "Sitemap must not expose account or draft routes");
   const sitemapEntries = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)].map((match) => match[1]);
   assert(sitemapEntries.length > 0, "Sitemap must contain URL entries");
   for (const entry of sitemapEntries) {
@@ -224,13 +234,14 @@ try {
   }
   const gulamEntry = sitemapEntries.find((entry) => entry.includes(`<loc>${canonical.origin}/games/gulam-chor</loc>`));
   assert(gulamEntry, "The playable Gulam Chor page must be discoverable");
-  assert(gulamEntry.includes("<lastmod>2026-11-05T00:00:00+05:30</lastmod>"), "Preserve the actual game-content date, not the request date");
+  assert(gulamEntry.includes("<lastmod>2026-11-08T00:00:00+05:30</lastmod>"), "Preserve the actual game-content date, not the request date");
   assert(gulamEntry.includes("/images/social-gulam-chor.png"), "Gulam Chor sharing artwork is discoverable");
   assert(sitemap.includes('xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"'), "Image sitemap namespace");
   const imageLocations = [...sitemap.matchAll(/<image:loc>(.*?)<\/image:loc>/g)].map((match) => new URL(decode(match[1])));
   assert(imageLocations.length >= 10, "Relevant pages need image sitemap entries");
   for (const url of new Map(imageLocations.map((url) => [url.href, url])).values()) {
-    assert.equal(url.origin, canonical.origin, "Images must use the canonical origin");
+    assert.equal(url.protocol, "https:", "Sitemap images must use HTTPS");
+    if (url.origin !== canonical.origin) continue; // Community artwork remains on its publisher’s host.
     const response = await get(url.pathname);
     assert.equal(response.status, 200, "Missing sitemap image: " + url.pathname);
     const info = await sharp(Buffer.from(await response.arrayBuffer())).metadata();
@@ -323,7 +334,7 @@ try {
   const help = pages.get("/help");
   const faq = [...help.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)]
     .map((match) => JSON.parse(match[1])).find((data) => data["@type"] === "FAQPage");
-  assert(faq && faq.mainEntity.length === 5, "Visible discovery FAQ schema");
+  assert(faq && faq.mainEntity.length === 7, "Visible discovery FAQ schema");
   for (const question of faq.mainEntity) {
     assert(homepage.includes(question.name));
     assert(homepage.includes(question.acceptedAnswer.text));

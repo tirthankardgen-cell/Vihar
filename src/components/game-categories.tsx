@@ -12,7 +12,7 @@ const icons = {
   solo: UserRound,
 };
 
-const options = [{ id: "all", label: "All games" }, ...gameCategories] as const;
+const options = [{ id: "all", label: "All categories" }, ...gameCategories] as const;
 
 export function GameCategories({
   selected = "all",
@@ -24,14 +24,14 @@ export function GameCategories({
   showAll?: boolean;
 }) {
   return (
-    <div className="game-categories" role={onSelect ? "group" : "navigation"} aria-label="Game categories">
+    <div className="game-categories" role={onSelect ? "group" : "navigation"} aria-label="VIHAR Originals categories">
       {options.filter(({ id }) => showAll || id !== "all").map(({ id, label }) => {
         const Icon = icons[id];
         const content = <><Icon size={16} aria-hidden="true" /><span>{label}</span></>;
         return onSelect ? (
           <button type="button" className="category-chip" key={id} aria-pressed={selected === id} onClick={() => onSelect(id)}>{content}</button>
         ) : (
-          <Link className="category-chip" key={id} href={id === "all" ? "/games" : `/games?category=${id}`}>{content}</Link>
+          <Link className="category-chip" key={id} href={id === "all" ? "/games/originals" : `/games/originals?category=${id}`}>{content}</Link>
         );
       })}
     </div>

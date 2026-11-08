@@ -15,7 +15,7 @@ export const site = {
   instagram: "https://www.instagram.com/vihar.world",
   email: process.env.SUPPORT_EMAIL || "contact@vihar.online",
   description:
-    "Discover games from Vihar and independent creators. Play browser games, find downloadable games, or share your own self-hosted game and follow player feedback.",
+    "Discover VIHAR Originals and games from independent creators. Play, explore creator profiles, leave reviews and feedback, or publish your own game on Vihar.",
   gameUrl: httpsUrl(
     process.env.BAP_KA_RASTA_URL || "https://rasta.vihar.online",
     "BAP_KA_RASTA_URL",
@@ -33,7 +33,7 @@ if (canonical.pathname !== "/" || canonical.search || canonical.hash) {
 
 export const isPreview = process.env.VERCEL_ENV === "preview";
 export const publicRoutes = [
-  "/", "/games", "/games/bap-ka-rasta", "/games/bap-ka-rasta/screenshots", "/games/gulam-chor",
+  "/", "/games", "/games/originals", "/games/community", "/games/bap-ka-rasta", "/games/bap-ka-rasta/screenshots", "/games/gulam-chor",
   "/about", "/help", "/contact", "/privacy", "/terms", "/guides/bap-ka-rasta-first-drive", "/site-map",
 ] as const;
 

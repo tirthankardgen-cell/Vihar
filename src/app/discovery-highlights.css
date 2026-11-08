@@ -1,0 +1,75 @@
+.catalogue-page .catalogue-intro { padding-block: 32px 6px; }
+.catalogue-page .catalogue-intro h1 { font-size: clamp(38px, 4.5vw, 60px); }
+.community-ranking { margin-top: 36px; }
+.discovery-section-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; }
+.discovery-section-heading .eyebrow { color: var(--terra); margin-bottom: 10px; }
+.discovery-section-heading h2 { font-size: clamp(28px, 3.2vw, 42px); }
+.discovery-section-heading h2 em { color: #756187; }
+.ranking-method { margin-top: 12px; font-size: 12px; color: var(--muted); }
+.ranking-carousel { position: relative; margin-top: 16px; }
+.ranking-shelf { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 36px) / 2.65); gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth; overscroll-behavior-inline: contain; -webkit-overflow-scrolling: touch; padding: 28px 8px 24px; scroll-padding-inline: 8px; list-style: none; }
+.rank-card { position: relative; min-width: 0; padding-left: 110px; scroll-margin-inline: 8px; scroll-snap-align: start; }
+.rank-number { position: absolute; left: 2px; top: 25px; width: 106px; font: 700 180px/1 var(--font-dm-sans), sans-serif; letter-spacing: -.065em; color: #e5dfd6; -webkit-text-stroke: 1px #d5c9ba; transition: color .4s, transform .4s cubic-bezier(.22,1,.36,1), text-shadow .4s; }
+.rank-content { position: relative; min-width: 0; }
+.rank-art { display: block; position: relative; isolation: isolate; overflow: hidden; border-radius: 12px; background: #eee9df; box-shadow: 0 5px 14px #4738280e; transition: transform .4s cubic-bezier(.22,1,.36,1), box-shadow .4s; }
+.rank-art .game-artwork { aspect-ratio: 4 / 3; border-radius: 0; }
+.rank-art img { transition: transform .4s ease; }
+.rank-origin { position: absolute; top: 12px; left: 12px; }
+.rank-play { position: absolute; bottom: 12px; right: 12px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; background: #faf9f6ed; border-radius: 999px; color: #302a32; font-size: 11px; transition: transform .3s, background .3s; }
+.rank-caption { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: 14px; }
+.rank-caption h3 { min-width: 0; font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
+.rank-rating { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: #87612e; white-space: nowrap; }
+.rank-rating small { color: var(--muted); font-size: 10px; }
+.rank-content > div:last-child { font-size: 11px; color: var(--muted); }
+.rank-card:focus-within .rank-art { transform: translateY(-6px); box-shadow: 0 14px 24px #47382822; }
+.rank-card:focus-within .rank-number { color: #cba88c; text-shadow: -2px 1px 0 #b9acd0; transform: translateY(-3px); }
+.ranking-controls { justify-content: flex-end; margin-top: 2px; }
+.ranking-empty, .ranking-loading { padding: 32px; margin-top: 20px; border: 1px solid var(--line); border-radius: 16px; }
+.ranking-empty p { font-size: 13px; color: var(--muted); margin-block: 8px; }
+.ranking-empty > svg { color: var(--terra); margin-bottom: 12px; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) { .rank-card:hover .rank-art { transform: translateY(-7px); box-shadow: 0 16px 28px #47382824; } .rank-card:hover .rank-art img { transform: scale(1.05); } .rank-card:hover .rank-number { color: #cba88c; text-shadow: -3px 2px 0 #b9acd0; transform: translateY(-3px) rotate(-2deg); } .rank-card:hover .rank-play { background: #fff; transform: translateX(2px); } }
+.recommendation-section { margin-top: 52px; }
+.recommendation-description { margin-top: 12px; color: var(--muted); font-size: 13px; }
+.shelf-controls { display: flex; gap: 8px; }
+.shelf-controls button { display: grid; place-items: center; min-width: 40px; height: 40px; border: 1px solid #d4cdc3; border-radius: 50%; background: transparent; }
+.shelf-controls button:hover { background: #f0ebe4; }
+.shelf-controls button:disabled { opacity: .35; cursor: default; }
+.recommendation-shelf { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 24px) / 2); gap: 24px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth; overscroll-behavior-inline: contain; -webkit-overflow-scrolling: touch; padding: 24px 0 16px; }
+.recommendation-card { min-width: 0; scroll-snap-align: start; }
+.recommendation-art { display: block; position: relative; height: clamp(280px, 26vw, 360px); overflow: hidden; border-radius: 18px; background: #29232e; color: white; isolation: isolate; }
+.recommendation-art > img, .recommendation-art > .game-artwork { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 0; z-index: -2; transition: transform .3s ease; }
+.recommendation-art:hover > img, .recommendation-art:hover > .game-artwork { transform: scale(1.035); }
+.recommendation-art::after { position: absolute; inset: 0; z-index: -1; content: ""; background: linear-gradient(180deg, #18141f22 25%, #18141f88 50%, #18141ff5); }
+.recommendation-origin { position: absolute; top: 20px; left: 20px; }
+.recommendation-image-label { position: absolute; right: 16px; top: 22px; font-size: 9px; padding: 3px 7px; background: #211b24b8; border-radius: 4px; }
+.recommendation-title { position: absolute; left: 24px; right: 24px; bottom: 20px; }
+.recommendation-title > span:first-child { font-size: 11px; color: #f0e8e2; }
+.recommendation-title h3 { font: 400 clamp(30px, 3.3vw, 44px)/1.08 var(--serif); letter-spacing: -.03em; margin-top: 8px; overflow-wrap: anywhere; }
+.recommendation-play { display: inline-flex; align-items: center; gap: 9px; font-size: 12px; margin-top: 14px; }
+.recommendation-art > .game-rating-badge { position: absolute; left: 20px; top: 62px; }
+.recommendation-meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 12px; padding-inline: 4px; font-size: 12px; color: var(--muted); }
+.recommendation-meta strong { color: var(--ink); font-weight: 500; }
+.recommendation-meta > div { margin: 0; font-size: 12px; }
+.recommendation-status { color: #486342; font-size: 11px; }
+.discovery-publish { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; margin-top: 48px; padding: 32px; background: #f1eee7; border: 1px solid #e3ddd2; border-radius: 18px; }
+.discovery-publish h2 { font-size: clamp(27px, 3vw, 38px); margin-block: 12px; }
+.discovery-publish p:not(.eyebrow) { color: var(--muted); font-size: 13px; }
+.originals-catalogue { margin-top: 32px; }
+@media (max-width: 767px) { .ranking-shelf { grid-auto-columns: 88%; gap: 12px; } .rank-card { padding-left: 84px; } .rank-number { width: 80px; font-size: 140px; top: 20px; } .discovery-section-heading { align-items: flex-start; flex-wrap: wrap; gap: 10px; } .recommendation-shelf { grid-auto-columns: 85%; gap: 16px; } .recommendation-section { margin-top: 36px; } .recommendation-origin { left: 16px; top: 16px; } .recommendation-image-label { top: 53px; right: 14px; } .recommendation-title { left: 20px; right: 20px; } .discovery-publish { padding: 24px; } }
+@media (prefers-reduced-motion: reduce) { .recommendation-art > img, .recommendation-art > .game-artwork { transition: none; } }
+
+@media (prefers-reduced-motion: reduce) { .rank-art, .rank-art img, .rank-number, .rank-play { transition: none; } .rank-card:focus-within .rank-art, .rank-card:focus-within .rank-number { transform: none; } }
+
+.community-ranking .discovery-section-heading h2 { font-family: var(--font-dm-sans), sans-serif; font-size: clamp(22px, 2.7vw, 30px); font-weight: 600; letter-spacing: -.035em; }
+.community-ranking .discovery-section-heading h2 em { font: inherit; color: inherit; }
+
+.ranking-shelf::-webkit-scrollbar, .recommendation-shelf::-webkit-scrollbar { display: none; width: 0; height: 0; }
+.ranking-controls { position: absolute; top: 42%; left: -14px; right: -14px; display: flex; justify-content: space-between; pointer-events: none; }
+.ranking-controls button { pointer-events: auto; width: 44px; height: 44px; background: #fffdf8f5; box-shadow: 0 3px 16px #362e2418; }
+.ranking-controls button:disabled { visibility: hidden; }
+.recommendation-art { transition: transform .4s cubic-bezier(.22,1,.36,1), box-shadow .4s; }
+.recommendation-art:focus-visible { transform: translateY(-4px); box-shadow: 0 12px 25px #30233220; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) { .recommendation-art:hover { transform: translateY(-4px); box-shadow: 0 12px 25px #30233220; } }
+@media (min-width: 768px) and (max-width: 1100px) { .ranking-shelf { grid-auto-columns: 48%; } .rank-card { padding-left: 94px; } .rank-number { width: 90px; font-size: 160px; } }
+@media (max-width: 767px) { .ranking-controls { left: -6px; right: -6px; } .ranking-controls button { width: 40px; height: 40px; } }
+@media (prefers-reduced-motion: reduce) { .ranking-shelf, .recommendation-shelf { scroll-behavior: auto; } .recommendation-art, .rank-art, .rank-art img, .rank-number, .rank-play { transition: none; } .recommendation-art:focus-visible { transform: none; } }

@@ -1,4 +1,6 @@
 .community-section { padding: 48px 0; }
+.community-detail-origin { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 24px; font-size: 13px; }
+.community-feedback-link { margin: 16px; }
 .community-section h1 { font-size: clamp(2rem, 5vw, 3.7rem); line-height: 1.1; margin: 16px 0 24px; }
 .community-section h2 { font-size: 2rem; }
 .community-section h3 { font-size: 1.3rem; margin: 12px 0; }

@@ -4,6 +4,8 @@ import { StructuredData } from "@/components/structured-data";
 import { site } from "@/lib/site";
 import "./home.css";
 
+export const revalidate = 300;
+
 export default function Home() {
   return (
     <>

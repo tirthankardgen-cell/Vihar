@@ -1,6 +1,5 @@
 "use client";
 
-import { OfficialPlayLink } from "@/components/official-play-link";
 
 import Image from "next/image";
 import Link from "@/components/site-link";
@@ -156,7 +155,7 @@ function TunnelCard({ card, progress, pointer }: {
         <Image src={card.src} alt={card.alt} fill sizes="(max-width: 767px) 180px, (max-width: 1100px) 240px, 320px" loading={card.index < 2 ? "eager" : "lazy"} draggable={false} className={styles.cardImage} />
         <span className={styles.cardNumber} aria-hidden="true">0{card.index + 1}</span>
         <span className={styles.cardArrow} aria-hidden="true"><ArrowUpRight size={16} /></span>
-        <span className={styles.cardCaption}><span>{card.caption}</span><strong>{card.title}</strong></span>
+        <span className={styles.cardCaption}><span>{card.href.startsWith("/games/") ? `VIHAR Original · ${card.caption}` : card.caption}</span><strong>{card.title}</strong></span>
       </Link>
     </motion.div>
   );
@@ -213,17 +212,17 @@ export default function PerspectiveTunnelHero() {
 
         <div className={styles.copy}>
           <div className={styles.anchor}>
-            <p className={styles.eyebrow}>Your next little escape starts here</p>
+            <p className={styles.eyebrow}>A home for games. A community of creators.</p>
             <h1 id="vihar-world-title" className={styles.title}>
               <span className={styles.titleIntro}>Into the </span>
               <span className={styles.titleName}>Vihar </span>
               <span className={styles.titleWorld}>world.</span>
             </h1>
-            <p className={styles.description}>Games from Vihar. Worlds from creators.<br />Discover your next favourite, or share your own.</p>
+            <p className={styles.description}>Discover games. Meet their creators.<br />Play, leave a review, and share your own world.</p>
           </div>
           <div className={styles.actions}>
-            <Link href="/games" className={styles.enterButton}>Enter the world <ArrowUpRight size={18} aria-hidden="true" /></Link>
-            <OfficialPlayLink id="bap-ka-rasta" className={styles.playButton}><Play size={12} fill="currentColor" aria-hidden="true" /> Play Bap Ka Rasta<span className="sr-only"> — opens the game in a new tab</span></OfficialPlayLink>
+            <Link href="/games" className={styles.enterButton}>Discover games <ArrowUpRight size={18} aria-hidden="true" /></Link>
+            <Link href="/dashboard/publish" className={styles.playButton}>Share your game <ArrowUpRight size={16} aria-hidden="true" /></Link>
           </div>
         </div>
 

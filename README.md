@@ -37,6 +37,7 @@ Vihar brings games from Vihar and independent creators into one discovery platfo
 
 ### Made for discovery
 
+- **Clear collections:** VIHAR Originals and Community Games have separate discovery pages, origin badges, creator attribution, player-rated rankings and recommendation carousels.
 - **Game pages:** individual descriptions, screenshots, controls, device requirements, and how-to-play instructions.
 - **Creator studio:** Details → Images & play guide → Preview → Visibility, with separate Content and Analytics views.
 - **Player feedback:** thumbnail rating badges, star distributions, and editable reviews for released games. Upcoming games open reviews on release.
@@ -102,6 +103,7 @@ docs/              Setup, architecture, and production operations
 | --- | --- |
 | [Getting started](docs/GETTING_STARTED.md) | Local setup, environment values, emulators, and commands |
 | [Architecture](docs/ARCHITECTURE.md) | Application boundaries, publishing, ratings, and data access |
+| [Discovery and indexing](docs/DISCOVERY_AND_INDEXING.md) | Collections, ranking rules, crawler access and IndexNow |
 | [Deployment](docs/DEPLOYMENT.md) | Vercel configuration, Firebase rules, release checks, and rollback |
 | [Contributing](CONTRIBUTING.md) | Contribution process, standards, and validation |
 | [Security](SECURITY.md) | Private vulnerability reporting and supported code |

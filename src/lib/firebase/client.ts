@@ -29,8 +29,8 @@ export function getFirebase() {
   const auth = getAuth(app);
   const db = getFirestore(app);
   if (emulators && !auth.emulatorConfig) {
-    connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
-    connectFirestoreEmulator(db, "127.0.0.1", 8080);
+    connectAuthEmulator(auth, `http://127.0.0.1:${process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_PORT || "9099"}`, { disableWarnings: true });
+    connectFirestoreEmulator(db, "127.0.0.1", Number(process.env.NEXT_PUBLIC_FIREBASE_FIRESTORE_EMULATOR_PORT || "8080"));
   }
   auth.languageCode = "en";
   client = { auth, db };

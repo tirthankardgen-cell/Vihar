@@ -29,7 +29,7 @@ const newsreader = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: { default: "Vihar — Original Browser Games | A space to play.", template: "%s | Vihar" },
+  title: { default: "Vihar — Discover, Play & Share Games", template: "%s | Vihar" },
   description: site.description,
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
@@ -42,13 +42,13 @@ export const metadata: Metadata = {
   category: "games",
   robots: isPreview
     ? { index: false, follow: false }
-    : { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
+    : { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 } },
   referrer: "strict-origin-when-cross-origin",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website", locale: "en_IN", url: "/", siteName: site.name,
     title: "Vihar — A space to play.", description: site.description,
-    images: [{ url: "/images/social-vihar.png", width: 1200, height: 630, alt: "Vihar — A space to play. Original games, different worlds." }],
+    images: [{ url: "/images/social-vihar.png", width: 1200, height: 630, alt: "Vihar — A space to play. Games, creators and a community of players." }],
   },
   twitter: { card: "summary_large_image", title: "Vihar — A space to play.", description: site.description, images: ["/images/social-vihar.png"] },
   icons: {
@@ -75,7 +75,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <main id="main-content" tabIndex={-1}>{children}</main>
         <Footer />
         </AuthProvider>
-        <StructuredData data={{ "@context": "https://schema.org", "@type": "Organization", "@id": `${site.url}/#organization`, name: "Vihar", url: site.url, logo: `${site.url}/brand/vihar-avatar.png`, email: site.email, sameAs: [site.instagram] }} />
+        <StructuredData data={{ "@context": "https://schema.org", "@type": "Organization", "@id": `${site.url}/#organization`, name: "Vihar", url: site.url, description: site.description, logo: { "@type": "ImageObject", "@id": `${site.url}/#logo`, url: `${site.url}/brand/vihar-avatar.png`, contentUrl: `${site.url}/brand/vihar-avatar.png`, caption: "Vihar — A space to play" }, email: site.email, sameAs: [site.instagram] }} />
       </body>
     </html>
   );

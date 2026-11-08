@@ -5,6 +5,7 @@ import { ArrowUpRight, CalendarDays, Download, Sparkles } from "lucide-react";
 import Link from "@/components/site-link";
 import { profileByUsername, watchProfile, watchStats } from "@/lib/account/data";
 import { accountError, memberSince, type GameStats, type PlayerProfile } from "@/lib/account/model";
+import { CommunityGames } from "@/components/community-games";
 import { ViharIdCard } from "./vihar-id-card";
 import { AccountLoading } from "./account-shell";
 import { StatTiles } from "./dashboard";
@@ -52,6 +53,7 @@ export function PublicProfile({ username }: { username: string }) {
       <div className="public-profile-stats"><StatTiles stats={stats} /><p className="stats-note">Play stats appear here as games connect to Vihar ID.</p></div>
       <div className="public-profile-bottom"><span><Sparkles size={17} aria-hidden="true" />Your games. Your identity.</span><Link href="/signup">Create your Vihar ID <ArrowUpRight size={16} aria-hidden="true" /></Link></div>
     </section>
+    <CommunityGames key={profile.uid} byCreator={profile.uid} />
     <p className="public-profile-footnote">A space to play. Built for players.</p>
   </div>;
 }

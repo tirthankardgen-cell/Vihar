@@ -1,3 +1,4 @@
+import { ViharAttribution } from "@/components/game-origin";
 import { RatingBadge } from "@/components/rating-badge";
 import Image from "next/image";
 import Link from "@/components/site-link";
@@ -24,6 +25,7 @@ export function GameCard({ game, eager = false }: { game: Game; eager?: boolean 
         </div>
         <span className="card-image-arrow" aria-hidden="true"><ArrowUpRight size={21} /></span>
       </Link>
+      <ViharAttribution />
     </article>
   );
 }

@@ -69,19 +69,19 @@ function Catalogue({ games, parameters }: { games: Game[]; parameters?: Pick<URL
 
   return (
     <div className="catalogue">
-      <h2 className="sr-only">Game collection</h2>
+      <h3 className="sr-only">Browse VIHAR Originals</h3>
       <GameCategories selected={category} onSelect={(value) => updateParameter("category", value)} />
       <div className="catalogue-toolbar">
         <div className="search-field">
           <Search size={18} aria-hidden="true" />
-          <label className="sr-only" htmlFor="game-search">Search games</label>
-          <input id="game-search" type="search" value={query} onChange={(event) => updateParameter("q", event.target.value)} placeholder="Search by name or category…" autoComplete="off" />
+          <label className="sr-only" htmlFor="game-search">Search VIHAR Originals</label>
+          <input id="game-search" type="search" value={query} onChange={(event) => updateParameter("q", event.target.value)} placeholder="Search VIHAR Originals…" autoComplete="off" />
           {query && <button type="button" aria-label="Clear search" onClick={() => { updateParameter("q", ""); document.getElementById("game-search")?.focus(); }}><X size={16} aria-hidden="true" /></button>}
         </div>
         <div className="catalogue-options">
           <div className="catalogue-select">
             <SlidersHorizontal size={15} aria-hidden="true" />
-            <label className="sr-only" htmlFor="game-availability">Filter by availability</label>
+            <label className="sr-only" htmlFor="game-availability">Filter VIHAR Originals by availability</label>
             <select id="game-availability" value={availability} onChange={(event) => updateParameter("availability", event.target.value)}>
               {availabilityOptions.map(({ value, label }) => <option key={value} value={value}>{label}</option>)}
             </select>
@@ -89,7 +89,7 @@ function Catalogue({ games, parameters }: { games: Game[]; parameters?: Pick<URL
           </div>
           <div className="catalogue-select">
             <ArrowDownWideNarrow size={16} aria-hidden="true" />
-            <label className="sr-only" htmlFor="game-sort">Sort games</label>
+            <label className="sr-only" htmlFor="game-sort">Sort VIHAR Originals</label>
             <select id="game-sort" value={sort} onChange={(event) => updateParameter("sort", event.target.value)}>
               {sortOptions.map(({ value, label }) => <option key={value} value={value}>{label}</option>)}
             </select>
@@ -98,7 +98,7 @@ function Catalogue({ games, parameters }: { games: Game[]; parameters?: Pick<URL
         </div>
       </div>
       <div className="catalogue-summary">
-        <p className="results-count" role="status" aria-live="polite" aria-atomic="true">{hasFilters ? `${visible.length} of ${games.length}` : visible.length} {games.length === 1 ? "game" : "games"}{category !== "all" ? ` · ${categoryLabel(category)}` : " to explore"}</p>
+        <p className="results-count" role="status" aria-live="polite" aria-atomic="true">{hasFilters ? `${visible.length} of ${games.length}` : visible.length} {visible.length === 1 ? "VIHAR Original" : "VIHAR Originals"}{category !== "all" ? ` · ${categoryLabel(category)}` : " to explore"}</p>
         {hasChanges && <button type="button" className="catalogue-reset" onClick={resetCatalogue}>Reset all <X size={13} aria-hidden="true" /></button>}
       </div>
       {visible.length ? (
@@ -106,12 +106,12 @@ function Catalogue({ games, parameters }: { games: Game[]; parameters?: Pick<URL
       ) : (
         <div className="empty-state">
           <span aria-hidden="true">✳</span>
-          <h3>{categoryIsEmpty ? "Room for something new." : "No games found. Yet."}</h3>
-          <p>{categoryIsEmpty ? `${categoryLabel(category)} games will live here as the collection grows.` : "Try another search or give a different category a go."}</p>
-          <button type="button" className="button button-dark" onClick={resetCatalogue}>Explore all games</button>
+          <h3>{categoryIsEmpty ? "Room for something new." : "No VIHAR Originals found."}</h3>
+          <p>{categoryIsEmpty ? `${categoryLabel(category)} VIHAR Originals will live here as the collection grows.` : "Try another search or give a different category a go."}</p>
+          <button type="button" className="button button-dark" onClick={resetCatalogue}>Reset Originals filters</button>
         </div>
       )}
-      <p className="catalogue-note">A small collection. Plenty of room to grow.</p>
+      <p className="catalogue-note">Every game in this collection is created by the VIHAR team.</p>
     </div>
   );
 }

@@ -2,6 +2,14 @@
 
 Notable repository changes are recorded here. Entries describe source changes; they do not independently confirm production deployment. See [GitHub history](https://github.com/tirthankardgen-cell/Vihar/commits/main/) and [development.md](development.md) for detailed implementation evidence.
 
+## 2026-11-08 — Originals, community discovery and search indexing
+
+- Distinguished VIHAR Originals and Community Games across discovery, game pages, creator profiles and player activity, with dedicated collection URLs.
+- Added a rated Community Top 5 with oversized numbers and mixed recommendations, retaining Vihar's warm colors. Carousels support smooth scrolling, touch, arrow controls, hover effects and reduced motion, with hidden scrollbars and room for every rank number.
+- Omitted empty ranking slots and sample games from production; published community games enter the rankings when they receive reviews.
+- Added collection and publisher structured data, community images in the sitemap, explicit search crawler allowances and an opt-in post-deployment IndexNow submission command.
+- Verified the production build, HTTP routes, authorization rules and responsive browser behavior from 320 to 1440 pixels.
+
 ## 2026-11-08 — Reviews and recorded play activity
 
 - Fixed official-game sign-in return paths and retained review eligibility after guest play in the same tab.
