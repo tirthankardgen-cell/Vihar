@@ -22,8 +22,14 @@ remain governed by their respective licenses. This notice does not replace,
 revoke, or expand those licenses. See THIRD_PARTY_NOTICES.md and the license
 files accompanying those materials.
 
-No trademark rights are granted. Vihar names, logos, and other brand materials
-may not be used to imply affiliation or endorsement without permission.
+Vihar ID integration permission: creators integrating Vihar ID into their own
+games may load and use the published Vihar ID browser SDK, adapt the integration
+examples, and copy and display the official vihar-emblem.svg and
+vihar-emblem-inverse.svg assets in their Vihar ID sign-in buttons. Keep the
+emblem's proportions and colors and show the "Sign in with Vihar ID" label,
+as described at https://vihar.online/help/brand-button. This limited permission
+does not permit unrelated reuse of Vihar's branding or imply endorsement of a
+studio or game. No ownership or other trademark rights are transferred.
 
 Materials are provided "as is", without warranties of any kind, to the extent
 permitted by law. Nothing in this notice excludes rights or liabilities that

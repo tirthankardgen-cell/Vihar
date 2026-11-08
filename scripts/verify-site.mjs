@@ -128,7 +128,14 @@ try {
   assert((await sdk.text()).includes("export function createViharId"));
   const connect = await get("/auth/connect");
   assert.equal(connect.headers.get("cross-origin-opener-policy"), "unsafe-none");
-  assert(attribute(await connect.text(), "meta", "name", "robots")?.includes("noindex"));
+  const connectHtml = await connect.text();
+  assert(attribute(connectHtml, "meta", "name", "robots")?.includes("noindex"));
+  assert(!/<(?:header|footer)\b[^>]*class="site-(?:header|footer)/.test(connectHtml), "The Vihar ID popup must not render the discovery navigation or footer");
+  for (const asset of ["/brand/vihar-emblem.svg", "/brand/vihar-emblem-inverse.svg"]) {
+    const response = await get(asset);
+    assert.equal(response.status, 200, "Studio sign-in icon must be available: " + asset);
+    assert(response.headers.get("content-type")?.includes("image/svg+xml"));
+  }
   assert.equal((await get("/help/not-a-real-topic")).status, 404);
   const invalidApi = await fetch(new URL("/api/vihar-id/not-a-real-action", base), { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
   assert.equal(invalidApi.status, 404);

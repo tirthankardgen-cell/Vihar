@@ -17,7 +17,7 @@ export function PasswordInput({ id = "password", label = "Password", newPassword
   const [visible, setVisible] = useState(false);
   return <div className="account-field"><label htmlFor={id}>{label}</label><span className="password-input"><input id={id} name={id} type={visible ? "text" : "password"} autoComplete={newPassword ? "new-password" : "current-password"} required minLength={newPassword ? 8 : undefined} maxLength={128} aria-describedby={newPassword ? `${id}-hint` : undefined} /><button type="button" aria-label={visible ? "Hide password" : "Show password"} aria-pressed={visible} onClick={() => setVisible(!visible)}>{visible ? <EyeOff size={18} /> : <Eye size={18} />}</button></span>{newPassword && <small id={`${id}-hint`}>At least 8 characters, with a letter and a number.</small>}</div>;
 }
-export function AuthForm({ mode }: { mode: "login" | "signup" | "reset" }) {
+export function AuthForm({ mode, embedded = false, onModeChange }: { mode: "login" | "signup" | "reset"; embedded?: boolean; onModeChange?: (mode: "login" | "signup" | "reset") => void }) {
   const { user, loading } = useAuth();
   const router = useRouter();
   const params = useSearchParams();
@@ -27,7 +27,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" | "reset" }) {
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
   const errorRef = useRef<HTMLParagraphElement>(null);
-  useEffect(() => { if (!loading && user && !reset) router.replace(next); }, [user, loading, reset, router, next]);
+  useEffect(() => { if (!embedded && !loading && user && !reset) router.replace(next); }, [user, loading, reset, router, next, embedded]);
   useEffect(() => {
     if (mode === "login" && error) errorRef.current?.scrollIntoView({ block: "nearest", behavior: "instant" });
   }, [error, mode]);
@@ -37,7 +37,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" | "reset" }) {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({ prompt: "select_account" });
       await signInWithPopup(getFirebase().auth, provider);
-      router.replace(next);
+      if (!embedded) router.replace(next);
     } catch (failure) { setError(accountError(failure)); } finally { setBusy(false); }
   }
   async function submit(event: React.FormEvent<HTMLFormElement>) {
@@ -56,10 +56,28 @@ export function AuthForm({ mode }: { mode: "login" | "signup" | "reset" }) {
         const credential = await createUserWithEmailAndPassword(auth, email, password);
         // An email delivery failure must not misreport successful account creation.
         try { await sendEmailVerification(credential.user, { url: `${window.location.origin}/dashboard` }); } catch { /* The dashboard offers resend. */ }
-        router.replace(next);
-      } else { await signInWithEmailAndPassword(auth, email, password); router.replace(next); }
+        if (!embedded) router.replace(next);
+      } else { await signInWithEmailAndPassword(auth, email, password); if (!embedded) router.replace(next); }
     } catch (failure) { setError(accountError(failure)); } finally { setBusy(false); }
   }
+  if (embedded) return <section className="id-credentials" aria-labelledby="auth-title">
+    <h1 id="auth-title">{reset ? "Reset your password" : signup ? "Create your Vihar ID" : "Sign in to Vihar ID"}</h1>
+    <p className="id-description">{reset ? "We’ll email you a password reset link." : signup ? "One player identity for your games and progress." : "Use your Vihar account to continue to the game."}</p>
+    {sent ? <div className="account-success" role="status"><Mail size={24} aria-hidden="true" /><h2>Check your inbox</h2><p>If that email has an account, a reset link is on its way.</p><button type="button" className="id-text-button" onClick={() => onModeChange?.("login")}>Back to sign in</button></div> : <>
+      {!reset && <><button type="button" className="google-button" onClick={() => void google()} disabled={busy}><GoogleMark />Continue with Google</button><div className="form-divider"><span>or use your email</span></div></>}
+      <form onSubmit={(event) => void submit(event)}>
+        <fieldset disabled={busy} className="account-fields">
+          <label className="account-field" htmlFor="email"><span>Email address</span><input id="email" name="email" type="email" autoComplete="email" placeholder="you@example.com" required maxLength={254} /></label>
+          {!reset && <PasswordInput newPassword={signup} />}
+          {signup && <label className="account-checkbox"><input type="checkbox" required /><span>I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer">Terms</a> and <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy notice</a>.</span></label>}
+          {!reset && !signup && <button type="button" className="id-text-button id-forgot" onClick={() => onModeChange?.("reset")}>Forgot password?</button>}
+          <button className="button button-dark account-submit" type="submit">{busy ? "Please wait…" : reset ? "Send reset link" : signup ? "Create Vihar ID" : "Sign in"}<ArrowRight size={16} aria-hidden="true" /></button>
+        </fieldset>
+      </form>
+      {error && <p ref={errorRef} className="account-error" role="alert">{error}</p>}
+      <p className="id-auth-switch">{!reset && (signup ? "Already have an ID? " : "New to Vihar? ")}<button className="id-text-button" type="button" disabled={busy} onClick={() => onModeChange?.(signup || reset ? "login" : "signup")}>{signup || reset ? "Sign in" : "Create an account"}</button></p>
+    </>}
+  </section>;
   return <div className="account-auth container">
     <section className="auth-story" aria-labelledby="id-story-title"><p className="eyebrow"><Sparkles size={16} aria-hidden="true" /> Your player identity</p><h2 id="id-story-title">One ID.<br />A world of <em>play.</em></h2><p>Your profile, your games, your community. Make your mark on Vihar.</p><div className="id-preview"><div className="id-preview-top"><span>VIHAR <b>ID</b></span><span aria-hidden="true">✳</span></div><Avatar id="tiger" size={94} /><p>Player One</p><span>@your_username</span><div className="id-preview-bottom"><span>Your name in the game</span><span aria-hidden="true">↗</span></div></div><div className="auth-story-note"><ShieldCheck size={18} aria-hidden="true" /><p>One identity for Vihar.<br /><span>More games. Same you.</span></p></div></section>
     <section className="auth-form-panel" aria-labelledby="auth-title"><p className="eyebrow">{reset ? "A fresh start" : signup ? "Your next chapter" : "Your space awaits"}</p><h1 id="auth-title">{reset ? "Forgot your password?" : signup ? <>Create your<br /><em>player ID.</em></> : <>Welcome <br /><em>back.</em></>}</h1><p className="account-muted">{reset ? "We’ll send you a link to choose a new one." : signup ? "Choose your username. Build your profile. Find your next game." : "Sign in to your Vihar ID and pick up where you left off."}</p>

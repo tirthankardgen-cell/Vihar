@@ -129,19 +129,24 @@ export function createViharId({ gameId, baseUrl = "https://vihar.online", onErro
     try { await stopSession(); if (token) await request("revoke", {}, token); }
     finally { remember(null); for (const reset of signOutViews) reset(); }
   }
-  function mount(element) {
+  function mount(element, { theme = "dark", compact = false } = {}) {
     const root = typeof element === "string" ? document.querySelector(element) : element;
     if (!root) throw new Error("Vihar ID button container was not found.");
-    const button = document.createElement("button"), note = document.createElement("p"), link = document.createElement("a"), status = document.createElement("p");
-    button.type = "button"; button.textContent = "Sign in with Vihar ID";
-    button.style.cssText = "font:600 15px system-ui;padding:13px 22px;border:1px solid #27241f;border-radius:10px;background:#27241f;color:#fff;cursor:pointer";
+    const button = document.createElement("button"), icon = document.createElement("img"), label = document.createElement("span"), note = document.createElement("p"), link = document.createElement("a"), status = document.createElement("p");
+    const light = theme === "light";
+    button.type = "button";
+    icon.src = `${base}/brand/vihar-emblem${light ? "" : "-inverse"}.svg`;
+    icon.alt = ""; icon.width = 24; icon.height = 24; icon.setAttribute("aria-hidden", "true");
+    icon.style.cssText = "display:block;flex:0 0 24px;width:24px;height:24px;object-fit:contain";
+    label.textContent = "Sign in with Vihar ID"; button.append(icon, label);
+    button.style.cssText = `display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:46px;font:600 14px system-ui;line-height:1.4;padding:11px 18px;border:1px solid ${light ? "#d8d3cc" : "#27241f"};border-radius:9px;background:${light ? "#fffefa" : "#27241f"};color:${light ? "#27241f" : "#fffefa"};cursor:pointer`;
     note.textContent = "One player ID across community games. Keep your play activity and supported cloud saves together.";
     link.href = `${base}/help/vihar-id`; link.textContent = "About Vihar ID"; link.target = "_blank"; link.rel = "noopener noreferrer";
     status.setAttribute("role", "status");
     const reset = () => { status.textContent = "Signed out of this game."; };
     signOutViews.add(reset);
     button.onclick = async () => { button.disabled = true; try { const player = await signIn(); status.textContent = `Signed in as @${player.username}`; root.dispatchEvent(new CustomEvent("vihar:signin", { detail: player, bubbles: true })); } catch (error) { status.textContent = error.message; onError(error); } finally { button.disabled = false; } };
-    root.replaceChildren(button, note, link, status);
+    root.replaceChildren(...(compact ? [button, status] : [button, note, link, status]));
     return () => { signOutViews.delete(reset); root.replaceChildren(); };
   }
   return { signIn, signOut, resumeLaunch, startSession, stopSession, setPlaying, mount,

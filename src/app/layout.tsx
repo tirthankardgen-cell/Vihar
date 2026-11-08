@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { SiteFrame } from "@/components/site-frame";
 import { RouteScrollReset } from "@/components/route-scroll-reset";
 import { StructuredData } from "@/components/structured-data";
 import { isPreview, site } from "@/lib/site";
@@ -71,9 +72,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <AuthProvider>
         <RouteScrollReset />
         <a href="#main-content" className="skip-link">Skip to content</a>
-        <Header />
-        <main id="main-content" tabIndex={-1}>{children}</main>
-        <Footer />
+        <SiteFrame header={<Header />} footer={<Footer />}>{children}</SiteFrame>
         </AuthProvider>
         <StructuredData data={{ "@context": "https://schema.org", "@type": "Organization", "@id": `${site.url}/#organization`, name: "Vihar", url: site.url, description: site.description, logo: { "@type": "ImageObject", "@id": `${site.url}/#logo`, url: `${site.url}/brand/vihar-avatar.png`, contentUrl: `${site.url}/brand/vihar-avatar.png`, caption: "Vihar — A space to play" }, email: site.email, sameAs: [site.instagram] }} />
       </body>

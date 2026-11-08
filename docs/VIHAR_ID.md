@@ -76,7 +76,15 @@ Heartbeats run every 15 seconds. The SDK excludes hidden and explicitly paused i
 
 Saves are JSON objects below 60 KB, scoped to player and game. Revision conflicts return `save_conflict`; reload and merge deliberately. Client-writable saves are unsuitable for authoritative currencies, purchases or competitive scores. Disconnect increments the connection version, invalidating outstanding codes and tokens while retaining saves and history.
 
+## Vihar ID button and icon
+
+`vihar.mount("#vihar-login")` includes the official Vihar emblem and the label **Sign in with Vihar ID**. Use `vihar.mount("#vihar-login", { theme: "light" })` for a light button, or `{ theme: "dark", compact: true }` for just the button and its accessible status message. With `compact`, put the identity explanation and permissions link elsewhere on your login screen.
+
+Studios may use the official [dark emblem](https://vihar.online/brand/vihar-emblem.svg) on light backgrounds and [light emblem](https://vihar.online/brand/vihar-emblem-inverse.svg) on dark backgrounds in their own sign-in buttons. Keep the icon square, at least 20px, alongside the full label; do not replace the label with an icon alone. The [button guide](https://vihar.online/help/brand-button) includes working HTML and styling. Sign-in, account creation and game consent stay in a compact Vihar popup; credentials never pass through the studio website.
+
 ## Operation and verification
+
+Use `npm run playground` for a standalone local studio site with the real SDK, player-data inspector, save editor, conflict test and gameplay controls. It starts isolated Firebase emulators and a local Vihar website. See the [local playground guide](../examples/vihar-id-playground/README.md) for launch instructions and demo accounts.
 
 The server uses Firebase Admin credentials described in [Deployment](DEPLOYMENT.md). Firestore browser rules deny writes to integrations, tokens, codes, saves, sessions and aggregate metrics. The server validates ownership, registered origins, scoped access, publication, versions, expiry and input limits.
 

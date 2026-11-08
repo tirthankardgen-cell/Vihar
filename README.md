@@ -65,6 +65,8 @@ On Windows, the project folder can show the website's icon using the included `d
 
 ### Quality checks
 
+For a separate local studio website with Vihar ID sign-in, a player-data inspector, editable cloud saves and gameplay controls, run `npm run playground` (Node 26 and Java 21+), or `./Start-Vihar-ID-Playground.ps1` on this Windows checkout. Open `http://127.0.0.1:4195`. See the [local playground guide](examples/vihar-id-playground/README.md) for demo accounts and step-by-step tests.
+
 ```sh
 npm run check       # Lint, unit tests, TypeScript, and production build
 npm run test:rules  # Firestore authorization tests; requires Java 21+
@@ -130,3 +132,5 @@ Advertising is paused by default. Publisher verification metadata and `ads.txt` 
 Vihar is **proprietary**, not an open-source release. Original code, branding, games, writing, and artwork retain their existing ownership; public source access does not grant a general right to redistribute or republish them. See [LICENSE](LICENSE). Fonts, icons, and dependencies retain their own licenses, listed in [Third-party notices](THIRD_PARTY_NOTICES.md).
 
 For usage permission, collaboration, or support, contact [contact@vihar.online](mailto:contact@vihar.online).
+
+Studios integrating Vihar ID may use its official icon in their sign-in buttons under the limited integration permission in [LICENSE](LICENSE). See the [button and icon guide](https://vihar.online/help/brand-button).

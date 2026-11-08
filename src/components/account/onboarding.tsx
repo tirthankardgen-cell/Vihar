@@ -9,7 +9,7 @@ import { getFirebase } from "@/lib/firebase/client";
 import { useAuth } from "./auth-provider";
 import { Avatar, AvatarPicker } from "./avatar";
 
-export function Onboarding() {
+export function Onboarding({ compact = false }: { compact?: boolean }) {
   const { user } = useAuth();
   const [step, setStep] = useState<1 | 2>(1);
   const [username, setUsername] = useState("");
@@ -65,8 +65,8 @@ export function Onboarding() {
     } finally { setBusy(false); }
   }
 
-  return <div className="onboarding-page"><div className="onboarding-wrap container">
-    <aside className="onboarding-preview" aria-label="Live Vihar ID preview">
+  return <div className={compact ? "id-onboarding" : "onboarding-page"}><div className="onboarding-wrap container">
+    {!compact && <aside className="onboarding-preview" aria-label="Live Vihar ID preview">
       <div className="onboarding-preview-intro"><p className="eyebrow"><Gamepad2 size={17} aria-hidden="true" /> Your player identity</p><h2>Your name.<br /><em>Your game.</em></h2><p>Build the profile players will know you by.</p></div>
       <div className="onboarding-id-card">
         <div className="onboarding-id-top"><span>VIHAR <b>ID</b></span><span className="onboarding-preview-badge">Live preview</span></div>
@@ -76,7 +76,7 @@ export function Onboarding() {
         <div className="onboarding-id-bottom"><span>YOUR IDENTITY ON VIHAR</span><Gamepad2 size={15} aria-hidden="true" /></div>
       </div>
       <p className="onboarding-preview-note">Your profile. Your games. Your community.</p>
-    </aside>
+    </aside>}
 
     <section className="onboarding-card" ref={panel} aria-labelledby="onboarding-title">
       <ol className="onboarding-steps" aria-label="Profile setup progress"><li aria-current={step === 1 ? "step" : undefined} data-complete={step > 1 || undefined}><span>{step > 1 ? <Check size={13} aria-hidden="true" /> : "01"}</span>Identity</li><li aria-current={step === 2 ? "step" : undefined}><span>02</span>Avatar</li></ol>
