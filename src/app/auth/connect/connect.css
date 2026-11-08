@@ -15,6 +15,7 @@
 .id-flow .account-field { gap: 6px; font-size: 12px; }
 .id-flow .account-field input { min-height: 44px; font-size: 16px; padding: 10px 12px; border-radius: 8px; background: #fff; }
 .id-flow .password-input input { padding-right: 48px; }
+.id-flow .username-input input { padding-left: 34px; }
 .id-flow .button { min-height: 44px; border-radius: 9px; font-size: 13px; padding: 11px 16px; }
 .id-flow button:disabled { cursor: wait; opacity: .6; }
 .id-text-button { border: 0; padding: 0; background: transparent; color: #814126; font-size: 12px; font-weight: 550; text-decoration: underline; text-underline-offset: 3px; }
