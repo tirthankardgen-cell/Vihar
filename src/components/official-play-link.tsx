@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { games } from "@/lib/games";
+import Link from "./site-link";
 
 export function OfficialPlayLink({ id, className, children, ariaLabel }: { id: string; className?: string; children: React.ReactNode; ariaLabel?: string }) {
   const [error, setError] = useState("");
@@ -23,5 +24,6 @@ export function OfficialPlayLink({ id, className, children, ariaLabel }: { id: s
     finally { recording.current = false; }
   }
   if (!game || game.status !== "playable") return null;
+  if (game.collection === "quick-play") return <Link href={`/games/${game.slug}`} className={className} aria-label={ariaLabel}>{children}</Link>;
   return <><a href={game.playUrl} target="_blank" rel="noopener noreferrer" className={className} aria-label={ariaLabel} onClick={() => void launched()} onAuxClick={(event) => { if (event.button === 1) void launched(); }}>{children}</a>{error && <p role="alert" className="account-error">{error}</p>}</>;
 }

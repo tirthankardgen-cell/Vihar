@@ -2,7 +2,7 @@ import { idAction } from "@/lib/vihar-id/service";
 import { IdError } from "@/lib/vihar-id/protocol";
 
 export const runtime = "nodejs";
-const actions = new Set(["register", "info", "authorize", "launch", "disconnect", "token", "me", "save", "session", "revoke"]);
+const actions = new Set(["register", "info", "authorize", "launch", "receipt", "disconnect", "token", "me", "save", "session", "revoke"]);
 function headers(request: Request) {
   return { "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow", "Access-Control-Allow-Origin": request.headers.get("origin") || "null", "Access-Control-Allow-Methods": "POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type, Authorization", "Vary": "Origin", "Referrer-Policy": "no-referrer" };
 }

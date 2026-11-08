@@ -12,6 +12,7 @@ Vihar is a game discovery and publishing platform, rooted in India and open to p
 ## Who publishes the games
 - VIHAR Originals are created by the VIHAR team. Bap Ka Rasta and Gulam Chor belong to this collection.
 - Community Games are published by independent creators and players. The Community Game badge identifies these listings; the publisher’s profile is linked when available. Community submissions are not presented as VIHAR creations.
+- Quick Play is a collection of twelve VIHAR board games and puzzles. Each has its own Vihar page. Unreleased games are marked Coming soon; only verified releases can play inside that page. Game code stays on games.vihar.online.
 - Community rankings use real player ratings, with review count as the tie-breaker. Unrated games do not receive a rank. Recommendations are discovery selections, not a claim of personalized tracking.
 - Reviews include a star rating and written comments or feedback. A signed-in player must open a game from Vihar before posting a review; a community publisher cannot review their own game.
 
@@ -26,6 +27,7 @@ ${helpArticles.map((article) => `- [${article.title}](${site.url}/help/${article
 - [Games](${site.url}/games): game discovery, community rankings and recommended games.
 - [VIHAR Originals](${site.url}/games/originals): games created by the VIHAR team.
 - [Community Games](${site.url}/games/community): published games by independent creators and players.
+- [Quick Play](${site.url}/games/quick-play): board and tabletop favourites, puzzles, release status and individual game pages.
 - [Share your game](${site.url}/dashboard/publish): sign in to submit a self-hosted game URL and track unique player opens and reviews.
 - [Instagram](${site.instagram}): official Vihar World profile.
 - [Bap Ka Rasta](${site.url}/games/bap-ka-rasta): free-roaming driving game inspired by Indian cities, with a growing city and vehicle line-up, controls and requirements.

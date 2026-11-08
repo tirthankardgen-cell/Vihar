@@ -1,6 +1,8 @@
 import { collection, doc, getDoc, runTransaction, serverTimestamp, setDoc } from "firebase/firestore";
 import { getFirebase } from "@/lib/firebase/client";
 import { games } from "@/lib/games";
+import { getQuickPlayGame } from "./quick-play";
+import { accountIdAction } from "./vihar-id/client";
 
 import type { GameDetails } from "./game-publishing";
 export type CommunityGame = Partial<GameDetails> & { id: string; ownerId: string; title: string; description: string; url: string; kind: "browser" | "download"; published: boolean };
@@ -11,6 +13,11 @@ export { gameUrl } from "./game-publishing";
 export type GameSource = "communityGames" | "officialGames";
 
 export async function ensureLaunchReceipt(gameId: string, uid: string, source: GameSource) {
+  if (source === "officialGames" && getQuickPlayGame(gameId)) {
+    if (getFirebase().auth.currentUser?.uid !== uid) throw new Error("Sign in again to record this game.");
+    await accountIdAction("receipt", { gameId, restore: true });
+    return;
+  }
   const ref = doc(getFirebase().db, source, gameId, "players", uid);
   if (!(await getDoc(ref)).exists()) {
     try { await setDoc(ref, { startedAt: serverTimestamp() }); }
@@ -32,6 +39,12 @@ export async function restoreGuestLaunch(gameId: string, uid: string, source: Ga
 }
 
 export async function recordLaunch(gameId: string, uid: string, source: GameSource = "communityGames") {
+  if (source === "officialGames" && getQuickPlayGame(gameId)) {
+    if (getFirebase().auth.currentUser?.uid !== uid) throw new Error("Sign in again to record this game.");
+    await accountIdAction("receipt", { gameId });
+    window.dispatchEvent(new CustomEvent("vihar:game-opened", { detail: { gameId, source } }));
+    return;
+  }
   const { db } = getFirebase();
   const receipt = doc(db, source, gameId, "players", uid);
   const activity = doc(collection(db, "players", uid, "activity"));

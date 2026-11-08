@@ -7,6 +7,7 @@ import { ArrowRight, ArrowUpRight, Monitor, Play, Sparkles } from "lucide-react"
 import { DiscoveryFaq } from "@/components/discovery-faq";
 import { GameCard } from "@/components/game-card";
 import { GameCollections } from "@/components/game-collections";
+import { QuickPlaySection } from "@/components/quick-play-section";
 import { CommunityGames } from "@/components/community-games";
 import { ViharAttribution } from "@/components/game-origin";
 import { publicGames } from "@/lib/community-public";
@@ -45,10 +46,12 @@ export async function HomeContent() {
       <section className="section collection-section viewport-section" aria-labelledby="collection-title">
         <div className="container">
           <div className="section-title-row"><div><p className="eyebrow"><span className="section-number">02 /</span> Made by our team</p><h2 id="collection-title">VIHAR <em>Originals.</em></h2><p className="collection-description">Our ideas, our worlds. Games created by the VIHAR team.</p></div><Link href="/games/originals" className="text-link">Explore VIHAR Originals <ArrowUpRight size={18} aria-hidden="true" /></Link></div>
-          <div className="game-grid">{games.map((game) => <GameCard key={game.slug} game={game} />)}</div>
+          <div className="game-grid">{games.filter((game) => !game.collection).map((game) => <GameCard key={game.slug} game={game} />)}</div>
           <p className="collection-note"><Sparkles size={16} aria-hidden="true" /> A small collection, growing with a little imagination.</p>
         </div>
       </section>
+
+      <div className="container"><QuickPlaySection /></div>
 
       <section className="world-section viewport-section" aria-labelledby="world-title">
         <div className="container world-inner">

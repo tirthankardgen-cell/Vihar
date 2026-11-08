@@ -5,6 +5,7 @@ import { indexableRoutes, site } from "@/lib/site";
 import { galleryPath } from "@/lib/game-images";
 import { galleryImages } from "@/lib/game-showcase";
 import { gulamFamily, gulamScreenshots } from "@/lib/gulam-chor";
+import { quickPlayGames, quickPlayUpdated } from "@/lib/quick-play";
 
 // Refresh the generated sitemap every five minutes; lastmod records content changes, not requests.
 export const revalidate = 300;
@@ -27,6 +28,8 @@ const pageImages: Record<string, readonly string[]> = {
   ],
   "/games": ["/images/bap-ka-rasta-cover.webp", "/images/gulam-chor/landing.webp"],
   "/games/originals": ["/images/bap-ka-rasta-cover.webp", "/images/gulam-chor/landing.webp"],
+  "/games/quick-play": quickPlayGames.map((game) => game.artwork),
+  ...Object.fromEntries(quickPlayGames.map((game) => [`/games/${game.id}`, [game.artwork]])),
   "/games/gulam-chor": ["/images/social-gulam-chor.png", "/images/gulam-chor/landing.webp", "/images/gulam-chor/courtyard.svg", ...gulamScreenshots.map((shot) => shot.src), ...gulamFamily.map((person) => `/images/gulam-chor/${person.id}.svg`)],
   "/games/bap-ka-rasta": ["/images/bap-ka-rasta-city-preview.webp", "/images/bap-ka-rasta-mumbai-chowk.webp", "/images/bap-ka-rasta-mumbai-map.webp", "/images/bap-ka-rasta-cover.webp", "/images/bap-ka-rasta-gameplay.webp", "/images/bap-ka-rasta-camera.webp"],
   [galleryPath]: galleryImages.map((image) => image.src),
@@ -36,12 +39,14 @@ const pageImages: Record<string, readonly string[]> = {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const community = await publicGames();
-  const latestDiscovery = community.reduce((latest, game) => Date.parse(game.updatedAt) > Date.parse(latest) ? game.updatedAt : latest, discoveryUpdated);
+  const latestDiscovery = community.reduce((latest, game) => Date.parse(game.updatedAt) > Date.parse(latest) ? game.updatedAt : latest, quickPlayUpdated);
   return [...indexableRoutes.map((path) => ({
     url: site.url + (path === "/" ? "" : path),
     ...discoveryHints,
     ...(path.startsWith("/help/") ? { lastModified: helpUpdated } : {}),
     images: pageImages[path]?.map((image) => site.url + image),
     ...(discoveryPages.has(path) ? { lastModified: ["/", "/games", "/games/community", "/site-map"].includes(path) ? latestDiscovery : discoveryUpdated } : path === "/games/gulam-chor" ? { lastModified: gulamUpdated } : updatedContent.has(path) ? { lastModified: ["/games/bap-ka-rasta", galleryPath, "/guides/bap-ka-rasta-first-drive"].includes(path) ? "2026-11-03T00:00:00+05:30" : creatorUpdated } : {}),
+    ...(["/games/quick-play", "/games/originals"].includes(path) ? { lastModified: quickPlayUpdated } : {}),
+    ...Object.fromEntries(quickPlayGames.filter((game) => path === `/games/${game.id}` && game.release.status === "playable").map((game) => ["lastModified", game.release.status === "playable" ? game.release.verifiedAt : quickPlayUpdated])),
   })), ...community.map((game) => ({ url: `${site.url}/community/${game.id}`, ...discoveryHints, lastModified: game.updatedAt, images: [...new Set([game.coverUrl, ...(game.screenshots ?? [])].filter((url): url is string => !!url && url.startsWith("https://")))] }))];
 }

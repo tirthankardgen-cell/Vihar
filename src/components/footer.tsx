@@ -19,7 +19,7 @@ export function Footer() {
           </div>
           <div className="footer-group">
             <p className="eyebrow">Wander a little</p>
-            <nav aria-label="Explore"><Link href="/games">All games</Link><Link href="/games/originals">VIHAR Originals</Link><Link href="/games/community">Community Games</Link><Link href="/dashboard/publish">Share your game</Link><Link href="/signup">Create your Vihar ID</Link><Link href="/guides/bap-ka-rasta-first-drive">First-drive guide</Link><Link href="/about">Our story</Link><Link href="/help">FAQs</Link><Link href="/help">Help &amp; support</Link></nav>
+            <nav aria-label="Explore"><Link href="/games">All games</Link><Link href="/games/originals">VIHAR Originals</Link><Link href="/games/community">Community Games</Link><Link href="/games/quick-play">Quick Play</Link><Link href="/dashboard/publish">Share your game</Link><Link href="/signup">Create your Vihar ID</Link><Link href="/guides/bap-ka-rasta-first-drive">First-drive guide</Link><Link href="/about">Our story</Link><Link href="/help">FAQs</Link><Link href="/help">Help &amp; support</Link></nav>
           </div>
           <div className="footer-group">
             <p className="eyebrow">Say hello</p>

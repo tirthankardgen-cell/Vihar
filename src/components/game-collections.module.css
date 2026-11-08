@@ -2,13 +2,14 @@
 .heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; font-size: 13px; color: var(--muted); }
 .heading a { min-height: 40px; padding: 7px 16px; border: 1px solid var(--line); border-radius: 999px; }
 .heading a[aria-current="page"] { background: var(--ink); color: white; border-color: var(--ink); }
-.choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .choice { display: flex; align-items: center; gap: 16px; width: 100%; padding: 24px; border: 1px solid var(--collection-border); border-radius: 18px; background: var(--collection-bg); color: var(--ink); text-align: left; transition: border-color .2s, box-shadow .2s; }
 .choice:hover, .choice[aria-current="page"] { border-color: var(--collection-accent); box-shadow: inset 0 0 0 1px var(--collection-accent); }
 .originals { --collection-bg: #fcf2e8; --collection-border: #e9d5c2; --collection-accent: #945333; }
 .community { --collection-bg: #f0edf8; --collection-border: #ded5ec; --collection-accent: #675087; }
+.quick-play { --collection-bg: #f0f1e4; --collection-border: #d5ddc4; --collection-accent: #5c7143; }
 .icon { display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; color: var(--collection-accent); background: #ffffffa6; border-radius: 12px; }
 .copy { display: grid; gap: 5px; flex: 1; min-width: 0; }
 .copy strong { font-size: 18px; line-height: 1.3; font-weight: 600; }
 .copy > span { font-size: 13px; color: #62616a; line-height: 1.5; }
-@media (max-width: 640px) { .choices { grid-template-columns: 1fr; gap: 12px; } .choice { padding: 18px; gap: 12px; } .copy strong { font-size: 16px; } }
+@media (max-width: 850px) { .choices { grid-template-columns: 1fr; gap: 12px; } .choice { padding: 18px; gap: 12px; } .copy strong { font-size: 16px; } }

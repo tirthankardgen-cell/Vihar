@@ -15,6 +15,7 @@ Do not create another developer guide, changelog, handoff, task report or perman
 - [Project and product](#project-and-product)
 - [Local development](#local-development)
 - [Architecture and data](#architecture-and-data)
+- [Quick Play embedded games](#quick-play-embedded-games)
 - [Vihar ID integration](#vihar-id-integration)
 - [Discovery and indexing](#discovery-and-indexing)
 - [Production operations](#production-operations)
@@ -100,6 +101,61 @@ Profiles contain UID, username, display name, bio, avatar and timestamps, never 
 Every eligible signed-in launch creates private dated activity and the first review receipt when absent. Guest continuity can restore review eligibility, not historical activity. The activity calendar displays the last 365 UTC days with a 90-day option. Game opens, actual reported play time and trusted game scores are distinct. Connected community play time is private; aggregate creator metrics exclude the creator's own tests. Account export includes private activity and connected-game data without credentials. Account deletion currently uses the support workflow to coordinate Auth, profiles, immutable usernames and related records; do not offer a bare Auth deletion that leaves orphaned data.
 
 The creator workflow is Details → Images & play guide → Preview → Visibility, with Content and Analytics views. Images are external HTTPS URLs; no game binary or arbitrary file upload is provided. New listings must save a draft, register their exact hosting origin and pass the owner integration test before publication. Changes to origin, URL or authentication mode require retesting. Legacy listings remain readable.
+
+## Quick Play embedded games
+
+The owner confirmed **https://games.vihar.online** on 9 November 2026; the earlier games.vihr.online spelling was a typo. The live games manifest is /api/games on the confirmed host. Gameplay is being implemented separately in the sibling Vihar Games project. This website change supplies the integration, not twelve game engines.
+
+The Quick Play collection at /games/quick-play contains Billiards, Carrom, Checkers, Chess, Connect Four, Ludo, Memory Match, Minesweeper, Reversi, Snakes and Ladders, Sudoku and Tic-Tac-Toe. Each has a canonical /games/{id} detail page with its own description, illustration and basic rules. The collection adds **Board & Table** and **Puzzles & Quick Play** genre filters without replacing VIHAR Originals / Community Games provenance. All twelve are VIHAR Originals. Bap Ka Rasta and Gulam Chor retain their independent pages and deployments.
+
+At integration delivery, all twelve host entries report availability planned and no available modes. They are visible as substantive **Coming soon** previews, with disabled play and no review claims. Upcoming detail pages are noindex and excluded from XML sitemaps; the collection and HTML directory make their status clear. Only released detail pages join the XML sitemap. Do not enable frames just because the coming-soon host route returns 200.
+
+The typed registry in src/lib/quick-play.ts owns each stable ID, verified individual /{id}/play address, exact origin, provenance, genres, artwork, instructions and release state. A playable release must supply verifiedAt, tested modes, tested devices and controls. Run **npm run verify:quick-play-host** before enabling one: the live manifest must report playable, the listed modes and embedVersion 1, and framing headers must allow Vihar. Browser-test the real game and its SDK lifecycle as well; the preflight does not prove gameplay. Update that entry's release field and this record together, then deploy the website. No environment variable, query parameter or browser message bypasses this gate.
+
+The shared detail route uses QuickPlayExperience and a lazily imported EmbeddedPlayer. Pressing Play preserves the Vihar URL, mounts only that game's iframe and gives the existing SiteFrame a route-scoped lease to remove navigation, footer and the skip link. Details/reviews unmount during play. A ready handshake, rather than iframe load, reveals the game. Loading expires after 15 seconds; errors offer Retry and Back to details. Exit requests a game-owned session flush, waits at most 1.5 seconds, unmounts the frame, restores scrolling and focuses Play. Browser history is never trapped. Dynamic viewport height, safe areas, reduced motion and keyboard recovery are supported. Card, catalogue, detail and player styles are separate so the homepage retains its existing CSS budget.
+
+### Game-host integration contract
+
+The public companion module **/sdk/vihar-embed.js** supplies createViharEmbed. It supplements **/sdk/vihar-id.js**; it is not an identity or heartbeat protocol. The website appends only vihar_embed=1 and a random vihar_session to the allowlisted play path. A signed-in launch also carries the existing one-use vihar_launch ticket in the fragment. No Firebase credential or durable bearer token is sent through UI messages or URL queries.
+
+Messages use channel vihar:embed, numeric version 1, exact gameId, and the expected sessionId. Every receiver checks origin and source window and rejects malformed or extra fields. Parent-to-game events are init and visibility with a boolean visible, plus stop. Game-to-parent events are ready, error with code load_failed or unsupported, exit, and stopped. Every send uses an exact target origin. The parent repeats init until the game explicitly calls ready(); an iframe load or a message from another frame cannot dismiss loading. The bridge waits for valid initialization before sending readiness and wires Escape to exit.
+
+The game host must send CSP frame-ancestors https://vihar.online on its play pages, with no conflicting X-Frame-Options. Keep Vihar's own DENY/frame-ancestors none protection. The trusted iframe permits scripts, same-origin storage and escaped popups, but no top navigation, camera, microphone or arbitrary community embeds. No browser Fullscreen API is invoked automatically. Treat storage as optional: a fresh embedded SDK launch clears a previous account's cached credential, shares repeated initialization safely and can continue in memory if storage is blocked.
+
+Game-side wiring, after importing the two public modules (use the real registry ID):
+
+```js
+const id = createViharId({ gameId: "chess" });
+let gameplay = false;
+let parentVisible = true;
+const syncPlaying = () => id.setPlaying(gameplay && parentVisible);
+const embed = createViharEmbed({
+  gameId: "chess",
+  onVisibilityChange(visible) {
+    parentVisible = visible;
+    syncPlaying();
+    // Pause the actual game/render loop when hidden, too.
+  },
+  async onExit() {
+    gameplay = false;
+    syncPlaying();
+    await id.stopSession();
+  },
+});
+await id.resumeLaunch(); // Handle a failure visibly; guest play remains possible.
+// After the real menu, game assets and Exit to Vihar control are usable:
+embed.ready();
+// At an actual round start: await id.startSession(); gameplay = true; syncPlaying();
+// At pause/menu: gameplay = false; syncPlaying();
+// At resume: gameplay = true; syncPlaying();
+// At round end: gameplay = false; await id.stopSession();
+// Wire the menu's Exit to Vihar button to embed.exit().
+// On teardown, remove engine listeners and call embed.dispose().
+```
+
+The game SDK is the only gameplay reporter. The wrapper requests an activity-only launch and records an open/first-review receipt after ready; it never credits elapsed page time. First-party registrations are code-owned and cannot be claimed through Creator studio or shadowed by same-ID community documents. The existing service writes officialGames review receipts and metrics, and private gameStats with source officialGames. Guest continuity restores a receipt after sign-in without fabricating past activity. Firestore clients cannot create Quick Play receipts, forge time or alter another player's review. Favourite IDs are allowlisted, including the upcoming previews. Existing connected-game dashboards route official play records back to /games/{id} and retain legacy community records.
+
+For release, test guest and signed-in play, blocked storage, popup capability where used, menu/round/pause/visibility transitions, exit, reload, interrupted sessions and actual account/game attribution. The local synthetic browser fixture is temporary evidence under ignored output, not a released game or a public test listing. Production gameplay, device support and online rooms still require the separate game implementation and per-game verification.
 
 ## Vihar ID integration
 
@@ -202,7 +258,8 @@ Vihar is a game discovery and publishing platform. VIHAR Originals are made by t
 
 ### Discovery
 
-- `/games` presents collection choices, a horizontal Community Top 5 when rated games exist, and recommendations mixing both origins.
+- `/games` presents collection choices, a horizontal Community Top 5 when rated games exist, recommendations mixing both origins, and the Quick Play section.
+- `/games/quick-play` contains twelve official board/tabletop and puzzle previews, with accurate release status, search and genre/availability filters. Its individual /games/{id} pages enter play mode only after verified release.
 - `/games/originals` contains VIHAR's catalogue and its search, category and availability filters.
 - `/games/community` contains published community listings and community search. Listings are rendered on the server for readers and crawlers, then refreshed in the browser.
 - Rankings use average rating, then review count, with stable title/ID ties. Only published, rated community games enter the Top 5. Unrated games remain discoverable in recommendations and the community collection.
@@ -214,9 +271,9 @@ No sample games or placeholder rankings are shipped. Temporary QA fixtures use i
 
 ### Crawlable information
 
-Both collection pages have dedicated canonical URLs, unique metadata, breadcrumbs and CollectionPage/ItemList structured data. Published community pages include VideoGame data and attribute the publisher to their public profile when available. Public profiles and private account pages retain their existing noindex policy.
+All collection pages have dedicated canonical URLs, unique metadata, breadcrumbs and CollectionPage/ItemList structured data. Published community pages include VideoGame data and attribute the publisher to their public profile when available. Public profiles and private account pages retain their existing noindex policy.
 
-The XML sitemap includes both collections, substantive public pages and published community games. It includes official artwork, the Vihar logo/favicon, and community cover/screenshot URLs. Daily change-frequency hints express the intended discovery cadence; the sitemap and public listing cache refresh every five minutes. Last-modified values represent actual content changes, not the time a crawler requests a file.
+The XML sitemap includes the three collections, released Quick Play detail pages, substantive public pages and published community games. Upcoming Quick Play detail pages remain noindex and out of XML sitemaps; the HTML directory identifies them as coming soon. It includes official artwork, the Vihar logo/favicon, and community cover/screenshot URLs. Daily change-frequency hints express the intended discovery cadence; the sitemap and public listing cache refresh every five minutes. Last-modified values represent actual content changes, not the time a crawler requests a file.
 
 Production robots.txt explicitly allows Bingbot, Googlebot, Googlebot-Image and search/answer crawlers, in addition to its wildcard rule. Images and Next.js image URLs remain crawlable. Preview deployments remain disallowed and noindex. Structured data, visible FAQs and llms.txt describe the same platform behavior without invented reviews, player counts or ranking promises.
 
@@ -265,6 +322,8 @@ Rollback uses a known-good deployment in the same Vercel project. Record the SHA
 | --- | --- |
 | `npm run check:log` | Current changes include the required development entry |
 | `npm run check` | ESLint, config/account/community/SDK unit tests, type generation, TypeScript and production build |
+| `npm run test:quick-play` | Exact-origin/frame/session messaging, launch URL and release gates, and game bridge lifecycle |
+| `npm run verify:quick-play-host` | Read-only live route, manifest, mode and released-frame header checks |
 | `npm run test:rules` | Firestore authorization contracts against an isolated emulator |
 | `npm run test:integration` | Real Auth/Firestore emulator registration, PKCE, token scope, saves, concurrency, play accounting and revocation |
 | `npm run verify` | Built HTTP routes, assets, links, metadata/schema, sitemap/robots, private auth headers and ad-policy boundaries |
@@ -366,6 +425,15 @@ Maintainers may edit or remove harmful content, ask participants to change their
 
 
 ## Change log
+
+### 2026-11-09 — Quick Play discovery and embedded-player integration
+
+- **Author:** Codex.
+- **Request:** Implement plans/embedded-games.md for the twelve Vihar Games entries, then push GitHub main and Vercel production. The owner confirmed games.vihar.online and explicitly kept gameplay implementation with the separate task.
+- **Changes:** Added the typed twelve-game registry, original reproducible illustrations, Quick Play collection and genre filters, shared detail pages, discovery links and release-aware metadata/sitemaps. Added a lazy viewport player, route-owned chrome suppression, strict versioned bridge, ready/error/retry/exit handling and focus/scroll restoration. Extended the existing Vihar ID service for code-owned official activity registrations and server-issued review receipts, preserved scoped credentials and guest play, and retained source-correct dashboards and Firestore review ownership.
+- **Decisions:** The local and live games manifests contain only planned scaffolds. Publish clearly labelled upcoming detail previews, with play/reviews gated and noindex until each verified game release; do not manufacture playable modes or implement the separately owned engines. Use the game SDK as the sole heartbeat owner. Keep existing Origins/Community provenance, Bap Ka Rasta, Gulam Chor, artwork, secrets and deployment linkage. Preserve unrelated pre-existing local development-record changes outside this release.
+- **Validation:** Read the installed Next.js server/client, dynamic-route, static-param, lazy-loading and route-handler guides. npm run check passed before the final CSS split; the later production build, npm run lint, npm run typecheck and git diff --check passed. The latest 17 SDK/protocol tests, 7 embedded-contract/bridge tests, 26 Firebase rules tests and 11 emulator service tests passed; account (7), community (7) and AdSense (4) checks also passed. npm run verify passed all 42 public routes plus private/account policies, metadata/schema, assets, sitemaps, ad boundaries and existing game pages. It initially caught homepage CSS above the unchanged 64 KiB budget; separated styles and reduced decorative motion brought it to 65,415 bytes. npm run verify:quick-play-host reconfirmed all twelve explicit routes and their planned status before release. Playwright CLI checks passed the 12 cards, 8/4 genre split, search/reset/empty/ready-only states, same-tab navigation, no game asset requests before Play, and layouts at 320x740, 390x844, 844x390 and 1440x1000. Screenshots were reviewed. An isolated emulator fixture using the real player, SDK, bridge and review components passed guest and signed-in launch, blocked frame storage, pause/resume, correct official account activity, one session owner, review creation/deletion and no remaining heartbeats after exit. Recovery checks passed malformed origins/sources/schemas, 15-second timeout, fresh retry, explicit failure, loading exit, child Escape, bounded unresponsive stop, portrait/landscape sizing, Back, reload, popup capability and CSP-blocked frames. The first API fixture hit Chrome loopback restrictions; request interception allowed normal flows but did not deliver unload requests. A separate temporary browser with only local-network checks disabled used the real local API and verified signed-in reload/session end. No production policy was weakened. Actual background-tab hiding was unavailable in headless Chrome; SDK/bridge visibility transitions passed unit tests, and real-game/browser compatibility remains a per-release requirement. Node 26.13.0 and a publisher-SHA-256-verified temporary Temurin 21.0.13 JRE were used. Final development-log gate and release verification follow below.
+- **Release:** npm run check:log passed. Compatible Firestore rules compiled and deployed successfully with npx firebase deploy --project vihar-27 --account tirthankar.dgen@gmail.com --only firestore:rules --non-interactive on 9 November 2026. No indexes, Storage rules or production account/game data were deployed or changed. Ready for the authorized main push; GitHub checks and the existing Vercel project's exact-SHA READY deployment must be confirmed afterward. Current Vercel CLI 65.12.1 refreshed the existing OAuth access; project linkage, Node 26, NODE_OPTIONS and the Production-only Firebase Admin Secret remain intact. The twelve game engines and real-game release checks remain with the separate gameplay task.
 
 ### 2026-11-08 — Quick Play embedded-games specification
 

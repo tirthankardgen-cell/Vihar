@@ -8,6 +8,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { setTimeout as delay } from "node:timers/promises";
 import sharp from "sharp";
+import { quickPlayGames } from "../src/lib/quick-play.ts";
 
 // Exercise the built HTTP site, including assets and links, rather than its source.
 // The private server is stopped even when an assertion fails.
@@ -24,8 +25,9 @@ const galleryPath = "/games/bap-ka-rasta/screenshots";
 const helpContent = await readFile(new URL("../src/lib/help.ts", import.meta.url), "utf8");
 const helpRoutes = [...helpContent.matchAll(/slug: "([a-z-]+)"/g)].map((match) => `/help/${match[1]}`);
 assert(helpRoutes.length >= 15, "Include the complete player, creator, developer and support guide library");
-const routes = ["/", "/games", "/games/originals", "/games/community", "/games/bap-ka-rasta", "/games/gulam-chor", "/about", "/help", ...helpRoutes, "/contact", "/privacy", "/terms", guidePath, galleryPath, "/site-map"];
-const indexableRoutes = routes;
+const routes = ["/", "/games", "/games/originals", "/games/community", "/games/quick-play", ...quickPlayGames.map((game) => `/games/${game.id}`), "/games/bap-ka-rasta", "/games/gulam-chor", "/about", "/help", ...helpRoutes, "/contact", "/privacy", "/terms", guidePath, galleryPath, "/site-map"];
+const upcomingRoutes = new Set(quickPlayGames.filter((game) => game.release.status !== "playable").map((game) => `/games/${game.id}`));
+const indexableRoutes = routes.filter((route) => !upcomingRoutes.has(route));
 const server = spawn(process.execPath, [require.resolve("next/dist/bin/next"), "start", "--hostname", "127.0.0.1", "--port", new URL(base).port], {
   cwd: root,
   env: { ...process.env, NODE_ENV: "production" },
@@ -126,6 +128,20 @@ try {
   assert.equal(sdk.status, 200);
   assert.equal(sdk.headers.get("access-control-allow-origin"), "*");
   assert((await sdk.text()).includes("export function createViharId"));
+  const bridge = await get("/sdk/vihar-embed.js");
+  assert.equal(bridge.status, 200);
+  assert.equal(bridge.headers.get("access-control-allow-origin"), "*");
+  assert((await bridge.text()).includes("export function createViharEmbed"));
+  assert.equal((await get("/games/not-a-real-game")).status, 404);
+  for (const game of quickPlayGames) {
+    assert(pages.get("/games/quick-play").includes(`href="/games/${game.id}"`), `${game.id}: discoverable detail page`);
+    const html = pages.get(`/games/${game.id}`);
+    assert(html.includes("How to play"), `${game.id}: server-rendered instructions`);
+    if (game.release.status !== "playable") {
+      assert(html.includes("Coming soon"), `${game.id}: truthful release status`);
+      assert(!html.includes('src="https://games.vihar.online'), `${game.id}: no placeholder iframe or asset preload`);
+    }
+  }
   const connect = await get("/auth/connect");
   assert.equal(connect.headers.get("cross-origin-opener-policy"), "unsafe-none");
   const connectHtml = await connect.text();

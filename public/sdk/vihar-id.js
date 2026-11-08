@@ -9,6 +9,7 @@ export function createViharId({ gameId, baseUrl = "https://vihar.online", onErro
   const storageKey = `vihar:id:v1:${base}:${gameId}`;
   let credential = null, sessionId = null, sequence = 0, timer = null, playing = false, lastTick = 0, pendingMs = 0, queue = Promise.resolve(), loginPending = false, starting = null;
   let removeLifecycle = () => {};
+  let resetEmbeddedLaunch = false, resumingLaunch = null;
   const signOutViews = new Set();
   try { credential = JSON.parse(sessionStorage.getItem(storageKey) || "null"); } catch { /* Storage is optional. */ }
   if (credential?.expiresAt <= Date.now()) credential = null;
@@ -46,7 +47,7 @@ export function createViharId({ gameId, baseUrl = "https://vihar.online", onErro
   async function stopSession() {
     if (starting) await starting.catch(() => {});
     clearInterval(timer); timer = null; removeLifecycle();
-    await report("end"); sessionId = null; playing = false;
+    await report("end", true); sessionId = null; playing = false;
   }
   async function signIn() {
     if (loginPending) throw Object.assign(new Error("Sign-in is already open."), { code: "login_pending" });
@@ -81,6 +82,19 @@ export function createViharId({ gameId, baseUrl = "https://vihar.online", onErro
     } finally { loginPending = false; popup.close(); }
   }
   async function resumeLaunch() {
+    if (resumingLaunch) return resumingLaunch;
+    resumingLaunch = readLaunch();
+    try { return await resumingLaunch; } finally { resumingLaunch = null; }
+  }
+  async function readLaunch() {
+    // Each embedded launch belongs to the player who just pressed Play on
+    // Vihar. Never inherit another account's tab credential on a shared device,
+    // including when a new ticket fails or the parent explicitly starts guest.
+    if (!resetEmbeddedLaunch && new URLSearchParams(location.search).get("vihar_embed") === "1") {
+      resetEmbeddedLaunch = true;
+      if (sessionId) await stopSession();
+      remember(null);
+    }
     const match = location.hash.match(/(?:^#|&)vihar_launch=([A-Za-z0-9_-]{43})$/);
     if (match) {
       const code = match[1];

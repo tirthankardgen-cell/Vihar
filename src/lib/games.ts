@@ -1,5 +1,6 @@
 import { site } from "@/lib/site";
 import type { GameCategory } from "@/lib/game-categories";
+import { quickPlayGames } from "./quick-play";
 
 type GameBase = {
   slug: string;
@@ -10,12 +11,13 @@ type GameBase = {
   platform: "Browser";
   artwork: string;
   artworkAlt: string;
-  artworkLabel: "Concept artwork" | "Game artwork";
+  artworkLabel: "Concept artwork" | "Game artwork" | "Game illustration";
+  collection?: "quick-play";
 };
 
 export type Game = GameBase &
   (
-    | { status: "playable"; playUrl: string; availability: "Early playable build" }
+    | { status: "playable"; playUrl: string; availability: "Early playable build" | "Ready to play" }
     | { status: "upcoming"; playUrl?: never; availability: "Coming soon" }
   );
 
@@ -50,6 +52,15 @@ export const games: Game[] = [
     availability: "Early playable build",
     playUrl: site.gulamChorUrl,
   },
+  ...quickPlayGames.map((game): Game => ({
+    slug: game.id, title: game.title, description: game.description,
+    genre: game.genre, categories: game.categories, platform: "Browser",
+    collection: game.collection, artwork: game.artwork, artworkAlt: game.artworkAlt,
+    artworkLabel: "Game illustration",
+    ...(game.release.status === "playable"
+      ? { status: "playable", playUrl: game.embedUrl, availability: "Ready to play" }
+      : { status: "upcoming", availability: "Coming soon" }),
+  })),
 ];
 
 export const featuredGame = games[0] as Game & { status: "playable"; playUrl: string };

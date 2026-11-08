@@ -1,0 +1,12 @@
+.player { position: fixed; inset: 0; z-index: 200; width: 100%; height: 100vh; height: 100dvh; background: #faf9f6; isolation: isolate; }
+.iframe { display: block; border: 0; position: absolute; inset: 0; width: 100%; height: 100%; }
+.playerState { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: max(80px, env(safe-area-inset-top)) 24px max(40px, env(safe-area-inset-bottom)); text-align: center; }
+.playerState h1 { font-family: var(--font-newsreader), Georgia, serif; font-size: clamp(32px, 5vw, 52px); line-height: 1.1; font-weight: 400; }
+.playerState p:not(:global(.eyebrow)) { max-width: 420px; font-size: 14px; line-height: 1.8; color: var(--muted); }
+.recovery { position: absolute; z-index: 2; top: max(12px, env(safe-area-inset-top)); left: max(12px, env(safe-area-inset-left)); display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 14px; background: #fffdf4; color: #363c32; border: 1px solid #d6d2c5; border-radius: 9px; font-size: 13px; cursor: pointer; }
+.recoveryQuiet { opacity: 0; pointer-events: none; }
+.recoveryQuiet:focus-visible { opacity: 1; pointer-events: auto; }
+.spinner { color: #a6573e; animation: turn 1.5s linear infinite; }
+@keyframes turn { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }

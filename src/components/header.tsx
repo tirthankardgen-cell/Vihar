@@ -83,6 +83,7 @@ export function Header() {
         <Link href="/games" onClick={() => setMenuOpen(false)} aria-current={(pathname.startsWith("/games") || pathname.startsWith("/community/")) ? "page" : undefined}>Games <ArrowUpRight size={18} aria-hidden="true" /></Link>
         <Link href="/games/originals" onClick={() => setMenuOpen(false)}>VIHAR Originals <ArrowUpRight size={18} aria-hidden="true" /></Link>
         <Link href="/games/community" onClick={() => setMenuOpen(false)}>Community Games <ArrowUpRight size={18} aria-hidden="true" /></Link>
+        <Link href="/games/quick-play" onClick={() => setMenuOpen(false)}>Quick Play <ArrowUpRight size={18} aria-hidden="true" /></Link>
         <Link href="/about" onClick={() => setMenuOpen(false)} aria-current={pathname === "/about" ? "page" : undefined}>About <ArrowUpRight size={18} aria-hidden="true" /></Link>
         <Link href="/help" onClick={() => setMenuOpen(false)}>Help &amp; support <ArrowUpRight size={18} aria-hidden="true" /></Link>
         <Link href={pathname === "/" ? "/#faqs" : "/help"} onClick={() => setMenuOpen(false)}>FAQs <ArrowUpRight size={18} aria-hidden="true" /></Link>

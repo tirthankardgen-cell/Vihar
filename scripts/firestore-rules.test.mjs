@@ -17,6 +17,27 @@ const anonymous = () => environment.unauthenticatedContext().firestore();
 const activityRef = (database, uid = "bobby", id = "open-one") => doc(database, "players", uid, "activity", id);
 const activityData = (extra = {}) => ({ source: "officialGames", gameId: "gulam-chor", title: "Gulam Chor", startedAt: serverTimestamp(), ...extra });
 
+test("Quick Play favourites are private and only the release-gated server can issue review receipts", async () => {
+  const database = db("bobby"), receipt = (connection) => doc(connection, "officialGames", "chess", "players", "bobby");
+  const review = (connection) => doc(connection, "officialGames", "chess", "reviews", "bobby");
+  const data = () => ({ rating: 4, text: "A thoughtful round", updatedAt: serverTimestamp() });
+  await assertSucceeds(setDoc(doc(database, "players", "bobby", "favorites", "chess"), { addedAt: serverTimestamp() }));
+  await assertFails(getDoc(doc(db("alice"), "players", "bobby", "favorites", "chess")));
+  await assertFails(setDoc(doc(database, "players", "bobby", "favorites", "made-up-game"), { addedAt: serverTimestamp() }));
+  await assertFails(setDoc(receipt(database), { startedAt: serverTimestamp() }));
+  await assertFails(setDoc(review(database), data()));
+  await assertFails(setDoc(activityRef(database), activityData({ gameId: "chess", title: "Chess" })));
+  await environment.withSecurityRulesDisabled(async (context) => { await setDoc(receipt(context.firestore()), { startedAt: new Date() }); });
+  await assertSucceeds(setDoc(review(database), data()));
+  await assertSucceeds(getDoc(review(anonymous())));
+  await assertSucceeds(getDoc(receipt(database)));
+  await assertFails(getDoc(receipt(anonymous())));
+  await assertFails(setDoc(review(db("alice")), data()));
+  await assertFails(deleteDoc(review(db("alice"))));
+  await assertFails(setDoc(doc(database, "officialGames", "chess", "metrics", "activity"), { playMilliseconds: 99999 }));
+  await assertSucceeds(deleteDoc(review(database)));
+});
+
 test("game opens and review eligibility save atomically, with private immutable server timestamps", async () => {
   const database = db("bobby", false);
   await assertFails(setDoc(activityRef(database), activityData()));

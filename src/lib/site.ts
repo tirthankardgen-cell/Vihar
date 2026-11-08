@@ -1,5 +1,6 @@
 import { helpPaths } from "./help";
 import type { Metadata } from "next";
+import { quickPlayGames } from "./quick-play";
 
 function httpsUrl(value: string, name: string): string {
   const url = new URL(value);
@@ -35,10 +36,12 @@ if (canonical.pathname !== "/" || canonical.search || canonical.hash) {
 export const isPreview = process.env.VERCEL_ENV === "preview";
 export const publicRoutes = [
   "/", "/games", "/games/originals", "/games/community", "/games/bap-ka-rasta", "/games/bap-ka-rasta/screenshots", "/games/gulam-chor",
+  "/games/quick-play", ...quickPlayGames.map((game) => `/games/${game.id}`),
   ...helpPaths, "/about", "/help", "/contact", "/privacy", "/terms", "/guides/bap-ka-rasta-first-drive", "/site-map",
 ] as const;
 
-export const indexableRoutes = publicRoutes;
+const upcomingRoutes = new Set(quickPlayGames.filter((game) => game.release.status !== "playable").map((game) => `/games/${game.id}`));
+export const indexableRoutes = publicRoutes.filter((route) => !upcomingRoutes.has(route));
 
 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(site.email)) {
   throw new Error("SUPPORT_EMAIL must be a valid email address.");

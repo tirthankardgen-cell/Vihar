@@ -1,11 +1,12 @@
-import { ArrowUpRight, Sparkles, UsersRound } from "lucide-react";
+import { ArrowUpRight, Dices, Sparkles, UsersRound } from "lucide-react";
 import Link from "@/components/site-link";
 import styles from "./game-collections.module.css";
 
-export type CollectionFilter = "all" | "originals" | "community";
+export type CollectionFilter = "all" | "originals" | "community" | "quick-play";
 const collections = [
   { id: "originals", title: "VIHAR Originals", description: "Games created by the VIHAR team.", Icon: Sparkles },
   { id: "community", title: "Community Games", description: "Games shared by independent creators and players.", Icon: UsersRound },
+  { id: "quick-play", title: "Quick Play", description: "Board favourites and thoughtful puzzles by VIHAR.", Icon: Dices },
 ] as const;
 
 export function GameCollections({ selected }: { selected?: CollectionFilter }) {

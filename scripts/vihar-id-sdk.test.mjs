@@ -26,6 +26,46 @@ test("guest gameplay does not invent a session or require login", async () => {
   assert.equal((await b.sdk.startSession()).guest, true);
   assert.equal(b.requests.length, 0);
 });
+
+test("a fresh embedded guest never inherits a previous player's credential", async () => {
+  const b = browser(); b.location.hash = `#vihar_launch=${"a".repeat(43)}`;
+  await b.sdk.resumeLaunch();
+  b.location.search = "?vihar_embed=1&vihar_session=new-frame-session";
+  assert.equal(await b.sdk.resumeLaunch(), false);
+  const requests = b.requests.length;
+  assert.equal((await b.sdk.startSession()).guest, true);
+  assert.equal(b.requests.length, requests);
+});
+
+test("a failed embedded ticket clears stale credentials before the exchange", async () => {
+  const b = browser(); b.location.hash = `#vihar_launch=${"a".repeat(43)}`;
+  await b.sdk.resumeLaunch();
+  b.location.search = "?vihar_embed=1";
+  b.location.hash = `#vihar_launch=${"b".repeat(43)}`;
+  b.respond(() => ({ error: "invalid_code", status: 401 }));
+  await assert.rejects(b.sdk.resumeLaunch(), { code: "invalid_code" });
+  assert.equal((await b.sdk.startSession()).guest, true);
+  assert.equal(b.location.hash, "");
+});
+
+test("repeated embedded initialization shares one exchange and retains its new credential", async () => {
+  const b = browser(); b.location.search = "?vihar_embed=1"; b.location.hash = `#vihar_launch=${"a".repeat(43)}`;
+  const [first, second] = await Promise.all([b.sdk.resumeLaunch(), b.sdk.resumeLaunch()]);
+  assert.equal(first, true); assert.equal(second, true);
+  assert.equal(b.requests.filter((request) => request.action === "token").length, 1);
+  assert.equal(await b.sdk.resumeLaunch(), true);
+  await b.sdk.signOut();
+  assert.equal(await b.sdk.resumeLaunch(), false);
+});
+
+test("explicit exit flushes the final gameplay interval with keepalive", async () => {
+  const b = browser(); b.location.hash = `#vihar_launch=${"a".repeat(43)}`;
+  await b.sdk.resumeLaunch(); await b.sdk.startSession();
+  b.clock(6000); await b.sdk.stopSession();
+  assert.equal(b.requests.at(-1).data.operation, "end");
+  assert.equal(b.requests.at(-1).options.keepalive, true);
+  assert.equal(b.intervals.size, 0);
+});
 test("launch ticket is removed before exchange and preserves the existing hash router", async () => {
   const b = browser();
   b.location.hash = `#/route/2&vihar_launch=${"a".repeat(43)}`;

@@ -47,9 +47,13 @@ service cloud.firestore {
         && getAfter(/databases/$(database)/documents/profiles/$(request.auth.uid)).data.username == username;
       allow update, delete: if false;
     }
+    function quickPlay(gameId) {
+      return gameId in ['billiards', 'carrom', 'checkers', 'chess', 'connect-four', 'ludo',
+        'memory-match', 'minesweeper', 'reversi', 'snakes-and-ladders', 'sudoku', 'tic-tac-toe'];
+    }
     match /players/{uid}/favorites/{gameId} {
       allow read: if owner(uid);
-      allow create: if owner(uid) && gameId in ['bap-ka-rasta', 'gulam-chor']
+      allow create: if owner(uid) && (gameId in ['bap-ka-rasta', 'gulam-chor'] || quickPlay(gameId))
         && request.resource.data.keys().hasOnly(['addedAt']) && request.resource.data.addedAt == request.time;
       allow delete: if owner(uid);
       allow update: if false;
@@ -126,13 +130,14 @@ service cloud.firestore {
         && data.text is string && data.text.size() >= 1 && data.text.size() <= 1000
         && data.updatedAt == request.time;
     }
-    // Curated playable game IDs; no client may create or modify official listings.
+    // Quick Play receipts are issued by the existing ID service only after its
+    // code-owned release gate passes. Clients cannot unlock an upcoming game.
     match /officialGames/{gameId} {
-      function playable() { return gameId in ['bap-ka-rasta', 'gulam-chor']; }
+      function playable() { return gameId in ['bap-ka-rasta', 'gulam-chor'] || quickPlay(gameId); }
       allow read, write: if false;
       match /players/{uid} {
         allow read: if playable() && owner(uid);
-        allow create: if playable() && owner(uid)
+        allow create: if gameId in ['bap-ka-rasta', 'gulam-chor'] && owner(uid)
           && request.resource.data.keys().hasOnly(['startedAt']) && request.resource.data.startedAt == request.time;
         allow update, delete: if false;
       }

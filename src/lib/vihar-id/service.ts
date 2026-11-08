@@ -1,9 +1,11 @@
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { getAdmin } from "../firebase/admin";
 import { creditedMilliseconds, digest, gameOrigin, IdError, progressData, requireString, secret } from "./protocol";
+import { getQuickPlayGame } from "../quick-play";
+import { assertQuickPlayRelease } from "../embedded-games";
 
 type Input = Record<string, unknown>;
-type Grant = { uid: string; gameId: string; origin: string; mode: "identity" | "activity"; version: number; expiresAt: Timestamp };
+type Grant = { uid: string; gameId: string; source?: "officialGames" | "communityGames"; origin: string; mode: "identity" | "activity"; version: number; expiresAt: Timestamp };
 const lifetime = 12 * 60 * 60 * 1000;
 const expires = (ms: number) => Timestamp.fromMillis(Date.now() + ms);
 function bearer(request: Request) {
@@ -33,10 +35,22 @@ function sameSite(request: Request) {
   if (!origins.includes(request.headers.get("origin") || "")) throw new IdError("invalid_origin", "This action must start on Vihar.", 403);
 }
 async function game(gameId: string) {
+  const official = getQuickPlayGame(gameId);
+  if (official) {
+    try { assertQuickPlayRelease(official); }
+    catch { throw new IdError("game_unavailable", "This game is still coming soon.", 404); }
+    // Code-owned first-party registrations cannot be claimed or reconfigured
+    // through Creator studio, or shadowed by a community document with this ID.
+    return {
+      listing: { title: official.title, url: official.embedUrl, ownerId: null, published: true, authMode: "none" },
+      registration: { origin: official.allowedOrigin, url: official.embedUrl, enabled: true, authMode: "none" },
+      source: "officialGames" as const,
+    };
+  }
   const { db } = getAdmin();
   const [listing, registration] = await db.getAll(db.doc(`communityGames/${gameId}`), db.doc(`gameIntegrations/${gameId}`));
   if (!listing.exists) throw new IdError("game_unavailable", "This game is unavailable.", 404);
-  return { listing: listing.data()!, registration: registration.data() };
+  return { listing: listing.data()!, registration: registration.data(), source: "communityGames" as const };
 }
 async function grant(request: Request, gameId: string) {
   const { db } = getAdmin();
@@ -45,10 +59,11 @@ async function grant(request: Request, gameId: string) {
   if (!token || token.gameId !== gameId || token.expiresAt.toMillis() <= Date.now()) throw new IdError("session_expired", "Sign in again or launch from Vihar to reconnect.", 401);
   const origin = request.headers.get("origin");
   if (origin && origin !== token.origin) throw new IdError("invalid_origin", "This token belongs to another game origin.", 403);
-  const [{ listing, registration }, connection] = await Promise.all([game(gameId), db.doc(`players/${token.uid}/connections/${gameId}`).get()]);
+  const [{ listing, registration, source }, connection] = await Promise.all([game(gameId), db.doc(`players/${token.uid}/connections/${gameId}`).get()]);
+  if ((token.source || "communityGames") !== source) throw new IdError("game_unavailable", "This credential belongs to another game listing.", 403);
   if (!registration?.enabled || registration.origin !== token.origin || registration.url !== listing.url || registration.authMode !== (listing.authMode || "none") || (!listing.published && listing.ownerId !== token.uid)) throw new IdError("game_unavailable", "This integration is disabled or its listing changed.", 403);
   if (!connection.exists || connection.data()!.version !== token.version || !connection.data()!.connected) throw new IdError("connection_revoked", "Reconnect this game from Vihar.", 401);
-  return { token, tokenRef, listing, registration };
+  return { token, tokenRef, listing, registration, source };
 }
 async function throttle(key: string, maximum: number, windowMs = 60_000) {
   const { db } = getAdmin();
@@ -63,7 +78,7 @@ async function throttle(key: string, maximum: number, windowMs = 60_000) {
 export async function idAction(action: string, input: Input, request: Request): Promise<unknown> {
   const { db } = getAdmin();
   const gameId = requireString(input.gameId, "gameId");
-  if (["register", "info", "authorize", "launch", "disconnect"].includes(action)) {
+  if (["register", "info", "authorize", "launch", "receipt", "disconnect"].includes(action)) {
     sameSite(request);
     const user = await account(request);
     if (action === "disconnect") {
@@ -71,9 +86,23 @@ export async function idAction(action: string, input: Input, request: Request): 
       await db.runTransaction(async (tx) => { const prior = (await tx.get(ref)).data(); tx.set(ref, { connected: false, version: (prior?.version || 0) + 1, title: prior?.title || "Unavailable game", updatedAt: Timestamp.now() }); });
       return { disconnected: true };
     }
-    const { listing, registration } = await game(gameId);
-    const owner = listing.ownerId === user.uid;
+    const { listing, registration, source } = await game(gameId);
+    const owner = source === "communityGames" && listing.ownerId === user.uid;
     if (!listing.published && !owner) throw new IdError("game_unavailable", "This game is not published.", 404);
+    if (action === "receipt") {
+      if (source !== "officialGames") throw new IdError("invalid_request", "This action is for Quick Play games.");
+      if (input.restore !== undefined && typeof input.restore !== "boolean") throw new IdError("invalid_request", "Invalid receipt request.");
+      await throttle(`receipt:${user.uid}`, 60);
+      const receipt = db.doc(`officialGames/${gameId}/players/${user.uid}`);
+      const activity = db.collection(`players/${user.uid}/activity`).doc();
+      await db.runTransaction(async (tx) => {
+        const prior = await tx.get(receipt);
+        if (!prior.exists) tx.create(receipt, { startedAt: Timestamp.now() });
+        // Guest continuity restores eligibility, never historical account time.
+        if (!input.restore) tx.create(activity, { gameId, title: listing.title, source, startedAt: Timestamp.now() });
+      });
+      return { recorded: true };
+    }
     if (action === "register") {
       if (!owner) throw new IdError("not_owner", "Only the listing owner can configure this game.", 403);
       if (!user.email_verified) throw new IdError("verify_email", "Verify your email in your dashboard first.", 403);
@@ -82,7 +111,7 @@ export async function idAction(action: string, input: Input, request: Request): 
       if (origin !== new URL(listing.url).origin) throw new IdError("invalid_origin", "The integration origin must match the saved game URL.");
       const authMode = listing.authMode || "none";
       const unchanged = registration?.origin === origin && registration.url === listing.url && registration.authMode === authMode;
-      await db.doc(`gameIntegrations/${gameId}`).set({ ownerId: user.uid, origin, url: listing.url, authMode, enabled: input.enabled !== false, verified: unchanged ? registration.verified || false : false, updatedAt: Timestamp.now() });
+      await db.doc(`gameIntegrations/${gameId}`).set({ ownerId: user.uid, origin, url: listing.url, authMode, enabled: input.enabled !== false, verified: unchanged && "verified" in registration ? registration.verified || false : false, updatedAt: Timestamp.now() });
       return { registered: true, origin };
     }
     if (!registration?.enabled || registration.url !== listing.url || registration.authMode !== (listing.authMode || "none")) throw new IdError("integration_required", "The creator must register the current game URL and access mode in Creator studio.", 409);
@@ -98,8 +127,8 @@ export async function idAction(action: string, input: Input, request: Request): 
     await db.runTransaction(async (tx) => {
       const prior = (await tx.get(connectionRef)).data();
       const version = prior?.version || 0;
-      tx.set(connectionRef, { title: listing.title, origin: registration.origin, version, connected: true, updatedAt: Timestamp.now() });
-      tx.create(db.doc(`gameCodes/${digest(code)}`), { uid: user.uid, gameId, origin: registration.origin, mode, challenge, version, expiresAt: expires(60_000) });
+      tx.set(connectionRef, { title: listing.title, source, origin: registration.origin, version, connected: true, updatedAt: Timestamp.now() });
+      tx.create(db.doc(`gameCodes/${digest(code)}`), { uid: user.uid, gameId, source, origin: registration.origin, mode, challenge, version, expiresAt: expires(60_000) });
     });
     if (action === "launch") {
       const url = new URL(listing.url);
@@ -121,12 +150,12 @@ export async function idAction(action: string, input: Input, request: Request): 
       const connection = (await tx.get(db.doc(`players/${stored.uid}/connections/${gameId}`))).data();
       if (!connection?.connected || connection.version !== stored.version) throw new IdError("connection_revoked", "The player disconnected this game.", 401);
       tx.delete(ref);
-      tx.create(db.doc(`gameTokens/${digest(token)}`), { uid: stored.uid, gameId, origin: stored.origin, mode: stored.mode, version: stored.version, expiresAt: expires(lifetime) });
+      tx.create(db.doc(`gameTokens/${digest(token)}`), { uid: stored.uid, gameId, source: stored.source || "communityGames", origin: stored.origin, mode: stored.mode, version: stored.version, expiresAt: expires(lifetime) });
       return { mode: stored.mode };
     });
     return { accessToken: token, tokenType: "Bearer", expiresIn: lifetime / 1000, ...result };
   }
-  const { token, tokenRef, listing } = await grant(request, gameId);
+  const { token, tokenRef, listing, source } = await grant(request, gameId);
   if (action === "revoke") { await tokenRef.delete(); return { signedOut: true }; }
   if (["me", "save"].includes(action) && token.mode !== "identity") throw new IdError("identity_required", "Sign in with Vihar ID inside this game first.", 403);
   if (action === "me") {
@@ -152,7 +181,7 @@ export async function idAction(action: string, input: Input, request: Request): 
   const sessionId = requireString(input.sessionId, "sessionId", /^[A-Za-z0-9_-]{20,80}$/);
   const statsRef = db.doc(`players/${token.uid}/gameStats/${gameId}`);
   const sessionRef = db.doc(`players/${token.uid}/sessions/${sessionId}`);
-  const ownerTest = listing.ownerId === token.uid;
+  const ownerTest = source === "communityGames" && listing.ownerId === token.uid;
   return db.runTransaction(async (tx) => {
     const [sessionSnap, statsSnap, currentToken, connectionSnap, integrationSnap] = await tx.getAll(sessionRef, statsRef, tokenRef, db.doc(`players/${token.uid}/connections/${gameId}`), db.doc(`gameIntegrations/${gameId}`));
     if (!currentToken.exists || !connectionSnap.data()?.connected || connectionSnap.data()?.version !== token.version) throw new IdError("connection_revoked", "This connection was disconnected.", 401);
@@ -168,8 +197,8 @@ export async function idAction(action: string, input: Input, request: Request): 
       // Keep the activity calendar bounded to one year; lifetime totals remain.
       for (const day of Object.keys(dailySessions)) if (day < new Date(now - 365 * 86400000).toISOString().slice(0, 10)) delete dailySessions[day];
       tx.create(sessionRef, { gameId, title: listing.title, tokenHash: tokenRef.id, startedAt: timestamp, lastSeenAt: timestamp, playMilliseconds: 0, sequence: 0, ended: false, expiresAt: expires(366 * 86400000) });
-      tx.set(statsRef, { ...stats, gameId, title: listing.title, source: "communityGames", sessions: stats.sessions + 1, dailySessions, lastPlayedAt: timestamp, lastSeenAt: timestamp, activeSessionId: sessionId, test: ownerTest });
-      if (!ownerTest) tx.set(db.doc(`communityGames/${gameId}/metrics/activity`), { sessions: FieldValue.increment(1), updatedAt: timestamp }, { merge: true });
+      tx.set(statsRef, { ...stats, gameId, title: listing.title, source, sessions: stats.sessions + 1, dailySessions, lastPlayedAt: timestamp, lastSeenAt: timestamp, activeSessionId: sessionId, test: ownerTest });
+      if (!ownerTest) tx.set(db.doc(`${source}/${gameId}/metrics/activity`), { sessions: FieldValue.increment(1), updatedAt: timestamp }, { merge: true });
       return { sessionId, test: ownerTest };
     }
     if (!["pulse", "end"].includes(String(input.operation)) || !Number.isSafeInteger(input.sequence) || Number(input.sequence) < 1) throw new IdError("invalid_request", "Supply a valid operation and sequence.");
@@ -179,7 +208,7 @@ export async function idAction(action: string, input: Input, request: Request): 
     const ms = creditedMilliseconds(input.elapsedMs, previous.lastSeenAt.toMillis(), now);
     tx.update(sessionRef, { lastSeenAt: timestamp, playMilliseconds: previous.playMilliseconds + ms, sequence: input.sequence, ended: input.operation === "end" });
     tx.update(statsRef, { playMilliseconds: stats.playMilliseconds + ms, ...(ms > 0 ? { lastPlayedAt: timestamp } : {}), lastSeenAt: timestamp, ...(input.operation === "end" ? { activeSessionId: null } : {}) });
-    if (!ownerTest) tx.set(db.doc(`communityGames/${gameId}/metrics/activity`), { playMilliseconds: FieldValue.increment(ms), updatedAt: timestamp }, { merge: true });
+    if (!ownerTest) tx.set(db.doc(`${source}/${gameId}/metrics/activity`), { playMilliseconds: FieldValue.increment(ms), updatedAt: timestamp }, { merge: true });
     // A successful owner test verifies tracking and, for account games, identity.
     if (ownerTest && ms > 0 && (listing.authMode !== "vihar-id" || token.mode === "identity") && !integrationSnap.data()?.verified) tx.update(integrationSnap.ref, { verified: true, verifiedAt: timestamp });
     return { sessionId, creditedMilliseconds: ms, ended: input.operation === "end", test: ownerTest };
