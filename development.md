@@ -360,6 +360,15 @@ Maintainers may edit or remove harmful content, ask participants to change their
 
 ## Change log
 
+### 2026-11-08 — Production verification and cleanup confirmation
+
+- **Author:** Codex.
+- **Request:** Complete the authorized production delivery and retain the verified outcome in the single development record.
+- **Changes:** Recorded the completed deployment, CI results, live service checks and workspace cleanup. This follow-up changes documentation only.
+- **Decisions:** Preserve the exact application commit and observation time so later agents can distinguish verified release evidence from plans. Temporary evidence was summarized here before removal; required source assets, tests, licenses, `.env.local`, `.vercel` and dependencies remain intact.
+- **Validation:** GitHub Actions run `42483238941` passed all five checks for `e6a26aa7b513adb784f67a0fac11b92ce06f89b2`: Development log, Firebase authorization rules, and website checks in review/enabled/preview modes. Vercel deployment `dpl_Chhk1994abaoZrc4ARBRWHtREKDv` reached READY. At 13:09:31 UTC, the canonical production smoke passed 15 help guides, sitemap/robots, SDK delivery, private auth headers, Firestore token lookup and real Firebase identity verification; its ephemeral Auth account was removed. All seven local review ports were free. `output/`, `.next/`, `.playwright-cli/`, the local playground, duplicate guides and generated export folders were absent, and the working tree was clean after the application commit.
+- **Release:** Application release `e6a26aa` is verified on https://vihar.online. This documentation-only confirmation introduces no application, database-rule or environment change.
+
 ### 2026-11-08 — Review completion, compact identity card and repository consolidation
 
 - **Author:** Codex, following the owner's completed local review.
@@ -367,7 +376,7 @@ Maintainers may edit or remove harmful content, ask participants to change their
 - **Changes:** Replaced the consent account row with a compact graphite/gold Vihar ID card; tightened popup spacing and placed Cancel beside Allow. Stopped the review launcher and removed the disposable studio playground, generated exports and redundant guides. Rewrote README.md, consolidated current operations and historical evidence here, and added mandatory AGENTS/PR instructions plus a development-log CI check. Retained production SDK/help pages, original assets, automated tests and legal notices.
 - **Decisions:** Kept the existing filename `development.md` as the single operational log. The smaller card reuses the established Vihar identity styling; normal interactive dashboard/profile cards stay unchanged. The screen is compact through layout, not by clipping permissions or buttons. Archived documents are retained in Git; current guidance is centralized so outdated credential, integration and test-status claims cannot masquerade as current instructions. Generated campaign images go to ignored output; reusable campaign input stays with source assets.
 - **Validation:** Real Chromium measured the entire consent document at 1280×660, 540×760, 540×600, 390×660, 375×600 and 320×568. All six fit with no horizontal or vertical document overflow and the privacy links visible. Consent height was 562.5px at 540×760, 490.5px at 540×600 and 549px at 320×568. `npm run check` passed on Node 26.13.0: lint, 31 unit/protocol/SDK tests, TypeScript and the 47-page build. `npm run verify` passed for 29 public and 10 account routes, assets, metadata, links, headers and policy boundaries. The new log gate passed six positive/negative Git-fixture cases, including missing entries, incomplete fields, CRLF-only edits, a valid working change, a commit range and an initial push. All 15 moved campaign artwork references and 18 current local document links resolved; a full historical-link audit found no missing local targets. All seven review ports were successfully bound and released after shutdown, proving the review services were stopped. Disposable evidence was removed after these checks. Authorization/service contracts are unchanged and remain covered by CI.
-- **Release:** The owner authorized pushing all reviewed changes to `main`. Local review is finished. Production verification of this cleanup commit is pending.
+- **Release:** Delivered as `e6a26aa` to the authorized `main` branch. Local review and artifact cleanup are complete. All GitHub checks and the Vercel deployment passed; the following production smoke is recorded in the verification entry above. No Firestore rules or data migration was required.
 
 ### 2026-11-08 — Community Vihar ID service, studio SDK and reviewed authentication flow
 
