@@ -3,7 +3,7 @@ import type { GameCategory } from "./game-categories";
 // Confirmed by the owner and /api/games on 9 November 2026. Paths below are
 // explicit entries from that manifest, not slugs inferred from display names.
 export const quickPlayOrigin = "https://games.vihar.online";
-export const quickPlayUpdated = "2026-11-09T16:02:02.362Z";
+export const quickPlayUpdated = "2026-11-09T18:31:42.000Z";
 export const quickPlayModes = {
   solo: "Solo",
   computer: "Vs computer",
@@ -39,12 +39,28 @@ export type QuickPlayGame = {
   artwork: string;
   artworkAlt: string;
   artworkLabel: "Game illustration" | "Game screenshot";
+  visual: { theme: "courtyard" | "pool" | "cloth" | "toybox" | "keepsakes" | "desktop" | "garden" | "folk" | "journal" | "notebook"; name: string; description: string; hindi?: string };
+  screenshot?: { src: string; alt: string; caption: string };
   instructions: readonly string[];
   tip: string;
   release: QuickPlayRelease;
 };
 
-type Entry = Omit<QuickPlayGame, "source" | "collection" | "allowedOrigin" | "artwork" | "artworkLabel" | "release"> & { artwork?: string; artworkLabel?: QuickPlayGame["artworkLabel"]; release?: QuickPlayRelease };
+type Entry = Omit<QuickPlayGame, "source" | "collection" | "allowedOrigin" | "artwork" | "artworkLabel" | "visual" | "release"> & { artwork?: string; artworkLabel?: QuickPlayGame["artworkLabel"]; release?: QuickPlayRelease };
+const visuals: Record<string, QuickPlayGame["visual"]> = {
+  billiards: { theme: "pool", name: "Vintage Pool Club", description: "Deep green felt, numbered balls and quiet club lettering. A clear view of every angle." },
+  carrom: { theme: "courtyard", name: "Indian Courtyard", hindi: "कैरम", description: "Ochre wood, a cream board and a red queen. Neem leaves and chai at the edge of the courtyard." },
+  checkers: { theme: "cloth", name: "Block Print Cloth", description: "Indigo and cream squares on a block-print cloth, with terracotta counters and printed crowns." },
+  chess: { theme: "courtyard", name: "Indian Courtyard", hindi: "शतरंज", description: "Cream and deep-teal squares, familiar chess silhouettes and the warmth of a neighbourhood courtyard." },
+  "connect-four": { theme: "toybox", name: "Retro Toybox", description: "A muted blue frame, coral and mustard discs, and a little childhood colour on warm cream." },
+  ludo: { theme: "courtyard", name: "Indian Courtyard", hindi: "लूडो", description: "A cotton-ground board with terracotta, neem, saffron and indigo tokens. Four colours, four familiar paths home." },
+  "memory-match": { theme: "keepsakes", name: "Illustrated Keepsakes", description: "Mangoes, kites, chai and everyday treasures. Friendly picture cards with one shared printed back." },
+  minesweeper: { theme: "desktop", name: "Retro Desktop", description: "A charcoal surround, flat grey cells and teal flags. Familiar number clues, clearly printed." },
+  reversi: { theme: "garden", name: "Quiet Garden", description: "Sage squares, charcoal and ivory discs, and a small leaf at the margin. Space to think." },
+  "snakes-and-ladders": { theme: "folk", name: "Folk Art Journey", description: "Warm paper, bamboo ladders and friendly folk-art snakes along the numbered journey to 100." },
+  sudoku: { theme: "journal", name: "Puzzle Journal", description: "Graphite clues, blue entries and small pencil notes. A carefully ruled page for a little order." },
+  "tic-tac-toe": { theme: "notebook", name: "Notebook Doodles", description: "Blue crosses, red loops and four uneven pen lines. A quiet ruled notebook, ready for another round." },
+};
 const entries: readonly Entry[] = [
   {
     id: "billiards", title: "Billiards", genre: "Board & Table", categories: ["board-table", "simulation"],
@@ -57,10 +73,11 @@ const entries: readonly Entry[] = [
   },
   {
     id: "carrom", title: "Carrom", genre: "Board & Table", categories: ["board-table"],
+    artwork: "/images/quick-play/styles/carrom-sunlit-veranda.webp",
     embedUrl: "https://games.vihar.online/carrom/play",
     description: "Line up the striker. Pocket a coin. Bring everyone to the board.",
     about: "A familiar tabletop ritual, with just enough precision to make every turn interesting. Carrom is about clean angles, gentle rebounds and finding a path through a crowded board.",
-    artworkAlt: "Flat illustration of a wooden carrom board with black and cream coins and a red queen",
+    artworkAlt: "Flat overhead carrom board with cream and black coins, a red queen and patterned striker in an Indian courtyard",
     instructions: ["Aim the striker at a coin and send it towards a corner pocket.", "Plan your shot around the other coins and the edges of the board.", "The queen needs a cover; the game's rules explain how to secure it and handle fouls."],
     tip: "Use the cushions when a direct route to the pocket is blocked.",
   },
@@ -69,18 +86,18 @@ const entries: readonly Entry[] = [
     embedUrl: "https://games.vihar.online/checkers/play",
     description: "Take the diagonal. Spot the jump. Turn a small move into a big advantage.",
     about: "Easy to recognise and rewarding to think through. Checkers turns a board of simple pieces into a contest of timing, trades and carefully protected diagonals.",
-    artworkAlt: "Flat illustration of a checkerboard with terracotta and cream draughts pieces",
+    artworkAlt: "Indigo and cream eight-by-eight checkerboard with terracotta and ivory counters and a block-print cloth border",
     instructions: ["Move your pieces diagonally along the playable squares.", "Jump over opposing pieces to capture them, following the game's capture rules.", "Reach the far side to crown a king and aim to leave your opponent without a legal move."],
     tip: "Look for the second jump before committing to the first.",
   },
   {
     id: "chess", title: "Chess", genre: "Board & Table", categories: ["board-table"],
+    artwork: "/images/quick-play/styles/chess-neem-courtyard.webp",
     embedUrl: "https://games.vihar.online/chess/play",
     description: "A quiet board. A clever plan. A new story with every move.",
     about: "Pull up a chair in a quiet Indian courtyard. Play Easy, Medium or Hard against Acharya Dev, your chess mentor, or share a device with a friend. Develop your pieces, protect your king and find the move that changes the whole position. Games are untimed and can be saved on this device.",
-    artwork: "/images/quick-play/chess-gameplay.webp",
-    artworkLabel: "Game screenshot",
-    artworkAlt: "Chess gameplay with a flat wooden board, cream and dark pieces, and Acharya Dev beside the move book",
+    artworkAlt: "Flat cream and deep-teal eight-by-eight chessboard in a terracotta courtyard with neem leaves, teal shutters and a woven charpoy",
+    screenshot: { src: "/images/quick-play/chess-gameplay.webp", alt: "The playable Chess board with cream and dark pieces and Acharya Dev", caption: "The playable Chess board and Acharya Dev, your computer opponent." },
     instructions: ["Each kind of piece moves differently; White makes the first move.", "Develop your pieces and protect your king from check.", "Win by checkmating the opposing king: a check with no legal escape."],
     tip: "Before moving, check what your opponent is threatening.",
     release: {
@@ -100,6 +117,7 @@ const entries: readonly Entry[] = [
   },
   {
     id: "ludo", title: "Ludo", genre: "Board & Table", categories: ["board-table"],
+    artwork: "/images/quick-play/styles/ludo-family-courtyard.webp",
     embedUrl: "https://games.vihar.online/ludo/play",
     description: "Roll, race and find your way home. Every token has a chance.",
     about: "A family favourite full of small decisions and sudden changes of fortune. Ludo mixes the luck of the die with choosing which token to move, protect or send into the chase.",
@@ -139,7 +157,7 @@ const entries: readonly Entry[] = [
     embedUrl: "https://games.vihar.online/snakes-and-ladders/play",
     description: "A lucky climb. An unexpected slide. Keep rolling towards 100.",
     about: "A cheerful race where nobody stays ahead for long. Snakes and Ladders makes room for lucky rolls, dramatic tumbles and the pleasure of seeing what happens next.",
-    artworkAlt: "Flat illustration of a numbered board with a green snake and golden ladders",
+    artworkAlt: "Folk-art board numbered one to one hundred, with patterned snakes and bamboo ladders on warm paper",
     instructions: ["Roll the die and move forward by the number shown.", "Land at the foot of a ladder to climb, or on a snake's head to slide.", "Reach the final square according to the game's finishing-roll rule."],
     tip: "The next roll can change everything. Enjoy the journey to the top.",
   },
@@ -148,7 +166,7 @@ const entries: readonly Entry[] = [
     embedUrl: "https://games.vihar.online/sudoku/play",
     description: "Nine numbers. One clear answer. Find a little order in the grid.",
     about: "A calm space for logical thinking. Sudoku needs no arithmetic: each number is a clue to what can go in the spaces around it, until the whole grid falls into place.",
-    artworkAlt: "Flat illustration of a Sudoku grid with handwritten-style number clues",
+    artworkAlt: "Crisp nine-by-nine Sudoku journal grid with graphite clues, a blue entry and small grey pencil notes",
     instructions: ["Fill empty squares with the numbers 1 to 9.", "Each row, column and 3 × 3 box must contain every number exactly once.", "Use the given clues to rule out possibilities without changing the starting numbers."],
     tip: "Look for a row, column or box with only a few empty squares.",
   },
@@ -157,9 +175,8 @@ const entries: readonly Entry[] = [
     embedUrl: "https://games.vihar.online/tic-tac-toe/play",
     description: "A familiar doodle. A friendly challenge. Just one more round.",
     about: "A ruled notebook, nine squares and two familiar marks. Play an Easy, Medium or Hard computer, or pass the notebook to a friend on the same device. Choose your marks, block a line and try another round. The notebook keeps your session score and saves your last page on this device when browser storage is available.",
-    artwork: "/images/quick-play/tic-tac-toe-gameplay.webp",
-    artworkLabel: "Game screenshot",
-    artworkAlt: "Close-up of the Tic-Tac-Toe notebook board with a blue cross and red circle",
+    artworkAlt: "Hand-drawn blue crosses and red circles on a lightly ruled cream notebook page",
+    screenshot: { src: "/images/quick-play/tic-tac-toe-gameplay.webp", alt: "The playable Tic-Tac-Toe notebook with a blue cross and red circle", caption: "The playable notebook, with blue X and red O ink." },
     instructions: ["Take turns placing an X or an O in an empty square.", "Make a line of three of your marks across, down or diagonally.", "If all nine squares fill without a line, the round is a draw."],
     tip: "Watch for forks: two possible winning lines created by one move.",
     release: {
@@ -175,8 +192,9 @@ export const quickPlayGames: QuickPlayGame[] = entries.map((entry) => ({
   source: "officialGames",
   collection: "quick-play",
   allowedOrigin: quickPlayOrigin,
-  artwork: entry.artwork ?? `/images/quick-play/${entry.id}.png`,
+  artwork: entry.artwork ?? `/images/quick-play/styles/${entry.id}.webp`,
   artworkLabel: entry.artworkLabel ?? "Game illustration",
+  visual: visuals[entry.id],
   // Enable only individually verified releases from the separate games host.
   release: entry.release ?? { status: "upcoming" },
 }));

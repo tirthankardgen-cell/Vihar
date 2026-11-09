@@ -18,7 +18,7 @@
     "check": "npm run lint && npm run test:adsense && npm run test:account && npm run test:community && npm run test:vihar-id && npm run test:quick-play && npm run typecheck && npm run build",
     "test:quick-play": "node --import tsx --test scripts/embedded-games.test.mjs scripts/vihar-embed-sdk.test.mjs",
     "verify:quick-play-host": "node --import tsx scripts/verify-quick-play-host.mjs",
-    "assets:quick-play": "node scripts/generate-quick-play-art.mjs",
+    "assets:quick-play": "node scripts/generate-quick-play-styles.mjs",
     "assets:avatars": "node scripts/generate-avatars.mjs",
     "assets": "node scripts/generate-assets.mjs",
     "verify": "node scripts/verify-site.mjs",

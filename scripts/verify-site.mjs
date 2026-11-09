@@ -137,6 +137,20 @@ try {
     assert(pages.get("/games/quick-play").includes(`href="/games/${game.id}"`), `${game.id}: discoverable detail page`);
     const html = pages.get(`/games/${game.id}`);
     assert(html.includes("How to play"), `${game.id}: server-rendered instructions`);
+    assert(html.includes(`data-theme="${game.visual.theme}"`), `${game.id}: specified detail theme`);
+    assert(html.includes(game.visual.name), `${game.id}: named visual direction`);
+    assert(html.includes("Game illustration"), `${game.id}: honest illustration label`);
+    const artwork = await get(game.artwork);
+    assert.equal(artwork.status, 200, `${game.id}: style artwork available`);
+    const artworkBytes = Buffer.from(await artwork.arrayBuffer());
+    assert(artworkBytes.length < 160 * 1024, `${game.id}: original artwork under 160 KiB`);
+    const artworkSize = await sharp(artworkBytes).metadata();
+    assert.equal(artworkSize.width, 1200, `${game.id}: artwork width`);
+    assert.equal(artworkSize.height, 630, `${game.id}: artwork height`);
+    if (game.screenshot) {
+      assert(html.includes("Game screenshot"), `${game.id}: separate screenshot label`);
+      assert.equal((await get(game.screenshot.src)).status, 200, `${game.id}: actual screenshot preserved`);
+    }
     if (game.release.status !== "playable") {
       assert(html.includes("Coming soon"), `${game.id}: truthful release status`);
       assert(!html.includes('src="https://games.vihar.online'), `${game.id}: no placeholder iframe or asset preload`);

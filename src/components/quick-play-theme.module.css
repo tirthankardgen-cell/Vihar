@@ -1,0 +1,51 @@
+/* Detail-route only: never add game theme fonts/styles to the homepage bundle. */
+@font-face { font-family: "Quick Play Yatra"; src: url("/fonts/gulam-chor/yatra-one-latin.woff2") format("woff2"); font-display: swap; unicode-range: U+0000-00FF,U+2000-206F; }
+@font-face { font-family: "Quick Play Yatra"; src: url("/fonts/gulam-chor/yatra-one-devanagari.woff2") format("woff2"); font-display: swap; unicode-range: U+0900-097F; }
+@font-face { font-family: "Quick Play Hind"; src: url("/fonts/gulam-chor/hind-latin.woff2") format("woff2"); font-display: swap; unicode-range: U+0000-00FF,U+2000-206F; }
+@font-face { font-family: "Quick Play Caveat"; src: url("/fonts/quick-play/caveat.woff2") format("woff2"); font-weight: 400 700; font-display: swap; }
+.page { --game-paper: #faf5e9; --game-accent: #496e9a; --game-tint: #eaf0ed; --game-heading: var(--font-newsreader), Georgia, serif; --game-hero: #f0eadc; --hero-ink: #303c39; --hero-muted: #58635a; background: var(--game-paper); color: var(--ink); }
+.page[data-theme="courtyard"] { --game-paper: #faf1dc; --game-accent: #2b4a42; --game-tint: #e9e5d0; --game-heading: "Quick Play Yatra", serif; --game-hero: #8e4931; --hero-ink: #f5e6c5; --hero-muted: #f2dfbe; --ink: #293d35; --muted: #56634e; --line: #d8c9a8; font-family: "Quick Play Hind", var(--font-dm-sans), sans-serif; }
+.page[data-game="chess"] { --game-hero: #293d35; --game-paper: #f6efde; --game-tint: #e1e5d6; }
+.page[data-game="carrom"] { --game-hero: #eeddb9; --hero-ink: #293d35; --hero-muted: #4b594a; --game-paper: #fcf4e3; --game-tint: #efe3c7; }
+.page[data-theme="pool"] { --game-paper: #eff1e6; --game-accent: #245846; --game-tint: #dfe8dc; --game-hero: #172d26; --hero-ink: #f5e6c5; --hero-muted: #d8dbc4; }
+.page[data-theme="cloth"] { --game-paper: #f5efdf; --game-accent: #3f5174; --game-tint: #e5e7ee; --game-hero: #e8e2d3; }
+.page[data-theme="toybox"] { --game-paper: #fff6e3; --game-accent: #416a91; --game-tint: #e7edf0; --game-hero: #f4ead2; --game-heading: var(--font-dm-sans), sans-serif; }
+.page[data-theme="keepsakes"] { --game-paper: #faf1e2; --game-accent: #906039; --game-tint: #eee5d3; --game-hero: #f2e7d6; }
+.page[data-theme="desktop"] { --game-paper: #f0f1ee; --game-accent: #2d6c65; --game-tint: #dfe9e5; --game-heading: ui-monospace, monospace; --game-hero: #262c30; --hero-ink: #f0ece0; --hero-muted: #cbd6d4; }
+.page[data-theme="garden"] { --game-paper: #f4f3e8; --game-accent: #48634e; --game-tint: #e3eadb; --game-hero: #e9edde; }
+.page[data-theme="folk"] { --game-paper: #f9efdb; --game-accent: #8f5038; --game-tint: #eee3c5; --game-hero: #f1e4ca; }
+.page[data-theme="journal"] { --game-paper: #fbf7ed; --game-tint: #e9eeee; --game-hero: #f3efe4; }
+.page[data-theme="notebook"] { --game-paper: #fbf7ec; --game-heading: "Quick Play Caveat", cursive; --game-hero: #fbf7ec; --game-tint: #e9eef0; background-image: repeating-linear-gradient(transparent 0 37px, #b7c9cf44 37px 38px); }
+.hero { background: var(--game-hero); color: var(--hero-ink); border: 1px solid var(--line); border-radius: 14px; padding: 28px; gap: 36px; }
+.hero p { color: var(--hero-muted); }
+.hero h1 { font-family: var(--game-heading); }
+.hero :global(.button-dark) { background: var(--hero-ink); color: var(--game-hero); border-radius: 5px; }
+.hero :global(.button-outline) { color: var(--hero-ink); border-color: var(--hero-muted); border-radius: 5px; }
+.hero :global(.button-dark):hover { filter: brightness(.94); }
+.hero :global(.button-outline):hover { background: transparent; text-decoration: underline; }
+.hero :global(.account-error) { color: var(--hero-ink); }
+.hero button:disabled { opacity: .85; }
+.hero > figure { border-radius: 4px; }
+.hero h1 + div { color: var(--hero-ink); }
+.hero [data-modes] span { color: var(--hero-ink); border-color: var(--hero-muted); }
+.hindi { font-family: "Quick Play Yatra", serif; font-size: 29px; line-height: 1.4; margin: 18px 0 -10px; }
+.page[data-theme="toybox"] .hero h1 { font-weight: 650; letter-spacing: -.04em; }
+.page[data-theme="desktop"] .hero h1 { font-size: clamp(30px, 3.5vw, 48px); font-weight: 600; letter-spacing: -.055em; }
+.page[data-theme="notebook"] .hero { border: 0; background: transparent; padding-inline: 0; }
+.page[data-theme="notebook"] .hero h1 { font-size: clamp(52px, 6vw, 78px); letter-spacing: -.035em; }
+.page[data-theme="notebook"] .hero :global(.button-dark) { background: transparent; color: #496e9a; border: 1.5px solid #496e9a; border-radius: 7px 3px 6px 4px; }
+.artNote { display: flex; align-items: baseline; gap: 24px; border-bottom: 1px solid var(--line); padding: 22px 0; }
+.artNote > span { flex: 0 0 190px; font-size: 12px; font-weight: 600; color: var(--game-accent); }
+.artNote p { font-size: 13px; color: var(--muted); line-height: 1.75; max-width: 75ch; }
+.page h2 em { color: var(--game-accent); }
+.page h2 { font-family: var(--game-heading); }
+.page ol li::marker { color: var(--game-accent); }
+.inGame { display: grid; grid-template-columns: 1fr 1.15fr; align-items: center; gap: 48px; padding: 32px; margin-bottom: 36px; border: 1px solid var(--line); background: var(--game-tint); border-radius: 8px; }
+.inGame h2 { font-family: var(--game-heading); font-size: 36px; margin: 14px 0; }
+.inGame p:not(:global(.eyebrow)) { font-size: 15px; line-height: 1.8; color: var(--muted); }
+.inGame figure { position: relative; margin: 0; overflow: hidden; border-radius: 4px; }
+.inGame img { width: 100%; height: auto; display: block; }
+.inGame figcaption { position: absolute; bottom: 8px; right: 8px; font-size: 10px; background: #fffaf1ed; color: #38443d; padding: 3px 7px; border-radius: 3px; }
+@media (max-width: 1000px) { .hero { padding: 22px; gap: 24px; } }
+@media (max-width: 850px) { .hero { gap: 8px; } .artNote { align-items: start; gap: 12px; } .artNote > span { flex-basis: 150px; } .inGame { grid-template-columns: 1fr; gap: 24px; } }
+@media (max-width: 640px) { .hero { padding: 16px; } .hero h1 { overflow-wrap: anywhere; } .artNote { flex-direction: column; gap: 5px; } .artNote > span { flex-basis: auto; } .inGame { padding: 18px; } .hindi { margin-top: 12px; } .page[data-theme="desktop"] .hero h1 { font-size: 31px; } }
