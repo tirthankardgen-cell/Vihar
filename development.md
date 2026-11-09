@@ -426,6 +426,15 @@ Maintainers may edit or remove harmful content, ask participants to change their
 
 ## Change log
 
+### 2026-11-09 — Verify Chess and Tic-Tac-Toe production release
+
+- **Author:** Codex.
+- **Request:** Complete the authorized GitHub release of the ready Chess and Tic-Tac-Toe games and verify they are playable on Vihar.
+- **Changes:** Recorded the verified website and games-host releases. This follow-up changes only the development record and retains the same tested application code. Stopped the owned local servers and browser session; reviewed and removed this task's temporary screenshots, source captures, browser fixtures and release helpers from ignored output before committing.
+- **Decisions:** Keep the two real releases enabled with computer and Pass & Play, accurate screenshot previews and optional account activity. Keep ten other games and online rooms coming soon. Preserve all original artwork, SDKs, automated tests, local configuration, deployment linkage and unrelated pre-existing operations notes outside this commit.
+- **Validation:** All five checks in GitHub run 42652517980 passed for website a28d1f8495c74ffc6f18f4f34899a4c93c90d80c: Development log, Firebase authorization rules, and Website checks in review/enabled/preview modes. Vercel readback confirmed READY deployment dpl_CyceX91fcdLrjMAmJPw71YDBGdH8 at that exact SHA and the canonical vihar.online alias. The games host remains READY at aaea67e9e005841510b6fc96d5591da0802cb0bf through dpl_7zbJCL5THYBfRM6P9rC6KtqvMCn6. Live Playwright passed four website/game flows at desktop 1440 and phone 390 pixels: two Ready games, screenshot labels, lazy frames, working setup forms, real moves, pause/resume, child Exit/Escape, unchanged Vihar URLs, restored chrome and Play focus, disposed frames and zero page errors. Production screenshots were reviewed. The live smoke check passed 27 canonical pages/assets, both released sitemap entries, ten noindex previews, retained Vihar framing protection and two read-only account API probes returning 401 session_expired after missing-token Firestore reads with the expected game-origin CORS. No production account, listing, review or test gameplay writes were used. npm run check:log and git diff --cached --check passed before delivery; the preceding source entry records local engine, SDK, emulator, build and browser checks.
+- **Release:** Chess is live at https://vihar.online/games/chess and Tic-Tac-Toe at https://vihar.online/games/tic-tac-toe. Games source aaea67e and website source a28d1f8 are pushed to their existing main branches and serve production. This documentation-only confirmation retains that application code; no Firebase rules/index or infrastructure migration is required.
+
 ### 2026-11-09 — Release Chess and Tic-Tac-Toe on Vihar
 
 - **Author:** Codex.
