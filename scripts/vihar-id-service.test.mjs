@@ -32,10 +32,10 @@ beforeEach(async () => {
 after(async () => { await db.terminate(); await deleteApp(auth.app); });
 
 test("unreleased Quick Play cannot mint launches or receipts, even with a counterfeit community listing", async () => {
-  await db.doc("communityGames/chess").set({ title: "Counterfeit", url: `${origin}/play`, ownerId: player.uid, published: true, authMode: "none" });
-  for (const action of ["launch", "receipt", "register", "info"]) await assert.rejects(call(action, { gameId: "chess", origin }, player.token), { code: "game_unavailable" });
-  await assert.rejects(call("receipt", { gameId: "chess" }, null), { code: "sign_in_required" });
-  assert.equal((await db.doc(`officialGames/chess/players/${player.uid}`).get()).exists, false);
+  await db.doc("communityGames/carrom").set({ title: "Counterfeit", url: `${origin}/play`, ownerId: player.uid, published: true, authMode: "none" });
+  for (const action of ["launch", "receipt", "register", "info"]) await assert.rejects(call(action, { gameId: "carrom", origin }, player.token), { code: "game_unavailable" });
+  await assert.rejects(call("receipt", { gameId: "carrom" }, null), { code: "sign_in_required" });
+  assert.equal((await db.doc(`officialGames/carrom/players/${player.uid}`).get()).exists, false);
 });
 
 test("released Quick Play reuses scoped activity and keeps official receipts, time and metrics isolated", async () => {
@@ -70,7 +70,7 @@ test("released Quick Play reuses scoped activity and keeps official receipts, ti
     assert.equal((await db.doc("communityGames/chess/metrics/activity").get()).exists, false);
     await db.doc(`gameTokens/${digest(accessToken)}`).update({ source: "communityGames" });
     await assert.rejects(call("session", { gameId: "chess", sessionId, operation: "start" }, accessToken, quickPlayOrigin), { code: "game_unavailable" });
-    game.release = previous;
+    game.release = { status: "upcoming" };
     await assert.rejects(call("launch", { gameId: "chess" }, player.token), { code: "game_unavailable" });
   } finally { game.release = previous; }
 });

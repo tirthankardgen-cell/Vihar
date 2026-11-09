@@ -19,6 +19,7 @@ type Props = {
 export default function EmbeddedPlayer({ game, sessionId, url, onReady, onExit, onRetry }: Props) {
   const activate = usePlayerFrame();
   const frame = useRef<HTMLIFrameElement>(null);
+  const frameLoaded = useRef(false);
   const initialize = useRef(() => {});
   const requestExit = useRef(() => {});
   const fail = useRef(() => {});
@@ -69,7 +70,7 @@ export default function EmbeddedPlayer({ game, sessionId, url, onReady, onExit, 
       requestAnimationFrame(() => recovery.current?.focus());
     };
     fail.current = error;
-    const init = () => { if (!failed && !closing) send({ type: "init", visible: document.visibilityState === "visible" }); };
+    const init = () => { if (frameLoaded.current && !failed && !closing) send({ type: "init", visible: document.visibilityState === "visible" }); };
     initialize.current = init;
     const receive = (event: MessageEvent<unknown>) => {
       const message = readGameEmbedMessage(event, game, sessionId, frame.current?.contentWindow ?? null);
@@ -114,11 +115,11 @@ export default function EmbeddedPlayer({ game, sessionId, url, onReady, onExit, 
       title={`${game.title} — Quick Play`}
       src={url}
       // This configuration is for the allowlisted first-party games host only.
-      sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
       referrerPolicy="no-referrer"
       tabIndex={phase === "ready" ? 0 : -1}
       aria-hidden={phase !== "ready"}
-      onLoad={() => initialize.current()}
+      onLoad={() => { frameLoaded.current = true; initialize.current(); }}
       onError={() => fail.current()}
     />}
     <button ref={recovery} type="button" className={`${styles.recovery} ${phase === "ready" ? styles.recoveryQuiet : ""}`} onClick={() => requestExit.current()} aria-label="Back to game details"><ArrowLeft size={17} aria-hidden="true" /><span>Back to details</span></button>

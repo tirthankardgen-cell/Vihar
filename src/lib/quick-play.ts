@@ -3,7 +3,7 @@ import type { GameCategory } from "./game-categories";
 // Confirmed by the owner and /api/games on 9 November 2026. Paths below are
 // explicit entries from that manifest, not slugs inferred from display names.
 export const quickPlayOrigin = "https://games.vihar.online";
-export const quickPlayUpdated = "2026-11-09T00:00:00+05:30";
+export const quickPlayUpdated = "2026-11-09T16:02:02.362Z";
 export const quickPlayModes = {
   solo: "Solo",
   computer: "Vs computer",
@@ -38,12 +38,13 @@ export type QuickPlayGame = {
   allowedOrigin: typeof quickPlayOrigin;
   artwork: string;
   artworkAlt: string;
+  artworkLabel: "Game illustration" | "Game screenshot";
   instructions: readonly string[];
   tip: string;
   release: QuickPlayRelease;
 };
 
-type Entry = Omit<QuickPlayGame, "source" | "collection" | "allowedOrigin" | "artwork" | "release"> & { release?: QuickPlayRelease };
+type Entry = Omit<QuickPlayGame, "source" | "collection" | "allowedOrigin" | "artwork" | "artworkLabel" | "release"> & { artwork?: string; artworkLabel?: QuickPlayGame["artworkLabel"]; release?: QuickPlayRelease };
 const entries: readonly Entry[] = [
   {
     id: "billiards", title: "Billiards", genre: "Board & Table", categories: ["board-table", "simulation"],
@@ -76,10 +77,17 @@ const entries: readonly Entry[] = [
     id: "chess", title: "Chess", genre: "Board & Table", categories: ["board-table"],
     embedUrl: "https://games.vihar.online/chess/play",
     description: "A quiet board. A clever plan. A new story with every move.",
-    about: "Chess rewards curiosity as much as calculation. Bring your pieces into the game, keep your king safe and look for the move that changes the whole position.",
-    artworkAlt: "Flat illustration of a chessboard with a cream knight and a dark king",
+    about: "Pull up a chair in a quiet Indian courtyard. Play Easy, Medium or Hard against Acharya Dev, your chess mentor, or share a device with a friend. Develop your pieces, protect your king and find the move that changes the whole position. Games are untimed and can be saved on this device.",
+    artwork: "/images/quick-play/chess-gameplay.webp",
+    artworkLabel: "Game screenshot",
+    artworkAlt: "Chess gameplay with a flat wooden board, cream and dark pieces, and Acharya Dev beside the move book",
     instructions: ["Each kind of piece moves differently; White makes the first move.", "Develop your pieces and protect your king from check.", "Win by checkmating the opposing king: a check with no legal escape."],
     tip: "Before moving, check what your opponent is threatening.",
+    release: {
+      status: "playable", verifiedAt: "2026-11-09T16:02:02.362Z",
+      modes: ["computer", "pass-and-play"], devices: ["Desktop", "Tablet", "Phone"],
+      controls: "Tap or click a piece, then a marked legal destination. Use arrow keys and Enter on the board. Choose a computer level or Pass & Play; games are untimed. Pause, resume or save and leave at any time.",
+    },
   },
   {
     id: "connect-four", title: "Connect Four", genre: "Board & Table", categories: ["board-table"],
@@ -148,10 +156,17 @@ const entries: readonly Entry[] = [
     id: "tic-tac-toe", title: "Tic-Tac-Toe", genre: "Puzzles & Quick Play", categories: ["puzzles"],
     embedUrl: "https://games.vihar.online/tic-tac-toe/play",
     description: "A familiar doodle. A friendly challenge. Just one more round.",
-    about: "Nine squares and two marks are all it takes. Tic-Tac-Toe is a small game of noticing opportunities, blocking a line and setting up a choice your opponent cannot cover.",
-    artworkAlt: "Flat notebook illustration of a Tic-Tac-Toe grid with terracotta crosses and green circles",
+    about: "A ruled notebook, nine squares and two familiar marks. Play an Easy, Medium or Hard computer, or pass the notebook to a friend on the same device. Choose your marks, block a line and try another round. The notebook keeps your session score and saves your last page on this device when browser storage is available.",
+    artwork: "/images/quick-play/tic-tac-toe-gameplay.webp",
+    artworkLabel: "Game screenshot",
+    artworkAlt: "Close-up of the Tic-Tac-Toe notebook board with a blue cross and red circle",
     instructions: ["Take turns placing an X or an O in an empty square.", "Make a line of three of your marks across, down or diagonally.", "If all nine squares fill without a line, the round is a draw."],
     tip: "Watch for forks: two possible winning lines created by one move.",
+    release: {
+      status: "playable", verifiedAt: "2026-11-09T16:02:02.362Z",
+      modes: ["computer", "pass-and-play"], devices: ["Desktop", "Tablet", "Phone"],
+      controls: "Tap or click an empty square. Use arrow keys and Enter or Space on the board. Choose Easy, Medium or Hard computer play, or Pass & Play; accept the handover between turns. Pause and resume from the game menu.",
+    },
   },
 ];
 
@@ -160,9 +175,9 @@ export const quickPlayGames: QuickPlayGame[] = entries.map((entry) => ({
   source: "officialGames",
   collection: "quick-play",
   allowedOrigin: quickPlayOrigin,
-  artwork: `/images/quick-play/${entry.id}.png`,
-  // Live manifest: all twelve are planned, with availableModes: []. Gameplay
-  // is owned by the separate games project; do not enable placeholder frames.
+  artwork: entry.artwork ?? `/images/quick-play/${entry.id}.png`,
+  artworkLabel: entry.artworkLabel ?? "Game illustration",
+  // Enable only individually verified releases from the separate games host.
   release: entry.release ?? { status: "upcoming" },
 }));
 
