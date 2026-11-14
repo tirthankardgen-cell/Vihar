@@ -62,7 +62,7 @@
 
 .topline {
   position: absolute;
-  z-index: 3;
+  z-index: 1;
   left: clamp(24px, 3.4vw, 56px);
   right: clamp(24px, 3.4vw, 56px);
   display: flex;
@@ -79,9 +79,6 @@
 .toplineLabel { display: flex; align-items: center; gap: 9px; }
 .toplineLabel { color: #e0e2d8; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; }
 .statusDot { width: 5px; height: 5px; border-radius: 50%; background: var(--world-accent); box-shadow: 0 0 12px #a5b4fc66; }
-.worldPicker { display: flex; align-items: center; gap: 4px; background: #0b0d15e8; border-radius: 99px; }
-.worldPicker button { display: grid; place-items: center; width: 44px; height: 44px; color: inherit; background: transparent; border: 0; }
-.worldPicker span { font: 10px monospace; white-space: nowrap; }
 
 .scene { position: absolute; inset: 0; z-index: 2; perspective: 1200px; transform-style: preserve-3d; pointer-events: none; }
 .card { position: absolute; left: var(--card-x); top: var(--card-y); width: var(--card-width); aspect-ratio: 4 / 5; will-change: transform; pointer-events: auto; }
@@ -129,6 +126,7 @@
 .motionToggle:focus-visible { outline-color: var(--world-accent); }
 .hero[data-motion="off"], .hero[data-pinned="false"] { min-height: 0; }
 .hero[data-motion="off"] .stage, .hero[data-pinned="false"] .stage { position: relative; top: auto; }
+.hero[data-motion="off"] .scene { z-index: 0; }
 .hero[data-motion="off"] .card:not(:focus-within) { transform: translate3d(-50%, -50%, calc(var(--far-z) + var(--z-travel) * var(--rest-progress))) rotateZ(var(--card-rotation)) !important; }
 
 @media (max-width: 1100px) {
@@ -153,8 +151,8 @@
 }
 
 @media (max-width: 767px) {
-  .hero { --hero-height: max(690px, 100svh); --card-width: clamp(100px, 30vw, 130px); --far-z: -1200px; --z-travel: 1550px; --camera-pan: 20px; }
-  .copy { z-index: 3; width: 100%; padding: 104px 24px 72px; }
+  .hero { --hero-height: max(690px, 100svh); --card-width: clamp(130px, 38vw, 180px); --far-z: -1200px; --z-travel: 1550px; --camera-pan: 20px; }
+  .copy { width: 100%; padding: 104px 24px 72px; }
   .eyebrow { font-size: 8px; margin-bottom: 20px; letter-spacing: .11em; }
   .titleIntro { font-size: 23px; margin-bottom: 12px; }
   .titleName { font-size: clamp(80px, 27vw, 130px); }
@@ -164,8 +162,6 @@
   .enterButton { min-width: 196px; min-height: 50px; font-size: 12px; }
   .playButton { min-height: 44px; font-size: 11px; }
   .scene { perspective: 900px; }
-  .card { top: 90%; }
-  .card:nth-child(3), .card:nth-child(4), .card:nth-child(7), .card:nth-child(8) { top: 23%; }
   .cardCaption { left: 11px; right: 11px; bottom: 12px; }
   .cardCaption strong { font-size: 17px; }
   .cardCaption > span { font-size: 6px; }
@@ -174,8 +170,6 @@
   .topline { top: calc(var(--header-height) + 23px); left: 22px; right: 22px; }
   .toplineTools { gap: 4px; }
   .toplineLabel { font-size: 8px; }
-  .worldPicker { gap: 0; }
-  .worldPicker span { font-size: 8px; }
   .rings span { width: 100vw; }
   .rings span:nth-child(2) { width: 145vw; }
   .rings span:nth-child(3) { width: 200vw; }
@@ -184,6 +178,7 @@
 @media (prefers-reduced-motion: reduce) {
   .hero { min-height: 0; }
   .stage { position: relative; top: auto; }
+  .scene { z-index: 0; }
   .card:not(:focus-within) { opacity: 1 !important; transform: translate3d(-50%, -50%, calc(var(--far-z) + var(--z-travel) * var(--rest-progress))) rotateZ(var(--card-rotation)) !important; }
   .cardImage, .enterButton, .playButton { transition: none; }
   .enterButton:hover { transform: none; }

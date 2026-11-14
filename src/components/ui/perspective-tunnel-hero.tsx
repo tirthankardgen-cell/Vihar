@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import Link from "@/components/site-link";
-import { ArrowLeft, ArrowRight, ArrowUpRight, CirclePause, Play } from "lucide-react";
+import { ArrowUpRight, CirclePause, Play } from "lucide-react";
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from "motion/react";
 import type { MotionValue } from "motion/react";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
@@ -12,16 +12,17 @@ import type { WorldCard } from "@/lib/hero-games";
 import "../quick-play-fonts.css";
 import styles from "./perspective-tunnel-hero.module.css";
 
-const CARDS_PER_SET = 9;
-const SLOT_POSITIONS = [[.34, .17], [-.34, .15], [.34, -.25], [-.34, -.26], [.32, .38], [-.32, .36], [0, -.39], [-.42, 0], [.42, -.04]].map(([x, y], index) => {
+const SLOT_POSITIONS = Array.from({ length: 12 }, (_, index) => {
+  const angle = index * 137.5 * Math.PI / 180;
   return {
-    x, y,
+    x: Math.cos(angle) * (0.28 + (index % 3) * 0.08),
+    y: Math.sin(angle) * (0.26 + (index % 2) * 0.09),
     rotation: (index % 2 === 0 ? 1 : -1) * (3 + (index % 5) * 2),
     index,
   };
 });
 
-// Keep nine images in the corridor while browsing the complete game collection.
+// Begin inside one image tunnel; scrolling clears it to reveal the copy.
 const INITIAL_PHASE = 0.46;
 const CAMERA_SPRING = { stiffness: 65, damping: 25, mass: 0.5 };
 
@@ -77,7 +78,7 @@ function TunnelCard({ card, progress, pointer }: {
   progress: MotionValue<number>;
   pointer: { x: MotionValue<number>; y: MotionValue<number> };
 }) {
-  const start = (card.index / CARDS_PER_SET) * 0.45;
+  const start = (card.index / SLOT_POSITIONS.length) * 0.45;
   const localProgress = useTransform(progress, [start, start + 0.55], [0, 1]);
   const transform = useTransform([localProgress, pointer.x, pointer.y], (values) => {
     const [travel, px, py] = values as number[];
@@ -110,10 +111,6 @@ export default function PerspectiveTunnelHero({ worldCards }: { worldCards: Worl
   const stageRef = useRef<HTMLDivElement>(null);
   const reduce = useSyncExternalStore(subscribeToMotionPreference, readMotionPreference, readServerMotionPreference);
   const [paused, setPaused] = useState(false);
-  const [set, setSet] = useState(0);
-  const sets = Math.ceil(worldCards.length / CARDS_PER_SET);
-  const cards = worldCards.slice(set * CARDS_PER_SET, (set + 1) * CARDS_PER_SET);
-  const changeSet = (direction: number) => setSet((value) => (value + direction + sets) % sets);
   const [stage, setStage] = useState<StageDimensions>({ isMobile: false, canPin: true });
   const motionEnabled = !reduce && !paused;
 
@@ -149,11 +146,6 @@ export default function PerspectiveTunnelHero({ worldCards }: { worldCards: Worl
         <div className={styles.topline}>
           <span className={styles.toplineLabel}><span className={styles.statusDot} aria-hidden="true" /> A space to play</span>
           <div className={styles.toplineTools}>
-            <div className={styles.worldPicker} role="group" aria-label="Featured games">
-              <button type="button" onClick={() => changeSet(-1)} aria-label="Previous games"><ArrowLeft size={15} aria-hidden="true" /></button>
-              <span role="status">Games {set * CARDS_PER_SET + 1}–{Math.min((set + 1) * CARDS_PER_SET, worldCards.length)} / {worldCards.length}</span>
-              <button type="button" onClick={() => changeSet(1)} aria-label="Next games"><ArrowRight size={15} aria-hidden="true" /></button>
-            </div>
             <button type="button" className={styles.motionToggle} onClick={() => setPaused((value) => !value)} aria-label={reduce ? "Reduced motion" : motionEnabled ? "Pause motion" : "Resume motion"} title={reduce ? "Your device has requested reduced motion." : motionEnabled ? "Pause motion" : "Resume motion"} disabled={reduce}>
               {motionEnabled ? <CirclePause size={16} aria-hidden="true" /> : <Play size={14} aria-hidden="true" />}
             </button>
@@ -177,7 +169,7 @@ export default function PerspectiveTunnelHero({ worldCards }: { worldCards: Worl
         </div>
 
         <div className={styles.scene}>
-          {cards.map((card, index) => <TunnelCard key={card.src} card={{ ...card, ...SLOT_POSITIONS[index], number: set * CARDS_PER_SET + index }} progress={progress} pointer={pointer} />)}
+          {worldCards.map((card, index) => <TunnelCard key={card.src} card={{ ...card, ...SLOT_POSITIONS[index], number: index }} progress={progress} pointer={pointer} />)}
         </div>
       </div>
     </section>

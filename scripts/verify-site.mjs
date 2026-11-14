@@ -205,13 +205,13 @@ try {
   const hero = home.match(/<section\b[^>]*aria-labelledby="vihar-world-title"[^>]*>([\s\S]*?)<\/section>/)?.[1];
   assert(hero, "Homepage needs the Vihar world hero");
   const heroImages = [...hero.matchAll(/<img\b[^>]*>/g)].map((match) => match[0]);
-  assert.equal(heroImages.length, 9, "The tunnel needs nine image cards");
+  assert.equal(heroImages.length, 12, "The single tunnel needs twelve image cards");
   assert(hero.includes('href="/games"'), "The hero must expose the games catalogue");
   assert(hero.includes('href="/dashboard/publish"'), "The hero must expose community publishing");
   for (const id of ["chess", "carrom", "sudoku", "tic-tac-toe", "paperwing", "ludo", "billiards", "bap-ka-rasta", "gulam-chor"]) {
     assert(hero.includes(`href="/games/${id}"`), `${id}: featured in the first hero set`);
   }
-  assert(hero.includes('aria-label="Next games"') && hero.includes('aria-label="Previous games"'), "All game worlds must be browsable");
+  assert(!hero.includes('aria-label="Next games"') && !hero.includes('aria-label="Previous games"'), "The hero is one scroll-driven image tunnel, without a game picker");
   for (const game of quickPlayGames) {
     const catalogue = pages.get("/games/quick-play");
     assert(catalogue.includes(`data-game="${game.id}"`) && catalogue.includes(game.visual.name), `${game.id}: individually themed catalogue card`);
@@ -243,12 +243,12 @@ try {
     }
   }
   // Aggregate budget replaces the former 25 KiB single courtyard image budget.
-  for (const [format, bytes] of formatBudgets) assert(bytes <= 128 * 1024, "All nine mobile hero images must stay within 128 KiB: " + format);
+  for (const [format, bytes] of formatBudgets) assert(bytes <= 128 * 1024, "All twelve mobile hero images must stay within 128 KiB: " + format);
   const heroPreviewResponse = await get("/preview/vihar-world");
   assert.equal(heroPreviewResponse.status, 200, "Hero preview must remain testable");
   const heroPreview = await heroPreviewResponse.text();
   assert(attribute(heroPreview, "meta", "name", "robots")?.includes("noindex"), "The hero preview must stay out of search results");
-  assert.equal([...heroPreview.matchAll(/data-world-card=/g)].length, 9, "The preview must use the same nine-card hero");
+  assert.equal([...heroPreview.matchAll(/data-world-card=/g)].length, 12, "The preview must use the same twelve-image hero");
   const homeStylesheets = [...home.matchAll(/<link\b[^>]*rel="stylesheet"[^>]*href="([^"]+)"[^>]*>/g)].map((match) => decode(match[1]));
   let homeCssBytes = 0;
   for (const url of new Set(homeStylesheets)) {
@@ -451,7 +451,7 @@ try {
     const metadata = await sharp(Buffer.from(await response.arrayBuffer())).metadata();
     assert.equal(metadata.width, metadata.height, "Avatars must retain a square aspect ratio");
   }
-  console.log(`PASS: ${routes.length} public routes, ${accountRoutes.length} ad-free/noindex account routes, six avatar assets, SEO metadata, structured data, internal links/assets, nine-card hero and noindex preview, responsive AVIF/WebP hero formats/cache/128 KiB aggregate image budget, ${homeCssBytes} bytes of homepage CSS, robots, image gallery and completed-page sitemap, game links, contact, headers, ad-free 404s, FAQ parity, original-logo favicon, approval/consent/preview gates, guide-only ads, privacy disclosures, ads.txt and llms.txt.`);
+  console.log(`PASS: ${routes.length} public routes, ${accountRoutes.length} ad-free/noindex account routes, six avatar assets, SEO metadata, structured data, internal links/assets, twelve-image hero and noindex preview, responsive AVIF/WebP hero formats/cache/128 KiB aggregate image budget, ${homeCssBytes} bytes of homepage CSS, robots, image gallery and completed-page sitemap, game links, contact, headers, ad-free 404s, FAQ parity, original-logo favicon, approval/consent/preview gates, guide-only ads, privacy disclosures, ads.txt and llms.txt.`);
 } catch (error) {
   console.error(error);
   process.exitCode = 1;

@@ -11,8 +11,8 @@ export interface WorldCard {
   visual?: CSSProperties;
 }
 
-const featured = ["chess", "carrom", "sudoku", "tic-tac-toe", "paperwing", "ludo", "billiards"];
-const games = [...featured.map((id) => quickPlayGames.find((game) => game.id === id)!), ...quickPlayGames.filter((game) => !featured.includes(game.id))];
+const featured = ["chess", "carrom", "sudoku", "tic-tac-toe", "paperwing", "ludo", "billiards", "silk-trail", "monsoon-blocks", "minesweeper"];
+const games = featured.map((id) => quickPlayGames.find((game) => game.id === id)!);
 const cards = games.map((game): WorldCard => ({
   src: game.artwork, alt: game.artworkAlt, title: game.title,
   caption: `${game.release.status === "playable" ? "Play here" : "Coming soon"} · ${game.artworkLabel}`,
