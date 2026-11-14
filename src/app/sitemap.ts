@@ -39,14 +39,15 @@ const pageImages: Record<string, readonly string[]> = {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const community = await publicGames();
-  const latestDiscovery = community.reduce((latest, game) => Date.parse(game.updatedAt) > Date.parse(latest) ? game.updatedAt : latest, quickPlayUpdated);
+  const contentUpdated = Date.parse(quickPlayUpdated) > Date.parse(site.searchUpdated) ? quickPlayUpdated : site.searchUpdated;
+  const latestDiscovery = community.reduce((latest, game) => Date.parse(game.updatedAt) > Date.parse(latest) ? game.updatedAt : latest, contentUpdated);
   return [...indexableRoutes.map((path) => ({
     url: site.url + (path === "/" ? "" : path),
     ...discoveryHints,
     ...(path.startsWith("/help/") ? { lastModified: helpUpdated } : {}),
     images: pageImages[path]?.map((image) => site.url + image),
     ...(discoveryPages.has(path) ? { lastModified: ["/", "/games", "/games/community", "/site-map"].includes(path) ? latestDiscovery : discoveryUpdated } : path === "/games/gulam-chor" ? { lastModified: gulamUpdated } : updatedContent.has(path) ? { lastModified: ["/games/bap-ka-rasta", galleryPath, "/guides/bap-ka-rasta-first-drive"].includes(path) ? "2026-11-03T00:00:00+05:30" : creatorUpdated } : {}),
-    ...(["/games/quick-play", "/games/originals"].includes(path) ? { lastModified: quickPlayUpdated } : {}),
+    ...(["/games/quick-play", "/games/originals", "/about", "/help"].includes(path) ? { lastModified: contentUpdated } : {}),
     ...Object.fromEntries(quickPlayGames.filter((game) => path === `/games/${game.id}` && game.release.status === "playable").map((game) => ["lastModified", game.release.status === "playable" ? game.release.verifiedAt : quickPlayUpdated])),
   })), ...community.map((game) => ({ url: `${site.url}/community/${game.id}`, ...discoveryHints, lastModified: game.updatedAt, images: [...new Set([game.coverUrl, ...(game.screenshots ?? [])].filter((url): url is string => !!url && url.startsWith("https://")))] }))];
 }

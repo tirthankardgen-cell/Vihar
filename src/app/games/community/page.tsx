@@ -4,8 +4,8 @@ import { publicGames } from "@/lib/community-public";
 import { pageMetadata } from "@/lib/site";
 import "@/app/content.css";
 
-const description = "Discover browser and downloadable games shared by independent creators and players. Explore creator profiles, play their games, and leave ratings, reviews and feedback.";
-export const metadata = pageMetadata("Community Games — Discover independent creators", description, "/games/community");
+const description = "Discover indie browser and downloadable games from independent creators. Explore creator profiles, find new games and share player reviews on Vihar.";
+export const metadata = pageMetadata("Community Games — Indie Games & Independent Creators", description, "/games/community");
 export const revalidate = 300;
 
 export default async function CommunityPage() {

@@ -30,7 +30,7 @@ const newsreader = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: { default: "Vihar — Discover, Play & Share Games", template: "%s | Vihar" },
+  title: { default: "Vihar — Free Browser Games, Board Games & Puzzles", template: "%s | Vihar" },
   description: site.description,
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
@@ -48,10 +48,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: {
     type: "website", locale: "en_IN", url: "/", siteName: site.name,
-    title: "Vihar — A space to play.", description: site.description,
+    title: "Vihar — Free Browser Games, Board Games & Puzzles", description: site.description,
     images: [{ url: "/images/social-vihar.png", width: 1200, height: 630, alt: "Vihar — A space to play. Games, creators and a community of players." }],
   },
-  twitter: { card: "summary_large_image", title: "Vihar — A space to play.", description: site.description, images: ["/images/social-vihar.png"] },
+  twitter: { card: "summary_large_image", title: "Vihar — Free Browser Games, Board Games & Puzzles", description: site.description, images: ["/images/social-vihar.png"] },
   icons: {
     icon: [
       { url: "/brand/icon-192.png", type: "image/png", sizes: "192x192" },

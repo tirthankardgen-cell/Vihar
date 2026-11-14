@@ -32,46 +32,48 @@ beforeEach(async () => {
 after(async () => { await db.terminate(); await deleteApp(auth.app); });
 
 test("unreleased Quick Play cannot mint launches or receipts, even with a counterfeit community listing", async () => {
-  await db.doc("communityGames/carrom").set({ title: "Counterfeit", url: `${origin}/play`, ownerId: player.uid, published: true, authMode: "none" });
-  for (const action of ["launch", "receipt", "register", "info"]) await assert.rejects(call(action, { gameId: "carrom", origin }, player.token), { code: "game_unavailable" });
-  await assert.rejects(call("receipt", { gameId: "carrom" }, null), { code: "sign_in_required" });
-  assert.equal((await db.doc(`officialGames/carrom/players/${player.uid}`).get()).exists, false);
+  const gameId = "billiards";
+  assert.equal(getQuickPlayGame(gameId).release.status, "upcoming");
+  await db.doc(`communityGames/${gameId}`).set({ title: "Counterfeit", url: `${origin}/play`, ownerId: player.uid, published: true, authMode: "none" });
+  for (const action of ["launch", "receipt", "register", "info"]) await assert.rejects(call(action, { gameId, origin }, player.token), { code: "game_unavailable" });
+  await assert.rejects(call("receipt", { gameId }, null), { code: "sign_in_required" });
+  assert.equal((await db.doc(`officialGames/${gameId}/players/${player.uid}`).get()).exists, false);
 });
 
-test("released Quick Play reuses scoped activity and keeps official receipts, time and metrics isolated", async () => {
-  const game = getQuickPlayGame("chess"), previous = game.release;
-  game.release = { status: "playable", verifiedAt: "2026-11-09T00:00:00+05:30", modes: ["pass-and-play"], devices: ["Desktop"], controls: "Select a piece, then its destination." };
+for (const gameId of ["chess", "carrom"]) test(`${gameId}: released Quick Play keeps scoped activity, receipts, time and metrics isolated`, async () => {
+  const game = getQuickPlayGame(gameId), previous = game.release;
+  assert.equal(game.release.status, "playable");
   try {
-    await assert.rejects(call("register", { gameId: "chess", origin: quickPlayOrigin }, player.token), { code: "not_owner" });
-    const launch = await call("launch", { gameId: "chess" }, player.token);
+    await assert.rejects(call("register", { gameId, origin: quickPlayOrigin }, player.token), { code: "not_owner" });
+    const launch = await call("launch", { gameId }, player.token);
     assert(launch.url.startsWith(`${game.embedUrl}#vihar_launch=`));
     const code = new URL(launch.url).hash.split("=")[1];
-    await assert.rejects(call("token", { gameId: "chess", code }, null, origin), { code: "invalid_origin" });
-    const { accessToken } = await call("token", { gameId: "chess", code }, null, quickPlayOrigin);
-    await assert.rejects(call("me", { gameId: "chess" }, accessToken, quickPlayOrigin), { code: "identity_required" });
-    await assert.rejects(call("save", { gameId: "chess", operation: "read" }, accessToken, quickPlayOrigin), { code: "identity_required" });
-    await assert.rejects(call("receipt", { gameId: "chess" }, player.token, quickPlayOrigin), { code: "invalid_origin" });
-    await call("receipt", { gameId: "chess", restore: true }, player.token);
+    await assert.rejects(call("token", { gameId, code }, null, origin), { code: "invalid_origin" });
+    const { accessToken } = await call("token", { gameId, code }, null, quickPlayOrigin);
+    await assert.rejects(call("me", { gameId }, accessToken, quickPlayOrigin), { code: "identity_required" });
+    await assert.rejects(call("save", { gameId, operation: "read" }, accessToken, quickPlayOrigin), { code: "identity_required" });
+    await assert.rejects(call("receipt", { gameId }, player.token, quickPlayOrigin), { code: "invalid_origin" });
+    await call("receipt", { gameId, restore: true }, player.token);
     assert.equal((await db.collection(`players/${player.uid}/activity`).get()).size, 0);
-    const receipt = await db.doc(`officialGames/chess/players/${player.uid}`).get();
-    await call("receipt", { gameId: "chess", title: "Counterfeit title", uid: stranger.uid }, player.token);
-    assert.equal((await db.doc(`officialGames/chess/players/${player.uid}`).get()).data().startedAt.toMillis(), receipt.data().startedAt.toMillis());
-    assert.equal((await db.doc(`officialGames/chess/players/${stranger.uid}`).get()).exists, false);
+    const receipt = await db.doc(`officialGames/${gameId}/players/${player.uid}`).get();
+    await call("receipt", { gameId, title: "Counterfeit title", uid: stranger.uid }, player.token);
+    assert.equal((await db.doc(`officialGames/${gameId}/players/${player.uid}`).get()).data().startedAt.toMillis(), receipt.data().startedAt.toMillis());
+    assert.equal((await db.doc(`officialGames/${gameId}/players/${stranger.uid}`).get()).exists, false);
     const activity = (await db.collection(`players/${player.uid}/activity`).get()).docs[0].data();
-    assert.equal(activity.title, "Chess"); assert.equal(activity.source, "officialGames");
-    assert.equal((await db.doc(`players/${player.uid}/gameStats/chess`).get()).exists, false, "Opening a frame is not a gameplay session");
+    assert.equal(activity.title, game.title); assert.equal(activity.source, "officialGames");
+    assert.equal((await db.doc(`players/${player.uid}/gameStats/${gameId}`).get()).exists, false, "Opening a frame is not a gameplay session");
     const sessionId = secret();
-    await call("session", { gameId: "chess", sessionId, operation: "start" }, accessToken, quickPlayOrigin);
+    await call("session", { gameId, sessionId, operation: "start" }, accessToken, quickPlayOrigin);
     await db.doc(`players/${player.uid}/sessions/${sessionId}`).update({ lastSeenAt: Timestamp.fromMillis(Date.now() - 10_000) });
-    await call("session", { gameId: "chess", sessionId, operation: "end", sequence: 1, elapsedMs: 7_000 }, accessToken, quickPlayOrigin);
-    const stats = (await db.doc(`players/${player.uid}/gameStats/chess`).get()).data();
+    await call("session", { gameId, sessionId, operation: "end", sequence: 1, elapsedMs: 7_000 }, accessToken, quickPlayOrigin);
+    const stats = (await db.doc(`players/${player.uid}/gameStats/${gameId}`).get()).data();
     assert.equal(stats.source, "officialGames"); assert.equal(stats.playMilliseconds, 7_000); assert.equal(stats.sessions, 1);
-    assert.equal((await db.doc("officialGames/chess/metrics/activity").get()).data().playMilliseconds, 7_000);
-    assert.equal((await db.doc("communityGames/chess/metrics/activity").get()).exists, false);
+    assert.equal((await db.doc(`officialGames/${gameId}/metrics/activity`).get()).data().playMilliseconds, 7_000);
+    assert.equal((await db.doc(`communityGames/${gameId}/metrics/activity`).get()).exists, false);
     await db.doc(`gameTokens/${digest(accessToken)}`).update({ source: "communityGames" });
-    await assert.rejects(call("session", { gameId: "chess", sessionId, operation: "start" }, accessToken, quickPlayOrigin), { code: "game_unavailable" });
+    await assert.rejects(call("session", { gameId, sessionId, operation: "start" }, accessToken, quickPlayOrigin), { code: "game_unavailable" });
     game.release = { status: "upcoming" };
-    await assert.rejects(call("launch", { gameId: "chess" }, player.token), { code: "game_unavailable" });
+    await assert.rejects(call("launch", { gameId }, player.token), { code: "game_unavailable" });
   } finally { game.release = previous; }
 });
 async function identity(account = player, gameId = "test-game") {

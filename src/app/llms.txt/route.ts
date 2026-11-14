@@ -1,5 +1,6 @@
 import { helpArticles } from "@/lib/help";
 import { site } from "@/lib/site";
+import { quickPlayGames, quickPlayModes } from "@/lib/quick-play";
 export const dynamic = "force-static";
 export function GET() {
   return new Response(`# Vihar
@@ -18,6 +19,10 @@ Vihar is a game discovery and publishing platform, rooted in India and open to p
 
 ## Vihar ID for community games
 A community game that uses login or saved player progress must offer Sign in with Vihar ID on the studio’s own website. A game without either can start directly. All new published community games must test gameplay reporting. Account identity and game-scoped cloud saves require player approval; direct-play launch tickets permit activity only. Private activity, sessions and saves appear in the player dashboard. The SDK is available at ${site.url}/sdk/vihar-id.js.
+
+## Playable Quick Play games
+${quickPlayGames.filter((game) => game.release.status === "playable").map((game) => `- [${game.title}](${site.url}/games/${game.id}): ${game.about} Modes: ${game.release.status === "playable" ? game.release.modes.map((mode) => quickPlayModes[mode]).join(", ") : ""}.`).join("\n")}
+These games are free browser games with guest play and no download. Signed-in launches can record account activity and enable reviews. Use Exit to Vihar or Escape to return to the game details. Private online rooms are coming soon; local Pass & Play means sharing one device.
 
 ## Step-by-step help
 ${helpArticles.map((article) => `- [${article.title}](${site.url}/help/${article.slug}): ${article.description}`).join("\n")}

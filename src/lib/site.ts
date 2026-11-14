@@ -13,11 +13,12 @@ function httpsUrl(value: string, name: string): string {
 export const site = {
   name: "Vihar",
   tagline: "A space to play.",
+  searchUpdated: "2026-11-14T08:26:00.000Z",
   url: httpsUrl(process.env.SITE_URL || "https://vihar.online", "SITE_URL"),
   instagram: "https://www.instagram.com/vihar.world",
   email: process.env.SUPPORT_EMAIL || "contact@vihar.online",
   description:
-    "Discover VIHAR Originals and games from independent creators. Play, explore creator profiles, leave reviews and feedback, or publish your own game on Vihar.",
+    "Play free browser games, Indian board and card games, and puzzles on Vihar. Discover independent games, read player reviews or publish your own game.",
   gameUrl: httpsUrl(
     process.env.BAP_KA_RASTA_URL || "https://rasta.vihar.online",
     "BAP_KA_RASTA_URL",

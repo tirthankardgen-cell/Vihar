@@ -136,6 +136,14 @@ try {
   for (const game of quickPlayGames) {
     assert(pages.get("/games/quick-play").includes(`href="/games/${game.id}"`), `${game.id}: discoverable detail page`);
     const html = pages.get(`/games/${game.id}`);
+    if (game.release.status === "playable" && game.faqs) {
+      const schema = [...html.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].map((match) => JSON.parse(match[1])).find((data) => data["@type"] === "FAQPage");
+      assert.equal(schema?.mainEntity.length, game.faqs.length, `${game.id}: complete FAQ structured data`);
+      const plain = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, "").replace(/<[^>]*>/g, "").replaceAll("&amp;", "&").replaceAll("&#x27;", "'").replaceAll("&quot;", '"');
+      for (const question of schema.mainEntity) {
+        assert(plain.includes(question.name) && plain.includes(question.acceptedAnswer.text), `${game.id}: structured answers must also be visible`);
+      }
+    }
     assert(html.includes("How to play"), `${game.id}: server-rendered instructions`);
     assert(html.includes(`data-theme="${game.visual.theme}"`), `${game.id}: specified detail theme`);
     assert(html.includes(game.visual.name), `${game.id}: named visual direction`);
@@ -377,7 +385,9 @@ try {
   else assert(!adsText.includes("DIRECT"));
   const llms = await get("/llms.txt");
   assert.equal(llms.status, 200);
-  assert((await llms.text()).includes(new URL("/help", canonical).href));
+  const llmsText = await llms.text();
+  assert(llmsText.includes(new URL("/help", canonical).href));
+  for (const game of quickPlayGames.filter((game) => game.release.status === "playable")) assert(llmsText.includes(`${canonical.origin}/games/${game.id}`), `${game.id}: AI-readable released game link`);
   const homepage = pages.get("/");
   assert(homepage.includes('id="faqs"'), "Homepage needs a visible FAQ destination");
   assert(homepage.includes("Frequently asked questions"), "Homepage FAQ heading");
@@ -389,7 +399,7 @@ try {
   assert(faq && faq.mainEntity.length === 7, "Visible discovery FAQ schema");
   for (const question of faq.mainEntity) {
     assert(homepage.includes(question.name));
-    assert(homepage.includes(question.acceptedAnswer.text));
+    assert(decode(homepage).includes(question.acceptedAnswer.text));
     assert(help.includes(question.name));
     assert(help.includes(question.acceptedAnswer.text));
   }

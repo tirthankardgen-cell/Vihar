@@ -7,8 +7,8 @@ import { BreadcrumbData } from "@/components/structured-data";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata(
-  "Our story — A little room for wonder",
-  "Meet Vihar, a home for games, independent creators and players rooted in India and open to everyone. Discover the idea behind our name, our emblem, and our approach to play.",
+  "About Vihar — Indian Games & Independent Creators",
+  "Meet Vihar, an Indian game discovery platform for free browser games, board games, puzzles and independent creators. Learn about our team and approach to play.",
   "/about",
 );
 
@@ -29,7 +29,7 @@ export default function AboutPage() {
           <div className="editorial-copy">
             <p>A quick drive after a long day. One more turn before dinner. A new world when the familiar one needs a little pause. Those small moments are where Vihar begins.</p>
             <p>Vihar is a game discovery and publishing platform. VIHAR Originals are made by our team; Community Games are published by independent creators and players. Create an account to share your self-hosted browser or downloadable game, discover new players, and read their ratings and reviews. Some are inspired by streets and stories close to home in India. Others will wander somewhere entirely different. Each game gets its own personality; Vihar gives them a shared front door.</p>
-            <p>Take a drive through familiar Indian streets in Bap Ka Rasta, or settle into the courtyard for a round of Gulam Chor with the virtual family. Two VIHAR Originals, with room for many more worlds from the community.</p>
+            <p>Take a drive through familiar Indian streets in Bap Ka Rasta, or settle into the courtyard for a round of Gulam Chor with the virtual family. Play free browser board games such as Carrom and Chess in <Link href="/games/quick-play">Quick Play</Link>, or discover indie games from community creators. Each listing explains its available modes and controls.</p>
             <Link href="/games" className="text-link">Find your next little escape <ArrowUpRight size={17} aria-hidden="true" /></Link>
           </div>
         </section>

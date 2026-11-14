@@ -27,6 +27,12 @@
 .requirements p { max-width: 660px; font-size: 14px; line-height: 1.8; color: var(--muted); }
 .reviewsSoon { padding: 40px 0; }
 .reviewsSoon p { color: var(--muted); font-size: 15px; line-height: 1.8; }
+.faqs { padding-block: 36px; }
+.faqs h2 { font-family: var(--font-newsreader), Georgia, serif; font-size: 30px; font-weight: 400; margin-bottom: 22px; }
+.faqs details { border-bottom: 1px solid var(--line); padding-block: 16px; }
+.faqs summary { cursor: pointer; font-size: 16px; font-weight: 600; line-height: 1.6; }
+.faqs summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 5px; }
+.faqs p { max-width: 78ch; margin-top: 12px; color: var(--muted); font-size: 15px; line-height: 1.8; }
 .more { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; align-items: center; border-top: 1px solid var(--line); padding-top: 44px; margin-top: 28px; }
 
 .modes { display: flex; flex-wrap: wrap; gap: 7px; margin: 18px 0 0; }

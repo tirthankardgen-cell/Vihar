@@ -3,7 +3,7 @@ import type { GameCategory } from "./game-categories";
 // Confirmed by the owner and /api/games on 9 November 2026. Paths below are
 // explicit entries from that manifest, not slugs inferred from display names.
 export const quickPlayOrigin = "https://games.vihar.online";
-export const quickPlayUpdated = "2026-11-09T18:31:42.000Z";
+export const quickPlayUpdated = "2026-11-14T08:16:00.000Z";
 export const quickPlayModes = {
   solo: "Solo",
   computer: "Vs computer",
@@ -42,6 +42,7 @@ export type QuickPlayGame = {
   visual: { theme: "courtyard" | "pool" | "cloth" | "toybox" | "keepsakes" | "desktop" | "garden" | "folk" | "journal" | "notebook"; name: string; description: string; hindi?: string };
   screenshot?: { src: string; alt: string; caption: string };
   instructions: readonly string[];
+  faqs?: readonly { question: string; answer: string }[];
   tip: string;
   release: QuickPlayRelease;
 };
@@ -75,11 +76,23 @@ const entries: readonly Entry[] = [
     id: "carrom", title: "Carrom", genre: "Board & Table", categories: ["board-table"],
     artwork: "/images/quick-play/styles/carrom-sunlit-veranda.webp",
     embedUrl: "https://games.vihar.online/carrom/play",
-    description: "Line up the striker. Pocket a coin. Bring everyone to the board.",
-    about: "A familiar tabletop ritual, with just enough precision to make every turn interesting. Carrom is about clean angles, gentle rebounds and finding a path through a crowded board.",
+    description: "Play Carrom free in your browser. Choose a computer challenge, practise your aim or share the board with a friend.",
+    about: "Pull up a chair at the carrom board. Choose Easy, Medium or Hard against the computer, share a device with a friend, or find your aim in Practice. Slide the striker, pull back and release to shoot. Competitive boards use singles house rules: pocket your nine coins and cover the queen before clearing your last coin. Settled boards save on this device when storage is available; online rooms are coming soon.",
     artworkAlt: "Flat overhead carrom board with cream and black coins, a red queen and patterned striker in an Indian courtyard",
-    instructions: ["Aim the striker at a coin and send it towards a corner pocket.", "Plan your shot around the other coins and the edges of the board.", "The queen needs a cover; the game's rules explain how to secure it and handle fouls."],
+    instructions: ["Slide the striker along your baseline, pull backward to aim and set power, then release to shoot. Board options also offers keyboard controls and Confirm shot.", "Pocketing an own coin in a legal shot earns another turn. An empty shot or an opponent's coin passes the turn; Pass & Play waits for the next player to accept.", "After pocketing an own coin on an earlier shot, pocket the queen with an own coin or cover it on the next legal shot. Clear your nine coins after the queen is covered to win.", "Pocketing the striker or sending a piece out of bounds is a foul: your pocketed coins return, a penalty coin or debt applies, and the turn ends. Practice has no penalties or winner."],
     tip: "Use the cushions when a direct route to the pocket is blocked.",
+    faqs: [
+      { question: "Can I play Carrom for free without an account?", answer: "Yes. Carrom runs free inside Vihar in your browser, with no download or account required. Guest play is available; a signed-in launch can record activity and enable player reviews." },
+      { question: "Which Carrom modes are available?", answer: "Play against the computer at Easy, Medium or Hard, practise on your own, or share one device with a friend in two-player Pass & Play. Private online rooms are coming soon." },
+      { question: "How do I aim and shoot on a phone or computer?", answer: "Slide the striker along your baseline, pull backward to aim and set power, then release to shoot using touch or a mouse. Board options offers keyboard controls for position, aim and power, followed by Confirm shot." },
+      { question: "Does Carrom save my board?", answer: "Settled boards save on this device when browser storage is available. Return to the game and choose Resume board. Reloading during a moving shot restores the previous settled board. If storage is blocked, you can keep playing in the current tab; cross-device cloud saves are not available." },
+      { question: "How do I win and cover the queen?", answer: "Competitive singles boards use Vihar's casual house rules. After pocketing an own coin on an earlier legal shot, pocket the queen with an own coin or cover it on the next legal shot. Clear your nine coins after the queen is covered to win. Practice has no penalties or winner." },
+    ],
+    release: {
+      status: "playable", verifiedAt: "2026-11-14T08:16:00.000Z",
+      modes: ["computer", "practice", "pass-and-play"], devices: ["Desktop", "Tablet", "Phone"],
+      controls: "Slide the striker, pull backward to aim and add power, then release to strike with a mouse or touch. Use Board options for keyboard position, aim and power controls, then Confirm shot. Choose a computer level, Practice or Pass & Play; pause, resume and return to Vihar at any time. Only settled boards save on this device.",
+    },
   },
   {
     id: "checkers", title: "Checkers", genre: "Board & Table", categories: ["board-table"],
