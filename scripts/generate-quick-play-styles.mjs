@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import sharp from "sharp";
 import { mkdir, writeFile } from "node:fs/promises";
+import { newQuickPlayArt } from "./quick-play-new-art.mjs";
 
 // Flat editorial illustrations based on section 7 of every Vihar Games GAME_SPEC.
 // Preserve the earlier PNG studies and actual gameplay screenshots. No engine,
@@ -181,11 +182,13 @@ journey+=many(100,i=>{const[x,y]=position(i+1);return rect(x-23,y-23,20+(i===99?
 art.set("snakes-and-ladders",svg(journey));
 
 assert.equal(art.size,12);
+for (const [id, body] of await newQuickPlayArt()) art.set(id, body);
+assert.equal(art.size,24);
 const source=new URL("../assets/quick-play/styles/",import.meta.url),output=new URL("../public/images/quick-play/styles/",import.meta.url);
 await mkdir(source,{recursive:true});await mkdir(output,{recursive:true});
-const sceneNames={chess:"chess-neem-courtyard",carrom:"carrom-sunlit-veranda",ludo:"ludo-family-courtyard"};
-for(const[id,body]of art){const buffer=await sharp(Buffer.from(body)).webp({quality:90,effort:6}).toBuffer();assert(buffer.length<160*1024,`${id}: artwork exceeds 160 KiB`);await writeFile(new URL(`${id}.svg`,source),body+"\n");await writeFile(new URL(`${sceneNames[id]??id}.webp`,output),buffer);console.log(`${id}: ${buffer.length} bytes`);}
+const sceneNames={chess:"chess-neem-courtyard",carrom:"carrom-veranda-club",ludo:"ludo-family-courtyard"};
+for(const[id,body]of art){const buffer=await sharp(Buffer.from(body)).webp({quality:90,effort:6}).toBuffer();assert(buffer.length<160*1024,`${id}: artwork exceeds 160 KiB`);await writeFile(new URL(`${id === "carrom" ? sceneNames[id] : id}.svg`,source),body+"\n");await writeFile(new URL(`${sceneNames[id]??id}.webp`,output),buffer);console.log(`${id}: ${buffer.length} bytes`);}
 await mkdir(new URL("keepsakes/",output),{recursive:true});
 for(const[id,body]of Object.entries(keepsakes))await writeFile(new URL(`keepsakes/${id}.svg`,output),svg(group(80,80,1,body),160,160)+"\n");
 await writeFile(new URL("keepsakes/card-back.svg",output),svg(group(80,80,1,back),160,160)+"\n");
-console.log("Generated twelve spec-directed illustrations and fifteen reusable keepsakes; original assets preserved.");
+console.log("Generated 24 spec-directed illustrations and fifteen reusable keepsakes; original assets preserved.");

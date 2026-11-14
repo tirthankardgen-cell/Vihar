@@ -3,7 +3,7 @@ import type { GameCategory } from "./game-categories";
 // Confirmed by the owner and /api/games on 9 November 2026. Paths below are
 // explicit entries from that manifest, not slugs inferred from display names.
 export const quickPlayOrigin = "https://games.vihar.online";
-export const quickPlayUpdated = "2026-11-14T08:16:00.000Z";
+export const quickPlayUpdated = "2026-11-14T16:10:00.000Z";
 export const quickPlayModes = {
   solo: "Solo",
   computer: "Vs computer",
@@ -30,7 +30,7 @@ export type QuickPlayGame = {
   title: string;
   description: string;
   about: string;
-  genre: "Board & Table" | "Puzzles & Quick Play";
+  genre: "Board & Table" | "Puzzles & Quick Play" | "Arcade";
   categories: readonly GameCategory[];
   source: "officialGames";
   collection: "quick-play";
@@ -39,7 +39,7 @@ export type QuickPlayGame = {
   artwork: string;
   artworkAlt: string;
   artworkLabel: "Game illustration" | "Game screenshot";
-  visual: { theme: "courtyard" | "pool" | "cloth" | "toybox" | "keepsakes" | "desktop" | "garden" | "folk" | "journal" | "notebook"; name: string; description: string; hindi?: string };
+  visual: { theme: "courtyard" | "pool" | "cloth" | "toybox" | "keepsakes" | "desktop" | "garden" | "folk" | "journal" | "notebook" | "airmail" | "silk" | "rain" | "desert" | "lantern" | "ceramic" | "optical" | "market" | "brass" | "riverstone" | "chalk" | "celestial"; name: string; description: string; hindi?: string };
   screenshot?: { src: string; alt: string; caption: string };
   instructions: readonly string[];
   faqs?: readonly { question: string; answer: string }[];
@@ -49,8 +49,20 @@ export type QuickPlayGame = {
 
 type Entry = Omit<QuickPlayGame, "source" | "collection" | "allowedOrigin" | "artwork" | "artworkLabel" | "visual" | "release"> & { artwork?: string; artworkLabel?: QuickPlayGame["artworkLabel"]; release?: QuickPlayRelease };
 const visuals: Record<string, QuickPlayGame["visual"]> = {
+  paperwing: { theme: "airmail", name: "Airmail Atelier", description: "Letter paper, navy folds and postal coral. An original paper swallow flies through a quiet faded-blue sky." },
+  "silk-trail": { theme: "silk", name: "Silk Garden", description: "A parchment silk panel, mulberry-green stitches and copper-stemmed leaves. A little garden, one turn at a time." },
+  "monsoon-blocks": { theme: "rain", name: "Rain Window", description: "Flat patterned glass swatches in slate, rain blue, sea glass, plum and amber. A quiet window into a falling-block puzzle." },
+  "dune-dash": { theme: "desert", name: "Desert Field Notes", description: "Sand paper, a rust fox and hand-cut sandstone silhouettes. A clear horizon from an illustrated field guide." },
+  "lantern-logic": { theme: "lantern", name: "Lantern Workshop", description: "Rice paper, plum clues and flat amber squares. A hidden stencil comes into view in a quiet lantern workshop." },
+  "mosaic-shift": { theme: "ceramic", name: "Ceramic Studio", description: "Cobalt borders, cream numbered tiles and original ceramic motifs. A small studio study waiting to be restored." },
+  "prism-paths": { theme: "optical", name: "Optical Print Room", description: "Drafting paper, graphite mirrors and amber and blue beams. A crisp optical diagram with room to think." },
+  "crate-courtyard": { theme: "market", name: "Morning Market", description: "Limestone floor joints, indigo walls and rust crates with produce stamps. An overhead delivery puzzle in the morning market." },
+  "tide-turn": { theme: "brass", name: "Brass Water Study", description: "Matte brass vessels, umber outlines and crisp teal waterlines. A measuring study on warm ivory paper." },
+  "pebble-solitaire": { theme: "riverstone", name: "Riverstone Tray", description: "A flat cross-shaped tray, engraved river pebbles and reed-green margins. Thirty-three holes for a patient plan." },
+  "rangoli-loops": { theme: "chalk", name: "Chalk Threshold", description: "Limestone paper, aubergine clues and a crisp chalk loop. Rangoli motifs sit quietly outside the logical grid." },
+  "orbit-breaker": { theme: "celestial", name: "Celestial Instrument", description: "Midnight ink, aged-gold instruments and flat celestial glyphs. A small comet crosses a quiet star chart." },
   billiards: { theme: "pool", name: "Vintage Pool Club", description: "Deep green felt, numbered balls and quiet club lettering. A clear view of every angle." },
-  carrom: { theme: "courtyard", name: "Indian Courtyard", hindi: "कैरम", description: "Ochre wood, a cream board and a red queen. Neem leaves and chai at the edge of the courtyard." },
+  carrom: { theme: "courtyard", name: "The Veranda Club", hindi: "कैरम", description: "The game's evening veranda: deep teal walls, warm brass, a wooden board and the shared red queen. The click of a coin. The comfort of good company." },
   checkers: { theme: "cloth", name: "Block Print Cloth", description: "Indigo and cream squares on a block-print cloth, with terracotta counters and printed crowns." },
   chess: { theme: "courtyard", name: "Indian Courtyard", hindi: "शतरंज", description: "Cream and deep-teal squares, familiar chess silhouettes and the warmth of a neighbourhood courtyard." },
   "connect-four": { theme: "toybox", name: "Retro Toybox", description: "A muted blue frame, coral and mustard discs, and a little childhood colour on warm cream." },
@@ -64,6 +76,115 @@ const visuals: Record<string, QuickPlayGame["visual"]> = {
 };
 const entries: readonly Entry[] = [
   {
+    id: "paperwing", title: "Paperwing", genre: "Arcade", categories: ["arcade", "solo"],
+    embedUrl: "https://games.vihar.online/paperwing/play",
+    description: "A little paper. A lot of sky. Tap your folded swallow through the airmail openings.",
+    about: "Find a flying rhythm with an original paper swallow. Play opens straight into a fresh flight; click Paperwing to choose Standard or Practice. Practice offers wider openings and a gentler speed rise. Each passed gate earns one point, while moving shutters and wax-seal hazards bring new challenges as the sky gets quicker. A collision ends the flight. Personal records and paused flights save on this device when browser storage is available. No download or account is required.",
+    artworkAlt: "Original folded paper swallow on a faded-blue airmail postcard with navy fold lines, coral postal edging and a gold stamp",
+    instructions: ["Play starts a fresh flight immediately. Click Paperwing to choose Standard or Practice, then Start flight. Saved unfinished flights return paused.", "Tap the sky or press Space, Up or W to flap. Each new press gives one flap; holding a key does not keep flapping.", "Fly through the openings and around the wax seals. Each gate passed earns one point; hitting a panel, seal or sky boundary ends the run. Speed rises gradually, and later gates include moving shutters.", "Pause with the pause control. Resume after the three-count countdown, retry a finished run, or return to mode selection. Standard and Practice keep separate personal bests."],
+    tip: "Short, deliberate taps keep your flight steadier than a burst of frantic flaps.",
+    release: { status: "playable", verifiedAt: "2026-11-14T16:10:00.000Z", modes: ["solo"], devices: ["Desktop", "Tablet", "Phone"], controls: "Tap or click the sky, or press Space, Up or W to flap. Choose Standard or Practice. Pause and resume with the game controls; hidden tabs pause the flight. Exit to Vihar returns to this page. Saved flights and personal bests stay on this device when storage is available." },
+  },
+  {
+    id: "silk-trail", title: "Silk Trail", genre: "Arcade", categories: ["arcade", "solo"],
+    embedUrl: "https://games.vihar.online/silk-trail/play",
+    description: "Guide a stitched garden snake. Gather leaves and leave yourself room to turn.",
+    about: "A classic growing-snake challenge imagined as a woven garden panel. Plan the next turn, gather leaves and protect the space your longer trail will need. This solo game is in development.",
+    artworkAlt: "Mulberry-green stitched snake and a copper leaf on a parchment grid with a woven silk border",
+    instructions: ["Guide the snake through the grid to collect leaves.", "Each leaf lengthens the trail. Avoid the boundaries and your own occupied cells.", "Plan ahead as the available space becomes smaller."],
+    tip: "Keep an open route around your own trail.",
+  },
+  {
+    id: "monsoon-blocks", title: "Monsoon Blocks", genre: "Arcade", categories: ["arcade", "solo"],
+    embedUrl: "https://games.vihar.online/monsoon-blocks/play",
+    description: "Arrange falling glass swatches. Clear a row and make room for the next shape.",
+    about: "Seven patterned falling shapes meet a flat rain-window grid. Fit and rotate the swatches to complete rows before the stack reaches the top. This solo game is in development.",
+    artworkAlt: "Flat rain-window grid with blue, sea-glass, plum and amber block swatches and thin mullion lines",
+    instructions: ["Move and rotate the falling shape into an open position.", "Fill an entire row to clear it and create more space.", "Use the next-shape preview and hold option to plan before the stack reaches the top."],
+    tip: "A level stack leaves more options for the next shape.",
+  },
+  {
+    id: "dune-dash", title: "Dune Dash", genre: "Arcade", categories: ["arcade", "solo"],
+    embedUrl: "https://games.vihar.online/dune-dash/play",
+    description: "Run the desert horizon. Help a little fox jump and duck past the next obstacle.",
+    about: "An original rust-coloured fox races across a flat illustrated desert. Read the approaching sandstone and birds, then time each jump or duck. This solo game is in development.",
+    artworkAlt: "Rust fox with a cream-tipped tail running past sandstone silhouettes on a flat sand-paper field-guide horizon",
+    instructions: ["Watch the obstacles approaching along the horizon.", "Jump over ground obstacles and duck beneath low birds.", "A collision ends the run; aim to travel a little farther next time."],
+    tip: "Watch the approach distance and keep your next action deliberate.",
+  },
+  {
+    id: "lantern-logic", title: "Lantern Logic", genre: "Puzzles & Quick Play", categories: ["puzzles", "solo"],
+    embedUrl: "https://games.vihar.online/lantern-logic/play",
+    description: "Read the row and column clues. Light a hidden picture, one square at a time.",
+    about: "A picture-logic puzzle on rice paper. Row and column clues describe groups of filled cells; careful deduction reveals an amber stencil. This solo game is in development.",
+    artworkAlt: "Plum-lined rice-paper stencil grid with amber cells, number clues and lantern tassels outside the grid",
+    instructions: ["Read each clue as a run of filled cells in that row or column.", "Keep separate runs apart with at least one empty cell.", "Mark filled and empty cells until all row and column clues agree."],
+    tip: "Start with long runs that have little room to move.",
+  },
+  {
+    id: "mosaic-shift", title: "Mosaic Shift", genre: "Puzzles & Quick Play", categories: ["puzzles", "solo"],
+    embedUrl: "https://games.vihar.online/mosaic-shift/play",
+    description: "Slide numbered ceramic tiles into place and restore a miniature mosaic.",
+    about: "A sliding-tile puzzle from an imagined ceramic studio. Move neighbours into the empty square and restore the ordered numbered design. This solo game is in development.",
+    artworkAlt: "Cream numbered ceramic tiles with cobalt borders, teal and terracotta floral motifs, and one dashed empty square",
+    instructions: ["Slide a tile next to the empty square into that space.", "Keep rearranging the tiles until the numbered pattern is in order.", "Use the empty space to move groups of tiles without losing completed sections."],
+    tip: "Work on one row at a time while keeping room to manoeuvre.",
+  },
+  {
+    id: "prism-paths", title: "Prism Paths", genre: "Puzzles & Quick Play", categories: ["puzzles", "solo"],
+    embedUrl: "https://games.vihar.online/prism-paths/play",
+    description: "Turn mirrored tiles and guide a beam of light to every matching receiver.",
+    about: "An optical puzzle drawn as a clean instrument diagram. Rotate mirrors to route labelled beams around walls and into their matching receivers. This solo game is in development.",
+    artworkAlt: "Graphite optical grid on drafting paper with slash mirrors, labelled receivers and amber and dashed blue beam paths",
+    instructions: ["Trace each labelled beam from its emitter.", "Turn mirrors to redirect the beam around blocked cells.", "Light every matching receiver to complete the diagram."],
+    tip: "Trace backwards from a receiver to find a useful mirror position.",
+  },
+  {
+    id: "crate-courtyard", title: "Crate Courtyard", genre: "Puzzles & Quick Play", categories: ["puzzles", "solo"],
+    embedUrl: "https://games.vihar.online/crate-courtyard/play",
+    description: "Push market crates onto their chalk marks. Think ahead; crates cannot be pulled.",
+    about: "A top-down delivery puzzle in a quiet morning market. Guide the keeper and push crates onto their targets without trapping them in a corner. This solo game is in development.",
+    artworkAlt: "Flat limestone market map with indigo walls, rust produce crates, chalk targets and a small keeper symbol",
+    instructions: ["Walk the keeper through open floor cells.", "Push a crate into the empty square beyond it; crates cannot be pulled.", "Place every crate on a target to finish the delivery."],
+    tip: "Keep crates away from corners unless a target is there.",
+  },
+  {
+    id: "tide-turn", title: "Tide Turn", genre: "Puzzles & Quick Play", categories: ["puzzles", "solo"],
+    embedUrl: "https://games.vihar.online/tide-turn/play",
+    description: "Fill, pour and empty brass vessels until their water matches the exact target.",
+    about: "A measuring puzzle using labelled brass vessels. Fill a vessel, empty it or pour until the source empties or the destination fills. Find the sequence that matches every target volume. This solo game is in development.",
+    artworkAlt: "Flat outlined brass measuring vessels with litre labels, fine ticks, target notches and crisp teal waterlines on ivory paper",
+    instructions: ["Read each vessel's capacity, current volume and target volume.", "Fill or empty a vessel, or pour into another until the source is empty or the destination is full.", "Match the complete set of target volumes to finish."],
+    tip: "The difference between two capacities can create a useful remainder.",
+  },
+  {
+    id: "pebble-solitaire", title: "Pebble Solitaire", genre: "Puzzles & Quick Play", categories: ["puzzles", "solo"],
+    embedUrl: "https://games.vihar.online/pebble-solitaire/play",
+    description: "Jump one river pebble over another. Finish with a single stone in the centre.",
+    about: "English peg solitaire imagined as a flat riverstone tray. The classic cross has 33 holes and begins with only the centre empty. Each orthogonal jump removes a pebble. This solo game is in development.",
+    artworkAlt: "Cross-shaped riverstone tray with 33 circular holes, dark engraved pebbles, an empty centre ring and reed strokes in the margins",
+    instructions: ["Jump a pebble over an adjacent pebble into the empty hole beyond.", "Remove the jumped pebble. Moves are horizontal or vertical, never diagonal.", "Keep jumping until just one pebble remains in the centre."],
+    tip: "Plan how the outer arms will feed stones back towards the centre.",
+  },
+  {
+    id: "rangoli-loops", title: "Rangoli Loops", genre: "Puzzles & Quick Play", categories: ["puzzles", "solo"],
+    embedUrl: "https://games.vihar.online/rangoli-loops/play",
+    description: "Follow numbered clues and draw one unbroken loop around a rangoli grid.",
+    about: "A loop-drawing logic puzzle on limestone paper. Clues count the surrounding drawn edges; the final path must form one closed loop without branches. This solo game is in development.",
+    artworkAlt: "Aubergine dotted clue grid and a dark chalk loop on limestone paper with rose and saffron rangoli corner motifs",
+    instructions: ["Each number tells you how many of that cell's four edges belong to the loop.", "Draw edges and cross out edges you know are unused.", "Satisfy every clue with one closed loop, without branches or crossings."],
+    tip: "A zero rules out all four edges around its cell.",
+  },
+  {
+    id: "orbit-breaker", title: "Orbit Breaker", genre: "Arcade", categories: ["arcade", "solo"],
+    embedUrl: "https://games.vihar.online/orbit-breaker/play",
+    description: "Keep a comet in play with your paddle and clear a field of celestial tiles.",
+    about: "A brick-breaking challenge drawn as a celestial instrument. Guide an aged-gold paddle, return the comet and clear glyph tiles across the star chart. This solo game is in development.",
+    artworkAlt: "Flat midnight star chart with celestial glyph panels, explicit durability pips, a slim gold paddle and a cream comet",
+    instructions: ["Move the paddle to return the comet into the tile field.", "Break the tiles; durability marks show which need another hit.", "Keep the comet in play and clear the stage before running out of lives."],
+    tip: "Use different paddle positions to change the comet's next angle.",
+  },
+  {
     id: "billiards", title: "Billiards", genre: "Board & Table", categories: ["board-table", "simulation"],
     embedUrl: "https://games.vihar.online/billiards/play",
     description: "Find the angle. Set up the next shot. Make every pocket count.",
@@ -74,11 +195,11 @@ const entries: readonly Entry[] = [
   },
   {
     id: "carrom", title: "Carrom", genre: "Board & Table", categories: ["board-table"],
-    artwork: "/images/quick-play/styles/carrom-sunlit-veranda.webp",
+    artwork: "/images/quick-play/styles/carrom-veranda-club.webp",
     embedUrl: "https://games.vihar.online/carrom/play",
     description: "Play Carrom free in your browser. Choose a computer challenge, practise your aim or share the board with a friend.",
-    about: "Pull up a chair at the carrom board. Choose Easy, Medium or Hard against the computer, share a device with a friend, or find your aim in Practice. Slide the striker, pull back and release to shoot. Competitive boards use singles house rules: pocket your nine coins and cover the queen before clearing your last coin. Settled boards save on this device when storage is available; online rooms are coming soon.",
-    artworkAlt: "Flat overhead carrom board with cream and black coins, a red queen and patterned striker in an Indian courtyard",
+    about: "Pull up a chair at the Veranda Club. Choose Easy, Medium or Hard against Ravi, share a device with a friend, or find your aim in Practice. Slide the striker, pull back and release to shoot. Competitive boards use singles house rules: pocket your nine coins and cover the queen before clearing your last coin. Settled boards save on this device when storage is available; online rooms are coming soon.",
+    artworkAlt: "Carrom's original wooden board, cream and dark coins, red queen and brass striker in the game's deep-teal evening Veranda Club",
     instructions: ["Slide the striker along your baseline, pull backward to aim and set power, then release to shoot. Board options also offers keyboard controls and Confirm shot.", "Pocketing an own coin in a legal shot earns another turn. An empty shot or an opponent's coin passes the turn; Pass & Play waits for the next player to accept.", "After pocketing an own coin on an earlier shot, pocket the queen with an own coin or cover it on the next legal shot. Clear your nine coins after the queen is covered to win.", "Pocketing the striker or sending a piece out of bounds is a foul: your pocketed coins return, a penalty coin or debt applies, and the turn ends. Practice has no penalties or winner."],
     tip: "Use the cushions when a direct route to the pocket is blocked.",
     faqs: [
@@ -200,7 +321,7 @@ const entries: readonly Entry[] = [
   },
 ];
 
-export const quickPlayGames: QuickPlayGame[] = entries.map((entry) => ({
+export const quickPlayGames: QuickPlayGame[] = entries.map<QuickPlayGame>((entry) => ({
   ...entry,
   source: "officialGames",
   collection: "quick-play",
@@ -210,7 +331,7 @@ export const quickPlayGames: QuickPlayGame[] = entries.map((entry) => ({
   visual: visuals[entry.id],
   // Enable only individually verified releases from the separate games host.
   release: entry.release ?? { status: "upcoming" },
-}));
+})).sort((a, b) => Number(b.release.status === "playable") - Number(a.release.status === "playable"));
 
 export function getQuickPlayGame(id: string) {
   return quickPlayGames.find((game) => game.id === id);

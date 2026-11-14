@@ -17,6 +17,22 @@ const anonymous = () => environment.unauthenticatedContext().firestore();
 const activityRef = (database, uid = "bobby", id = "open-one") => doc(database, "players", uid, "activity", id);
 const activityData = (extra = {}) => ({ source: "officialGames", gameId: "gulam-chor", title: "Gulam Chor", startedAt: serverTimestamp(), ...extra });
 
+test("new Quick Play IDs allow private favourites and server-issued Paperwing reviews without client receipts", async () => {
+  const database = db("bobby");
+  for (const id of ["paperwing", "silk-trail", "monsoon-blocks", "dune-dash", "lantern-logic", "mosaic-shift", "prism-paths", "crate-courtyard", "tide-turn", "pebble-solitaire", "rangoli-loops", "orbit-breaker"]) {
+    await assertSucceeds(setDoc(doc(database, "players", "bobby", "favorites", id), { addedAt: serverTimestamp() }));
+    await assertFails(getDoc(doc(db("alice"), "players", "bobby", "favorites", id)));
+    await assertFails(setDoc(doc(database, "officialGames", id, "players", "bobby"), { startedAt: serverTimestamp() }));
+    await assertFails(setDoc(doc(database, "officialGames", id, "reviews", "bobby"), { rating: 5, text: "No receipt", updatedAt: serverTimestamp() }));
+  }
+  await environment.withSecurityRulesDisabled(async (context) => setDoc(doc(context.firestore(), "officialGames", "paperwing", "players", "bobby"), { startedAt: new Date() }));
+  const review = doc(database, "officialGames", "paperwing", "reviews", "bobby");
+  await assertSucceeds(setDoc(review, { rating: 4, text: "A quiet flight", updatedAt: serverTimestamp() }));
+  await assertSucceeds(getDoc(doc(anonymous(), "officialGames", "paperwing", "reviews", "bobby")));
+  await assertFails(deleteDoc(doc(db("alice"), "officialGames", "paperwing", "reviews", "bobby")));
+  await assertSucceeds(deleteDoc(review));
+});
+
 test("Quick Play favourites are private and only the release-gated server can issue review receipts", async () => {
   const database = db("bobby"), receipt = (connection) => doc(connection, "officialGames", "chess", "players", "bobby");
   const review = (connection) => doc(connection, "officialGames", "chess", "reviews", "bobby");

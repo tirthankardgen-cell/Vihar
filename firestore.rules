@@ -49,7 +49,9 @@ service cloud.firestore {
     }
     function quickPlay(gameId) {
       return gameId in ['billiards', 'carrom', 'checkers', 'chess', 'connect-four', 'ludo',
-        'memory-match', 'minesweeper', 'reversi', 'snakes-and-ladders', 'sudoku', 'tic-tac-toe'];
+        'memory-match', 'minesweeper', 'reversi', 'snakes-and-ladders', 'sudoku', 'tic-tac-toe',
+        'paperwing', 'silk-trail', 'monsoon-blocks', 'dune-dash', 'lantern-logic', 'mosaic-shift',
+        'prism-paths', 'crate-courtyard', 'tide-turn', 'pebble-solitaire', 'rangoli-loops', 'orbit-breaker'];
     }
     match /players/{uid}/favorites/{gameId} {
       allow read: if owner(uid);

@@ -6,7 +6,23 @@
 .page { --game-paper: #faf5e9; --game-accent: #496e9a; --game-tint: #eaf0ed; --game-heading: var(--font-newsreader), Georgia, serif; --game-hero: #f0eadc; --hero-ink: #303c39; --hero-muted: #58635a; background: var(--game-paper); color: var(--ink); }
 .page[data-theme="courtyard"] { --game-paper: #faf1dc; --game-accent: #2b4a42; --game-tint: #e9e5d0; --game-heading: "Quick Play Yatra", serif; --game-hero: #8e4931; --hero-ink: #f5e6c5; --hero-muted: #f2dfbe; --ink: #293d35; --muted: #56634e; --line: #d8c9a8; font-family: "Quick Play Hind", var(--font-dm-sans), sans-serif; }
 .page[data-game="chess"] { --game-hero: #293d35; --game-paper: #f6efde; --game-tint: #e1e5d6; }
-.page[data-game="carrom"] { --game-hero: #eeddb9; --hero-ink: #293d35; --hero-muted: #4b594a; --game-paper: #fcf4e3; --game-tint: #efe3c7; }
+.page[data-game="carrom"] { --game-hero: #173d3a; --hero-ink: #f7edda; --hero-muted: #d9ceb8; --game-paper: #f7edda; --game-tint: #e9dcc1; --game-accent: #285247; --ink: #203e39; --line: #d9b879; }
+.page[data-game="carrom"] .hero { background: linear-gradient(90deg, #102f32e6, #143a39a6), url("/images/quick-play/carrom-veranda.svg") center / cover; border-color: #d9b87955; }
+.page[data-game="carrom"] .hero :global(.button-dark) { background: #edcc91; color: #203e39; border: 1px solid #e6c283; border-radius: 9px; }
+.page[data-game="carrom"] .hindi { color: #fff0d1; font-size: clamp(64px, 7vw, 96px); margin: 8px 0 -8px; }
+.page[data-game="carrom"] .hero h1 { color: #dec497; font-family: "Quick Play Hind", sans-serif; font-size: 20px; letter-spacing: .3em; text-transform: uppercase; margin-block: 8px 20px; }
+.page[data-theme="airmail"] { --game-paper: #f8f1e4; --game-hero: #d8e7eb; --game-tint: #e7edef; --game-accent: #2c445c; --hero-ink: #2c445c; --hero-muted: #465d70; --ink: #2c445c; --line: #b3935755; }
+.page[data-theme="silk"] { --game-paper: #f5efdc; --game-hero: #304b3b; --game-tint: #e3e8d4; --game-accent: #304b3b; --hero-ink: #f5efdc; --hero-muted: #d6e1c6; --ink: #304b3b; }
+.page[data-theme="rain"] { --game-paper: #eee9df; --game-hero: #263b49; --game-tint: #dce5e3; --game-accent: #426578; --hero-ink: #eee9df; --hero-muted: #c9d9de; --ink: #263b49; }
+.page[data-theme="desert"] { --game-paper: #f2e5cb; --game-hero: #e4c99f; --game-tint: #e8dbc0; --game-accent: #975335; --hero-ink: #463d32; --hero-muted: #66533e; --ink: #463d32; }
+.page[data-theme="lantern"] { --game-paper: #f6ebdd; --game-hero: #47384b; --game-tint: #efe0c4; --game-accent: #844a42; --hero-ink: #fff9ee; --hero-muted: #ead8bb; --ink: #47384b; }
+.page[data-theme="ceramic"] { --game-paper: #f4efe3; --game-hero: #e1e7e5; --game-tint: #e4e9e6; --game-accent: #355e82; --hero-ink: #3b454b; --hero-muted: #4d646c; --ink: #3b454b; }
+.page[data-theme="optical"] { --game-paper: #efece4; --game-hero: #283f47; --game-tint: #e0e8e6; --game-accent: #3b6579; --hero-ink: #efece4; --hero-muted: #cedbdc; --ink: #283f47; --game-heading: ui-monospace, monospace; }
+.page[data-theme="market"] { --game-paper: #f0e7d4; --game-hero: #344a69; --game-tint: #e9dfc6; --game-accent: #344a69; --hero-ink: #f0e7d4; --hero-muted: #e3d2a9; --ink: #344a69; }
+.page[data-theme="brass"] { --game-paper: #f5eddc; --game-hero: #e6d6af; --game-tint: #d7e5e1; --game-accent: #456f73; --hero-ink: #493d2f; --hero-muted: #63543e; --ink: #493d2f; }
+.page[data-theme="riverstone"] { --game-paper: #eaefe7; --game-hero: #d7e0d5; --game-tint: #dce5d8; --game-accent: #466750; --hero-ink: #344a4c; --hero-muted: #4a6260; --ink: #344a4c; }
+.page[data-theme="chalk"] { --game-paper: #f0e9d9; --game-hero: #493d4e; --game-tint: #e8ddcf; --game-accent: #78545d; --hero-ink: #fff9ee; --hero-muted: #e9d1cb; --ink: #493d4e; }
+.page[data-theme="celestial"] { --game-paper: #ede7d6; --game-hero: #243b50; --game-tint: #dbe4e2; --game-accent: #3d6771; --hero-ink: #ede7d6; --hero-muted: #c7dedd; --ink: #243b50; }
 .page[data-theme="pool"] { --game-paper: #eff1e6; --game-accent: #245846; --game-tint: #dfe8dc; --game-hero: #172d26; --hero-ink: #f5e6c5; --hero-muted: #d8dbc4; }
 .page[data-theme="cloth"] { --game-paper: #f5efdf; --game-accent: #3f5174; --game-tint: #e5e7ee; --game-hero: #e8e2d3; }
 .page[data-theme="toybox"] { --game-paper: #fff6e3; --game-accent: #416a91; --game-tint: #e7edf0; --game-hero: #f4ead2; --game-heading: var(--font-dm-sans), sans-serif; }

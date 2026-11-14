@@ -6,7 +6,7 @@ export type CollectionFilter = "all" | "originals" | "community" | "quick-play";
 const collections = [
   { id: "originals", title: "VIHAR Originals", description: "Games created by the VIHAR team.", Icon: Sparkles },
   { id: "community", title: "Community Games", description: "Games shared by independent creators and players.", Icon: UsersRound },
-  { id: "quick-play", title: "Quick Play", description: "Board favourites and thoughtful puzzles by VIHAR.", Icon: Dices },
+  { id: "quick-play", title: "Quick Play", description: "New games every week. Boards, puzzles and arcade play.", Icon: Dices },
 ] as const;
 
 export function GameCollections({ selected }: { selected?: CollectionFilter }) {
