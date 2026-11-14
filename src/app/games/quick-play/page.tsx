@@ -6,7 +6,7 @@ import { pageMetadata } from "@/lib/site";
 import styles from "@/components/quick-play-catalogue.module.css";
 import "@/app/content.css";
 
-const description = "New games every week. Play Chess, Carrom, Tic-Tac-Toe and Paperwing free in your browser. Discover 24 board games, puzzles and arcade favourites, with upcoming releases clearly marked.";
+const description = "New games every week. Play Chess, Carrom, Tic-Tac-Toe, Paperwing and Sudoku free in your browser. Discover 24 board games, puzzles and arcade favourites, with upcoming releases clearly marked.";
 export const metadata = pageMetadata("Free Browser Board Games & Puzzles — Quick Play", description, "/games/quick-play", "/images/quick-play/ludo.png");
 
 export default function QuickPlayPage() {

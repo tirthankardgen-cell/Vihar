@@ -1,8 +1,4 @@
-/* Detail-route only: never add game theme fonts/styles to the homepage bundle. */
-@font-face { font-family: "Quick Play Yatra"; src: url("/fonts/gulam-chor/yatra-one-latin.woff2") format("woff2"); font-display: swap; unicode-range: U+0000-00FF,U+2000-206F; }
-@font-face { font-family: "Quick Play Yatra"; src: url("/fonts/gulam-chor/yatra-one-devanagari.woff2") format("woff2"); font-display: swap; unicode-range: U+0900-097F; }
-@font-face { font-family: "Quick Play Hind"; src: url("/fonts/gulam-chor/hind-latin.woff2") format("woff2"); font-display: swap; unicode-range: U+0000-00FF,U+2000-206F; }
-@font-face { font-family: "Quick Play Caveat"; src: url("/fonts/quick-play/caveat.woff2") format("woff2"); font-weight: 400 700; font-display: swap; }
+/* Detail layouts stay here; shared game fonts also serve catalogue titles. */
 .page { --game-paper: #faf5e9; --game-accent: #496e9a; --game-tint: #eaf0ed; --game-heading: var(--font-newsreader), Georgia, serif; --game-hero: #f0eadc; --hero-ink: #303c39; --hero-muted: #58635a; background: var(--game-paper); color: var(--ink); }
 .page[data-theme="courtyard"] { --game-paper: #faf1dc; --game-accent: #2b4a42; --game-tint: #e9e5d0; --game-heading: "Quick Play Yatra", serif; --game-hero: #8e4931; --hero-ink: #f5e6c5; --hero-muted: #f2dfbe; --ink: #293d35; --muted: #56634e; --line: #d8c9a8; font-family: "Quick Play Hind", var(--font-dm-sans), sans-serif; }
 .page[data-game="chess"] { --game-hero: #293d35; --game-paper: #f6efde; --game-tint: #e1e5d6; }
@@ -30,8 +26,8 @@
 .page[data-theme="desktop"] { --game-paper: #f0f1ee; --game-accent: #2d6c65; --game-tint: #dfe9e5; --game-heading: ui-monospace, monospace; --game-hero: #262c30; --hero-ink: #f0ece0; --hero-muted: #cbd6d4; }
 .page[data-theme="garden"] { --game-paper: #f4f3e8; --game-accent: #48634e; --game-tint: #e3eadb; --game-hero: #e9edde; }
 .page[data-theme="folk"] { --game-paper: #f9efdb; --game-accent: #8f5038; --game-tint: #eee3c5; --game-hero: #f1e4ca; }
-.page[data-theme="journal"] { --game-paper: #fbf7ed; --game-tint: #e9eeee; --game-hero: #f3efe4; }
-.page[data-theme="notebook"] { --game-paper: #fbf7ec; --game-heading: "Quick Play Caveat", cursive; --game-hero: #fbf7ec; --game-tint: #e9eef0; background-image: repeating-linear-gradient(transparent 0 37px, #b7c9cf44 37px 38px); }
+.page[data-theme="journal"] { --game-paper: #f8f5ed; --game-tint: #e9eeee; --game-hero: #f8f5ed; --game-accent: #365e83; --hero-ink: #383c40; --hero-muted: #71716c; --ink: #383c40; --line: #d8d6cc; --game-heading: Georgia, "Times New Roman", serif; }
+.page[data-theme="notebook"] { --game-paper: #faf9f4; --game-accent: #3b6d98; --hero-ink: #3c403f; --hero-muted: #666d65; --game-heading: "Quick Play Caveat", cursive; --game-hero: #faf9f4; --game-tint: #e9eef0; background-image: repeating-linear-gradient(transparent 0 37px, #b7c9cf44 37px 38px); }
 .hero { background: var(--game-hero); color: var(--hero-ink); border: 1px solid var(--line); border-radius: 14px; padding: 28px; gap: 36px; }
 .hero p { color: var(--hero-muted); }
 .hero h1 { font-family: var(--game-heading); }

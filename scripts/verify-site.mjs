@@ -208,6 +208,14 @@ try {
   assert.equal(heroImages.length, 9, "The tunnel needs nine image cards");
   assert(hero.includes('href="/games"'), "The hero must expose the games catalogue");
   assert(hero.includes('href="/dashboard/publish"'), "The hero must expose community publishing");
+  for (const id of ["chess", "carrom", "sudoku", "tic-tac-toe", "paperwing", "ludo", "billiards", "bap-ka-rasta", "gulam-chor"]) {
+    assert(hero.includes(`href="/games/${id}"`), `${id}: featured in the first hero set`);
+  }
+  assert(hero.includes('aria-label="Next games"') && hero.includes('aria-label="Previous games"'), "All game worlds must be browsable");
+  for (const game of quickPlayGames) {
+    const catalogue = pages.get("/games/quick-play");
+    assert(catalogue.includes(`data-game="${game.id}"`) && catalogue.includes(game.visual.name), `${game.id}: individually themed catalogue card`);
+  }
   const formatBudgets = new Map([["image/avif", 0], ["image/webp", 0]]);
   for (const image of heroImages) {
     const alt = image.match(/\balt="([^"]*)"/i)?.[1];

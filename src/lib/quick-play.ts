@@ -3,7 +3,7 @@ import type { GameCategory } from "./game-categories";
 // Confirmed by the owner and /api/games on 9 November 2026. Paths below are
 // explicit entries from that manifest, not slugs inferred from display names.
 export const quickPlayOrigin = "https://games.vihar.online";
-export const quickPlayUpdated = "2026-11-14T16:10:00.000Z";
+export const quickPlayUpdated = "2026-11-14T17:52:14.545Z";
 export const quickPlayModes = {
   solo: "Solo",
   computer: "Vs computer",
@@ -299,10 +299,15 @@ const entries: readonly Entry[] = [
     id: "sudoku", title: "Sudoku", genre: "Puzzles & Quick Play", categories: ["puzzles", "solo"],
     embedUrl: "https://games.vihar.online/sudoku/play",
     description: "Nine numbers. One clear answer. Find a little order in the grid.",
-    about: "A calm space for logical thinking. Sudoku needs no arithmetic: each number is a clue to what can go in the spaces around it, until the whole grid falls into place.",
+    about: "A quiet Puzzle Journal with Easy, Medium and Hard solo puzzles. Every 9 × 9 puzzle has one solution and needs logic, not arithmetic. Keep fixed graphite clues, enter blue digits and use pencil notes to narrow the possibilities. Check marks incorrect entries without filling them; Hint fills one cell and labels the attempt as assisted. Pause hides the grid and stops active time. Unfinished puzzles return paused, and completed attempts keep separate assisted, unassisted and restarted records on this device when browser storage is available. No account or download is required.",
     artworkAlt: "Crisp nine-by-nine Sudoku journal grid with graphite clues, a blue entry and small grey pencil notes",
-    instructions: ["Fill empty squares with the numbers 1 to 9.", "Each row, column and 3 × 3 box must contain every number exactly once.", "Use the given clues to rule out possibilities without changing the starting numbers."],
+    instructions: ["Choose Easy, Medium or Hard and start a puzzle. Fill the empty squares with digits 1–9; fixed graphite clues cannot be edited.", "Every row, column and 3 × 3 box must contain each digit exactly once. Pencil notes do not count as final answers.", "Select a cell and use the keypad or number keys. Toggle Notes to add possibilities, Erase to clear, and Undo or Redo to revisit an edit. Check marks incorrect entries; Hint supplies one cell. Both count as assistance, even after Undo.", "Pause hides the grid, suspends input and stops the active timer. Returning from another tab or restoring a saved puzzle leaves it paused until you choose Resume. Finish the grid to record the attempt locally; restarting or replacing an unfinished puzzle asks for confirmation."],
     tip: "Look for a row, column or box with only a few empty squares.",
+    release: {
+      status: "playable", verifiedAt: "2026-11-14T17:52:14.545Z",
+      modes: ["solo"], devices: ["Desktop", "Tablet", "Phone"],
+      controls: "Choose Easy, Medium or Hard. Tap or click a cell and use the 1–9 keypad, or use arrow keys and number keys. N toggles Notes; Delete erases; Ctrl/⌘ Z undoes. Check and Hint label the attempt as assisted. Pause or Escape hides the grid and stops active time; Resume continues it. Use Larger grid on small screens. Optional device saves restore paused. Exit to Vihar returns to this page.",
+    },
   },
   {
     id: "tic-tac-toe", title: "Tic-Tac-Toe", genre: "Puzzles & Quick Play", categories: ["puzzles"],

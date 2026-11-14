@@ -7,6 +7,7 @@ import { useAuth } from "./account/auth-provider";
 import { buildEmbedUrl } from "@/lib/embedded-games";
 import { accountIdAction } from "@/lib/vihar-id/client";
 import type { QuickPlayGame } from "@/lib/quick-play";
+import "./quick-play-fonts.css";
 import styles from "./quick-play-detail.module.css";
 
 const EmbeddedPlayer = dynamic(() => import("./embedded-player"));
@@ -80,7 +81,7 @@ export function QuickPlayLaunchButton() {
     <button ref={button} type="button" className="button button-dark" disabled={game.release.status !== "playable" || busy} onClick={() => void launch()}>
       {game.release.status === "playable" ? <><Play size={17} aria-hidden="true" />{busy ? "Preparing…" : `Play ${game.title}`}</> : <>Coming soon <ArrowRight size={17} aria-hidden="true" /></>}
     </button>
-    <p>{game.release.status === "playable" ? "Play here in your browser. Use Exit to Vihar or Escape to return." : "This game is in the making. Play will open here when it’s ready."}</p>
+    <p>{game.release.status === "playable" ? game.id === "sudoku" ? "Play here in your browser. Escape pauses your puzzle; use Exit to Vihar to return." : "Play here in your browser. Use Exit to Vihar or Escape to return." : "This game is in the making. Play will open here when it’s ready."}</p>
     {error && <p role="alert" className="account-error">{error}</p>}
     {canPlayGuest && <button type="button" className="button button-outline" disabled={busy} onClick={() => void launch(true)}>Play as a guest</button>}
   </div>;

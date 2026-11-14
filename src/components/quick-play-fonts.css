@@ -1,0 +1,4 @@
+@font-face { font-family: "Quick Play Yatra"; src: url("/fonts/gulam-chor/yatra-one-latin.woff2") format("woff2"); font-display: swap; unicode-range: U+0000-00FF,U+2000-206F; }
+@font-face { font-family: "Quick Play Yatra"; src: url("/fonts/gulam-chor/yatra-one-devanagari.woff2") format("woff2"); font-display: swap; unicode-range: U+0900-097F; }
+@font-face { font-family: "Quick Play Hind"; src: url("/fonts/gulam-chor/hind-latin.woff2") format("woff2"); font-display: swap; unicode-range: U+0000-00FF,U+2000-206F; }
+@font-face { font-family: "Quick Play Caveat"; src: url("/fonts/quick-play/caveat.woff2") format("woff2"); font-weight: 400 700; font-display: swap; }

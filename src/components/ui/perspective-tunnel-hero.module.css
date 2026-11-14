@@ -40,19 +40,6 @@
   mask-image: radial-gradient(ellipse at center, #000, transparent 76%);
 }
 
-.floor {
-  position: absolute;
-  z-index: -1;
-  bottom: -24%;
-  left: -30%;
-  width: 160%;
-  height: 65%;
-  background-image: linear-gradient(#cad7c718 1px, transparent 1px), linear-gradient(90deg, #cad7c718 1px, transparent 1px);
-  background-size: 72px 72px;
-  transform: perspective(480px) rotateX(62deg);
-  mask-image: linear-gradient(transparent, #000 45%, transparent);
-}
-
 .rings {
   position: absolute;
   inset: 0;
@@ -72,16 +59,10 @@
 
 .rings span:nth-child(2) { width: min(82vw, 950px); border-style: dashed; border-color: #a5b4fc14; }
 .rings span:nth-child(3) { width: min(104vw, 1270px); border-color: #a5b4fc0a; }
-.coordinates { position: absolute; inset: 0; pointer-events: none; color: #d4e9bc68; font: 300 20px monospace; }
-.coordinates span { position: absolute; }
-.coordinates span:nth-child(1) { left: 36%; top: 13%; }
-.coordinates span:nth-child(2) { left: 67%; top: 67%; }
-.coordinates span:nth-child(3) { left: 8%; top: 77%; }
-.coordinates span:nth-child(4) { right: 5%; top: 10%; }
 
 .topline {
   position: absolute;
-  z-index: 1;
+  z-index: 3;
   left: clamp(24px, 3.4vw, 56px);
   right: clamp(24px, 3.4vw, 56px);
   display: flex;
@@ -95,10 +76,12 @@
 
 .topline { top: calc(var(--header-height) + 28px); }
 .toplineTools { display: flex; align-items: center; gap: 12px; }
-.toplineLabel, .toplineNote { display: flex; align-items: center; gap: 9px; }
+.toplineLabel { display: flex; align-items: center; gap: 9px; }
 .toplineLabel { color: #e0e2d8; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; }
 .statusDot { width: 5px; height: 5px; border-radius: 50%; background: var(--world-accent); box-shadow: 0 0 12px #a5b4fc66; }
-.toplineNote { font-family: var(--serif); font-size: 14px; font-style: italic; }
+.worldPicker { display: flex; align-items: center; gap: 4px; background: #0b0d15e8; border-radius: 99px; }
+.worldPicker button { display: grid; place-items: center; width: 44px; height: 44px; color: inherit; background: transparent; border: 0; }
+.worldPicker span { font: 10px monospace; white-space: nowrap; }
 
 .scene { position: absolute; inset: 0; z-index: 2; perspective: 1200px; transform-style: preserve-3d; pointer-events: none; }
 .card { position: absolute; left: var(--card-x); top: var(--card-y); width: var(--card-width); aspect-ratio: 4 / 5; will-change: transform; pointer-events: auto; }
@@ -121,7 +104,7 @@
 .cardArrow { right: 12px; display: grid; place-items: center; width: 27px; height: 27px; background: #171b2166; border: 1px solid #fff4; border-radius: 50%; }
 .cardCaption { position: absolute; z-index: 1; bottom: 19px; left: 18px; right: 18px; display: flex; flex-direction: column; gap: 5px; }
 .cardCaption > span { color: #dddeda; font-size: 8px; line-height: 1.5; letter-spacing: .08em; text-transform: uppercase; }
-.cardCaption strong { color: #fff; font-family: var(--serif); font-size: clamp(19px, 1.7vw, 25px); font-weight: 400; line-height: 1.08; letter-spacing: -.025em; }
+.cardCaption strong { color: #fff; font-family: var(--card-heading, var(--serif)); font-size: clamp(19px, 1.7vw, 25px); font-weight: 400; line-height: 1.08; letter-spacing: -.025em; }
 
 .copy { position: relative; z-index: 1; width: min(660px, 60%); padding: 76px 20px 60px; text-align: center; pointer-events: none; }
 .anchor { position: relative; z-index: 1; }
@@ -146,7 +129,6 @@
 .motionToggle:focus-visible { outline-color: var(--world-accent); }
 .hero[data-motion="off"], .hero[data-pinned="false"] { min-height: 0; }
 .hero[data-motion="off"] .stage, .hero[data-pinned="false"] .stage { position: relative; top: auto; }
-.hero[data-motion="off"] .anchor { transform: none !important; opacity: 1 !important; }
 .hero[data-motion="off"] .card:not(:focus-within) { transform: translate3d(-50%, -50%, calc(var(--far-z) + var(--z-travel) * var(--rest-progress))) rotateZ(var(--card-rotation)) !important; }
 
 @media (max-width: 1100px) {
@@ -171,8 +153,8 @@
 }
 
 @media (max-width: 767px) {
-  .hero { --hero-height: max(690px, 100svh); --card-width: clamp(130px, 38vw, 180px); --far-z: -1200px; --z-travel: 1550px; --camera-pan: 20px; }
-  .copy { width: 100%; padding: 104px 24px 72px; }
+  .hero { --hero-height: max(690px, 100svh); --card-width: clamp(100px, 30vw, 130px); --far-z: -1200px; --z-travel: 1550px; --camera-pan: 20px; }
+  .copy { z-index: 3; width: 100%; padding: 104px 24px 72px; }
   .eyebrow { font-size: 8px; margin-bottom: 20px; letter-spacing: .11em; }
   .titleIntro { font-size: 23px; margin-bottom: 12px; }
   .titleName { font-size: clamp(80px, 27vw, 130px); }
@@ -182,6 +164,8 @@
   .enterButton { min-width: 196px; min-height: 50px; font-size: 12px; }
   .playButton { min-height: 44px; font-size: 11px; }
   .scene { perspective: 900px; }
+  .card { top: 90%; }
+  .card:nth-child(3), .card:nth-child(4), .card:nth-child(7), .card:nth-child(8) { top: 23%; }
   .cardCaption { left: 11px; right: 11px; bottom: 12px; }
   .cardCaption strong { font-size: 17px; }
   .cardCaption > span { font-size: 6px; }
@@ -190,19 +174,16 @@
   .topline { top: calc(var(--header-height) + 23px); left: 22px; right: 22px; }
   .toplineTools { gap: 4px; }
   .toplineLabel { font-size: 8px; }
-  .toplineNote { font-size: 11px; max-width: 128px; text-align: right; gap: 7px; }
-  .toplineNote svg { display: none; }
+  .worldPicker { gap: 0; }
+  .worldPicker span { font-size: 8px; }
   .rings span { width: 100vw; }
   .rings span:nth-child(2) { width: 145vw; }
   .rings span:nth-child(3) { width: 200vw; }
-  .coordinates span:nth-child(1) { left: 19%; top: 13%; }
-  .coordinates span:nth-child(2) { left: 80%; top: 66%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero { min-height: 0; }
   .stage { position: relative; top: auto; }
-  .anchor { transform: none !important; opacity: 1 !important; }
   .card:not(:focus-within) { opacity: 1 !important; transform: translate3d(-50%, -50%, calc(var(--far-z) + var(--z-travel) * var(--rest-progress))) rotateZ(var(--card-rotation)) !important; }
   .cardImage, .enterButton, .playButton { transition: none; }
   .enterButton:hover { transform: none; }
@@ -211,8 +192,7 @@
 @media (forced-colors: active) {
   .hero { min-height: 0; background: Canvas; color: CanvasText; }
   .stage { position: relative; top: auto; }
-  .atmosphere, .dots, .floor, .rings, .coordinates, .scene { display: none; }
-  .anchor { transform: none !important; opacity: 1 !important; }
+  .atmosphere, .dots, .rings, .scene { display: none; }
   .titleWorld, .description, .eyebrow, .topline, .toplineLabel, .motionToggle { color: CanvasText; }
   .enterButton, .playButton { color: ButtonText; background: ButtonFace; border: 1px solid ButtonText; }
   .statusDot { background: CanvasText; }
@@ -221,8 +201,7 @@
 @media print {
   .hero { min-height: 0; color: #111; background: white; }
   .stage { position: relative; top: auto; min-height: 0; }
-  .scene, .atmosphere, .dots, .floor, .rings, .coordinates, .topline, .actions { display: none; }
+  .scene, .atmosphere, .dots, .rings, .topline, .actions { display: none; }
   .copy { width: 100%; }
-  .anchor { transform: none !important; opacity: 1 !important; }
   .titleWorld, .description, .eyebrow { color: #111; }
 }

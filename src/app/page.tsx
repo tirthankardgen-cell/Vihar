@@ -2,6 +2,7 @@ import { HomeContent } from "@/components/home-content";
 import PerspectiveTunnelHero from "@/components/ui/perspective-tunnel-hero";
 import { StructuredData } from "@/components/structured-data";
 import { site } from "@/lib/site";
+import { heroWorlds } from "@/lib/hero-games";
 import "./home.css";
 
 export const revalidate = 300;
@@ -10,7 +11,7 @@ export default function Home() {
   return (
     <>
       <StructuredData data={{ "@context": "https://schema.org", "@type": "WebSite", "@id": `${site.url}/#website`, url: site.url, name: "Vihar", description: site.description, inLanguage: "en", publisher: { "@id": `${site.url}/#organization` } }} />
-      <PerspectiveTunnelHero />
+      <PerspectiveTunnelHero worldCards={heroWorlds} />
       <HomeContent />
     </>
   );

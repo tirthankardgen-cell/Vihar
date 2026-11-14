@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { HomeContent } from "@/components/home-content";
 import PerspectiveTunnelHero from "@/components/ui/perspective-tunnel-hero";
+import { heroWorlds } from "@/lib/hero-games";
 import "../../home.css";
 
 export const metadata: Metadata = {
@@ -11,5 +12,5 @@ export const metadata: Metadata = {
 };
 
 export default function ViharWorldPreview() {
-  return <><PerspectiveTunnelHero /><HomeContent /></>;
+  return <><PerspectiveTunnelHero worldCards={heroWorlds} /><HomeContent /></>;
 }
