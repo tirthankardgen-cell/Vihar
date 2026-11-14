@@ -114,6 +114,16 @@ The typed registry in src/lib/quick-play.ts owns each stable ID, verified indivi
 
 The shared detail route uses QuickPlayExperience and a lazily imported EmbeddedPlayer. Pressing Play preserves the Vihar URL, mounts only that game's iframe and gives the existing SiteFrame a route-scoped lease to remove navigation, footer and the skip link. Details/reviews unmount during play. A ready handshake, rather than iframe load, reveals the game. Loading expires after 15 seconds; errors offer Retry and Back to details. Exit requests a game-owned session flush, waits at most 1.5 seconds, unmounts the frame, restores scrolling and focuses Play. Browser history is never trapped. Dynamic viewport height, safe areas, reduced motion and keyboard recovery are supported. Card, catalogue, detail and player styles are separate so the homepage retains its existing CSS budget. The homepage hero is one scroll-driven tunnel of twelve selected game images: the two standalone games, five released Quick Play titles, Ludo, Billiards, Silk Trail, Monsoon Blocks and Minesweeper. There are no slides, previous/next game controls or catalogue selector. Images deliberately overlap the central hero text and buttons on arrival; native scrolling moves through and clears the tunnel to reveal that content before the stage releases. Keyboard focus, motion pause and reduced-motion support remain available. Artwork remains distinct from screenshots. Quick Play cards use each game’s own palette and title typography, flexible column heights and wrapping footers; status badges stay on one line with enough space below them at every catalogue breakpoint.
 
+### Homepage hero interaction
+
+The owner approved this interaction on 14 November 2026. Preserve it when updating hero artwork:
+
+- Use one continuous scroll tunnel with 10–12 images; the current implementation uses twelve selected game images. The hero does not need to contain every game.
+- Place the images in front of the hero heading, introduction and buttons so they overlap and cover that content on arrival.
+- Native vertical scrolling takes the user through the image tunnel. Clear the images while the hero stage is still pinned, revealing the text and usable Discover games / Share your game buttons before the page continues.
+- Do not turn the hero into slides, a carousel, separate image sets or a previous/next game picker. Add or replace artwork within the same tunnel.
+- Preserve keyboard access, the existing motion pause control and reduced-motion behavior, which exposes the content without requiring the scroll animation.
+
 ### Game-host integration contract
 
 The public companion module **/sdk/vihar-embed.js** supplies createViharEmbed. It supplements **/sdk/vihar-id.js**; it is not an identity or heartbeat protocol. The website appends only vihar_embed=1 and a random vihar_session to the allowlisted play path. A signed-in launch also carries the existing one-use vihar_launch ticket in the fragment. No Firebase credential or durable bearer token is sent through UI messages or URL queries.
@@ -427,6 +437,15 @@ Maintainers may edit or remove harmful content, ask participants to change their
 
 
 ## Change log
+
+### 2026-11-14 — Record the approved hero interaction and verify production
+
+- **Author:** Codex.
+- **Request:** Complete the authorized main release and document the hero behavior after the owner confirmed the corrected tunnel is right.
+- **Changes:** Added explicit current-state hero guidance: 10–12 selected images in one tunnel, foreground overlap with the text/buttons, native scroll clearance before the pinned stage releases, and accessible motion handling. Recorded the completed hero, Sudoku and card-theme release.
+- **Decisions:** Treat the approved interaction as the design requirement for future artwork changes. The current twelve images are a selection, not an obligation to display every game; slides, separate sets and a game picker would change that requirement. Preserved the external game-host architecture and unrelated unstaged development-record notes.
+- **Validation:** GitHub main matched application SHA 387cf6aee20daaa9266fbe1f78372527f4ecbbc3. All five GitHub checks completed successfully and Vercel status was success. Vercel deployment dpl_FBibYY29RxWKgUEm7bRK761MUUGE reached READY at that exact SHA with vihar.online/www aliases. Live Playwright checks passed 1440×1000, 390×844 and 320×740: exactly twelve images, no picker, initial heading/button overlap, scroll clearance and successful Discover games navigation. Reduced motion passed; screenshots were reviewed and zero page errors occurred. Seven live page/crawler/SDK/font HTTP checks passed, including 24 cards, five playable releases and indexable Sudoku. The first HTTP fixture incorrectly expected the hydrated Play Sudoku button in server HTML; inspection showed the legitimate Preparing state, and the corrected HTTP check tested server-rendered release content instead. A separate fresh phone browser verified the actual Play Sudoku button, Easy gameplay, pause/resume and Exit, restored site chrome and no remaining iframe, with zero page errors. A missing-token Sudoku API request returned 401 session_expired through the real server path. No production account/listing/review writes were performed. This final documentation change does not require repeating the completed application/emulator suites; npm run check:log and git diff --check are run before delivery.
+- **Release:** Application 387cf6a is pushed and live at https://vihar.online. This documentation confirmation carries identical runtime code and is included in the authorized main push. The owner confirmed the hero is correct. Physical hardware/Safari remain untested.
 
 ### 2026-11-14 — Restore one continuous twelve-image hero tunnel
 
