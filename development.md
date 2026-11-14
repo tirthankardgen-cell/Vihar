@@ -438,6 +438,15 @@ Maintainers may edit or remove harmful content, ask participants to change their
 
 ## Change log
 
+### 2026-11-15 — Verify Dune Dash production launch
+
+- **Author:** Codex.
+- **Request:** Complete the authorized Dune Dash release and verify the playable game at https://vihar.online/games/dune-dash after pushing both repositories to main.
+- **Changes:** Recorded the completed website deployment, live browser launch and public-route checks. This follow-up changes documentation only; the tested game and website runtime remain unchanged.
+- **Decisions:** Verify the canonical production origins and actual embedded player after the release build becomes READY. Keep the existing discovery layout, game-owned pause/Exit protocol, optional audio preferences and unrelated uncommitted development history intact. Remove this task's temporary website verification files after reviewing them.
+- **Validation:** Vercel readback confirmed Games a8c51e479d7fb6c8858799cca674b503ffd1f4b4 and website eeb700af74d4cf4fa33695dd4494aef8870098a2 at READY deployments assigned to games.vihar.online and vihar.online. All five website GitHub checks passed: development log, preview/enabled/review website checks and Firebase authorization rules. With all local proxy routes removed, the actual public page passed 36 Play/game/Exit checks across 1440×900 desktop, 390×844 phone portrait and 844×390 short landscape. Checks covered preserved Vihar URL, removed site header during play, visible game/host controls without scrolling, Space start/jump/fresh-seed replay, Escape pause, music/effects toggles, collision/results, frame removal and restored Play focus/header. Eight public HTTP routes passed, including indexed listing metadata/audio/keyboard guidance, Quick Play, sitemap inclusion, the public embed module, game overview/field guide and live info/rules contracts. The first HTTP assertion expected the hydrated Play label in server HTML; the server correctly emits Preparing while auth initializes, so HTTP checks now verify released metadata/guidance and the browser verifies enabled Play. npm run check:log and git diff --check passed. Both task-owned Next test servers were stopped; the existing unrelated development server was preserved. Browser evidence is viewport/input emulation, not physical-device testing; no production test account or review writes were made.
+- **Release:** Games deployment dpl_GFUjZppU24VS6EwUJgJZWSn6344j and website deployment dpl_ESSHjHeF4rfCgxGJPv4zDGHFZjRK are READY at their exact pushed release commits. Dune Dash is playable from the owner's supplied Vihar URL with Endless/Practice, single-viewport game screens, Space controls and optional original music/effects. This documentation verification record follows on main without a runtime change.
+
 ### 2026-11-15 — Release Dune Dash with viewport screens, Space controls and audio
 
 - **Author:** Codex.
