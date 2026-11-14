@@ -38,8 +38,8 @@ test("launches use an allowlisted individual URL and accept only a one-use fragm
 test("unverified releases cannot launch, and login returns only to known game pages", () => {
   assert.equal(quickPlayGames.length, 24);
   assert.equal(new Set(quickPlayGames.map((game) => game.id)).size, 24);
-  assert.deepEqual(quickPlayGames.slice(0, 5).map((game) => game.id).sort(), ["carrom", "chess", "paperwing", "sudoku", "tic-tac-toe"]);
-  assert(quickPlayGames.slice(5).every((game) => game.release.status === "upcoming"));
+  assert.deepEqual(quickPlayGames.slice(0, 6).map((game) => game.id).sort(), ["carrom", "chess", "dune-dash", "paperwing", "sudoku", "tic-tac-toe"]);
+  assert(quickPlayGames.slice(6).every((game) => game.release.status === "upcoming"));
   assert(!quickPlayGames.some((game) => ["bap-ka-rasta", "gulam-chor"].includes(game.id)));
   for (const game of quickPlayGames) {
     assert.equal(new URL(game.embedUrl).origin, game.allowedOrigin);

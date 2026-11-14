@@ -40,7 +40,7 @@ test("unreleased Quick Play cannot mint launches or receipts, even with a counte
   assert.equal((await db.doc(`officialGames/${gameId}/players/${player.uid}`).get()).exists, false);
 });
 
-for (const gameId of ["chess", "carrom", "paperwing", "sudoku"]) test(`${gameId}: released Quick Play keeps scoped activity, receipts, time and metrics isolated`, async () => {
+for (const gameId of ["chess", "carrom", "paperwing", "sudoku", "dune-dash"]) test(`${gameId}: released Quick Play keeps scoped activity, receipts, time and metrics isolated`, async () => {
   const game = getQuickPlayGame(gameId), previous = game.release;
   assert.equal(game.release.status, "playable");
   try {

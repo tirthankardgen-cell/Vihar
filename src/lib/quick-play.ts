@@ -3,7 +3,7 @@ import type { GameCategory } from "./game-categories";
 // Confirmed by the owner and /api/games on 9 November 2026. Paths below are
 // explicit entries from that manifest, not slugs inferred from display names.
 export const quickPlayOrigin = "https://games.vihar.online";
-export const quickPlayUpdated = "2026-11-14T17:52:14.545Z";
+export const quickPlayUpdated = "2026-11-14T18:57:14.000Z";
 export const quickPlayModes = {
   solo: "Solo",
   computer: "Vs computer",
@@ -107,10 +107,15 @@ const entries: readonly Entry[] = [
     id: "dune-dash", title: "Dune Dash", genre: "Arcade", categories: ["arcade", "solo"],
     embedUrl: "https://games.vihar.online/dune-dash/play",
     description: "Run the desert horizon. Help a little fox jump and duck past the next obstacle.",
-    about: "An original rust-coloured fox races across a flat illustrated desert. Read the approaching sandstone and birds, then time each jump or duck. This solo game is in development.",
+    about: "An original rust fox runs across a sand-paper field guide. Jump hand-cut sandstone and duck beneath ink swifts, with the full horizon visible on every screen. Endless gradually gets faster; Practice keeps a gentler, fixed pace. One collision ends the run, and distance sets the score. Optional device saves restore paused, and each mode keeps its own local best when browser storage is available. Music and sound effects have separate controls and start off. No account or download is required.",
     artworkAlt: "Rust fox with a cream-tipped tail running past sandstone silhouettes on a flat sand-paper field-guide horizon",
-    instructions: ["Watch the obstacles approaching along the horizon.", "Jump over ground obstacles and duck beneath low birds.", "A collision ends the run; aim to travel a little farther next time."],
+    instructions: ["Choose Endless or Practice and pack your field notes. Press Space or Start run to begin; Endless gets faster over time, while Practice stays at a gentler pace.", "Press Space, Up or W, tap the horizon, or use Jump to clear sandstone. Each new press gives one grounded jump; holding a key does not repeat it.", "Hold Down, S or the separate Duck control to pass beneath low birds. Release to stand. Duck works only on the ground, and jumping from Duck first stands the fox.", "Escape or Pause freezes the run; Resume continues after a three-count countdown. One collision ends the journey. Press Space or Try again to replay the same mode with a fresh horizon. Use Exit to Vihar to return here. Music and effects are optional and stop while paused."],
     tip: "Watch the approach distance and keep your next action deliberate.",
+    release: {
+      status: "playable", verifiedAt: "2026-11-14T18:57:14.000Z",
+      modes: ["solo"], devices: ["Desktop", "Tablet", "Phone"],
+      controls: "Choose Endless or Practice. Space starts, jumps and replays; Up or W also jumps. Tap the horizon or use Jump. Hold Down, S or Duck while grounded to duck. Escape or Pause freezes the run; Resume uses a three-count countdown. Music and sound effects have separate optional controls, start off and stop on pause or Exit. Device saves restore paused and keep separate mode records. Exit to Vihar returns to this page.",
+    },
   },
   {
     id: "lantern-logic", title: "Lantern Logic", genre: "Puzzles & Quick Play", categories: ["puzzles", "solo"],
