@@ -3,7 +3,7 @@ import type { GameCategory } from "./game-categories";
 // Confirmed by the owner and /api/games on 9 November 2026. Paths below are
 // explicit entries from that manifest, not slugs inferred from display names.
 export const quickPlayOrigin = "https://games.vihar.online";
-export const quickPlayUpdated = "2026-11-14T18:57:14.000Z";
+export const quickPlayUpdated = "2026-11-15T06:22:08.558Z";
 export const quickPlayModes = {
   solo: "Solo",
   computer: "Vs computer",
@@ -89,19 +89,29 @@ const entries: readonly Entry[] = [
     id: "silk-trail", title: "Silk Trail", genre: "Arcade", categories: ["arcade", "solo"],
     embedUrl: "https://games.vihar.online/silk-trail/play",
     description: "Guide a stitched garden snake. Gather leaves and leave yourself room to turn.",
-    about: "A classic growing-snake challenge imagined as a woven garden panel. Plan the next turn, gather leaves and protect the space your longer trail will need. This solo game is in development.",
+    about: "A classic growing-snake challenge woven into a Silk Garden. Choose Calm, Flow or Swift and guide a mulberry-green snake around a 20 × 20 panel. Each leaf earns one point and lengthens your trail; the walls and your own body end the run. Start and Resume use a three-count countdown. Optional device saves return paused and keep a separate personal best for each pace. Sound effects and original music have independent controls. No account or download is required.",
     artworkAlt: "Mulberry-green stitched snake and a copper leaf on a parchment grid with a woven silk border",
-    instructions: ["Guide the snake through the grid to collect leaves.", "Each leaf lengthens the trail. Avoid the boundaries and your own occupied cells.", "Plan ahead as the available space becomes smaller."],
+    instructions: ["Choose Calm, Flow or Swift, then Enter the garden and Start. After the three-count countdown, the snake moves at a fixed 5, 8 or 11 cells per second.", "Use arrow keys, WASD, the labelled direction pad or a clear swipe inside the garden to turn. The snake cannot reverse directly. Gather leaves to grow by one cell and earn one point each.", "Avoid the solid walls and your occupied trail; the garden does not wrap. A collision ends the run. Fill all 400 cells to complete the garden.", "Space, Escape or Pause freezes movement and active time. Resume uses another countdown. Unfinished gardens restore paused on this device when storage is available; each pace keeps its own best. Use Exit to Vihar to return here."],
     tip: "Keep an open route around your own trail.",
+    release: {
+      status: "playable", verifiedAt: "2026-11-15T06:22:08.558Z",
+      modes: ["solo"], devices: ["Desktop", "Tablet", "Phone"],
+      controls: "Choose Calm, Flow or Swift. Turn with arrow keys, WASD, the labelled direction pad or swipes within the garden. Space, Escape or Pause pauses; Start and Resume use a three-count countdown. Larger garden expands the board. Sound and music have separate switches. Optional device saves restore paused. Exit to Vihar returns to this page.",
+    },
   },
   {
     id: "monsoon-blocks", title: "Monsoon Blocks", genre: "Arcade", categories: ["arcade", "solo"],
     embedUrl: "https://games.vihar.online/monsoon-blocks/play",
     description: "Arrange falling glass swatches. Clear a row and make room for the next shape.",
-    about: "Seven patterned falling shapes meet a flat rain-window grid. Fit and rotate the swatches to complete rows before the stack reaches the top. This solo game is in development.",
+    about: "Seven patterned falling shapes meet a Rain Window with ten columns and twenty rows. Choose Standard or the slower Practice preset, fit the glass swatches into complete rows, and plan with three upcoming shapes and a hold slot. Row clears raise your score and gradually increase the pace. A blocked spawn or a shape locking above the window ends the run. Optional device saves return paused and keep separate mode records. Glass sounds and original music have independent controls. No account or download is required.",
     artworkAlt: "Flat rain-window grid with blue, sea-glass, plum and amber block swatches and thin mullion lines",
-    instructions: ["Move and rotate the falling shape into an open position.", "Fill an entire row to clear it and create more space.", "Use the next-shape preview and hold option to plan before the stack reaches the top."],
+    instructions: ["Choose Standard or Practice and start a window. Practice gives each gravity step twice as much time, with the same scoring and controls.", "Left and Right move a shape. Down soft-drops, Up or X rotates clockwise, Space hard-drops and locks, and C holds a shape once before it locks. Use the labelled controls on touch screens.", "Fill complete rows to clear them. Clearing one, two, three or four rows earns 100, 300, 500 or 800 points times the current level; every ten total rows raises the level. Watch the next three shapes and keep space near the top.", "Escape or Pause freezes the window and active time; Resume continues after a three-count countdown. Unfinished windows restore paused with their hold and preview intact when device storage is available. Restart asks before replacing progress. Use Exit to Vihar to return here."],
     tip: "A level stack leaves more options for the next shape.",
+    release: {
+      status: "playable", verifiedAt: "2026-11-15T06:22:08.558Z",
+      modes: ["solo"], devices: ["Desktop", "Tablet", "Phone"],
+      controls: "Choose Standard or Practice. Left/Right moves; Down soft-drops; Up or X rotates; Space hard-drops; C holds. Touch players use the labelled movement, rotate, drop and hold controls. Escape or Pause freezes play; Resume uses a three-count countdown. Sound and music have separate switches. Optional device saves restore paused. Exit to Vihar returns to this page.",
+    },
   },
   {
     id: "dune-dash", title: "Dune Dash", genre: "Arcade", categories: ["arcade", "solo"],

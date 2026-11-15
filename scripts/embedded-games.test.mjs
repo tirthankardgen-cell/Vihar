@@ -38,11 +38,17 @@ test("launches use an allowlisted individual URL and accept only a one-use fragm
 test("unverified releases cannot launch, and login returns only to known game pages", () => {
   assert.equal(quickPlayGames.length, 24);
   assert.equal(new Set(quickPlayGames.map((game) => game.id)).size, 24);
-  assert.deepEqual(quickPlayGames.slice(0, 6).map((game) => game.id).sort(), ["carrom", "chess", "dune-dash", "paperwing", "sudoku", "tic-tac-toe"]);
-  assert(quickPlayGames.slice(6).every((game) => game.release.status === "upcoming"));
+  assert.deepEqual(quickPlayGames.slice(0, 8).map((game) => game.id).sort(), ["carrom", "chess", "dune-dash", "monsoon-blocks", "paperwing", "silk-trail", "sudoku", "tic-tac-toe"]);
+  assert(quickPlayGames.slice(8).every((game) => game.release.status === "upcoming"));
   assert(!quickPlayGames.some((game) => ["bap-ka-rasta", "gulam-chor"].includes(game.id)));
   for (const game of quickPlayGames) {
     assert.equal(new URL(game.embedUrl).origin, game.allowedOrigin);
+    if (game.release.status === "playable") {
+      assertQuickPlayRelease(game);
+      const url = new URL(buildEmbedUrl(game, session, "https://vihar.online"));
+      assert.equal(url.pathname, `/${game.id}/play`);
+      assert(!game.about.includes("in development"));
+    }
     assert.equal(safeReturnPath(`/games/${game.id}`), `/games/${game.id}`);
     assert.equal(safeReturnPath(`/games/${game.id}?next=//evil.example`), "/dashboard");
     if (game.release.status === "upcoming") assert.throws(() => buildEmbedUrl(game, session, "https://vihar.online"), /coming soon/);

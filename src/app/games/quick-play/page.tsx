@@ -1,12 +1,12 @@
 import { BreadcrumbData, GameCollectionData } from "@/components/structured-data";
 import { GameCollections } from "@/components/game-collections";
 import { QuickPlayCatalogue } from "@/components/quick-play-catalogue";
-import { quickPlayGames } from "@/lib/quick-play";
+import { quickPlayGames, releasedQuickPlayGames } from "@/lib/quick-play";
 import { pageMetadata } from "@/lib/site";
 import styles from "@/components/quick-play-catalogue.module.css";
 import "@/app/content.css";
 
-const description = "New games every week. Play Chess, Carrom, Tic-Tac-Toe, Paperwing and Sudoku free in your browser. Discover 24 board games, puzzles and arcade favourites, with upcoming releases clearly marked.";
+const description = `New games every week. Play ${releasedQuickPlayGames().length} games free in your browser, including Silk Trail, Monsoon Blocks, Dune Dash, Chess and Sudoku. Discover ${quickPlayGames.length} board games, puzzles and arcade favourites, with upcoming releases clearly marked.`;
 export const metadata = pageMetadata("Free Browser Board Games & Puzzles — Quick Play", description, "/games/quick-play", "/images/quick-play/ludo.png");
 
 export default function QuickPlayPage() {
