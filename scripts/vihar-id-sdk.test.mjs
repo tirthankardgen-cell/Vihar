@@ -5,8 +5,16 @@ import vm from "node:vm";
 import test from "node:test";
 const source = (await readFile(new URL("../public/sdk/vihar-id.js", import.meta.url), "utf8")).replace("export function createViharId", "function createViharId");
 const tick = () => new Promise((resolve) => setImmediate(resolve));
-function browser() {
+function browser(t) {
   let clock = 1000, nextTimer = 0;
+  const timeouts = new Set();
+  t?.after(() => { for (const timeout of timeouts) clearTimeout(timeout); });
+  const setBrowserTimeout = (fn, ms) => {
+    const timeout = setTimeout(fn, ms);
+    // A failed assertion must not keep Node alive for the SDK's login expiry.
+    timeout.unref(); timeouts.add(timeout);
+    return timeout;
+  };
   const requests = [], storage = new Map(), intervals = new Map(), windowEvents = new Map(), documentEvents = new Map();
   const location = { origin: "https://studio.example.com", pathname: "/play", search: "?level=2", hash: "" };
   const popup = { closed: false, location: { replace: (url) => { popup.url = url; } }, close: () => { popup.closed = true; } };
@@ -14,7 +22,7 @@ function browser() {
   const document = { visibilityState: "visible", addEventListener: (name, fn) => documentEvents.set(name, fn), removeEventListener: (name) => documentEvents.delete(name) };
   const history = { state: null, replaceState: (_, __, url) => { history.url = url; location.hash = new URL(url, location.origin).hash; } };
   let responder = (action) => action === "token" ? { accessToken: "scoped-token", mode: "activity", expiresIn: 43200 } : action === "me" ? { sub: "player", username: "player", displayName: "Player" } : {};
-  const context = { crypto: webcrypto, TextEncoder, btoa, URL, URLSearchParams, console, location, history, window, document, performance: { now: () => clock }, sessionStorage: { getItem: (key) => storage.get(key), setItem: (key, value) => storage.set(key, value), removeItem: (key) => storage.delete(key) }, setInterval: (fn) => { intervals.set(++nextTimer, fn); return nextTimer; }, clearInterval: (id) => intervals.delete(id), setTimeout, clearTimeout,
+  const context = { crypto: webcrypto, TextEncoder, btoa, URL, URLSearchParams, console, location, history, window, document, performance: { now: () => clock }, sessionStorage: { getItem: (key) => storage.get(key), setItem: (key, value) => storage.set(key, value), removeItem: (key) => storage.delete(key) }, setInterval: (fn) => { intervals.set(++nextTimer, fn); return nextTimer; }, clearInterval: (id) => intervals.delete(id), setTimeout: setBrowserTimeout, clearTimeout: (timeout) => { clearTimeout(timeout); timeouts.delete(timeout); },
     fetch: async (url, options) => { const action = url.split("/").at(-1); const data = JSON.parse(options.body); requests.push({ action, data, options }); const result = await responder(action, data); return { ok: !result.error, status: result.status || 200, json: async () => result }; } };
   vm.runInNewContext(`${source}\nglobalThis.create = createViharId;`, context);
   const errors = [], sdk = context.create({ gameId: "test-game", onError: (error) => errors.push(error) });
@@ -88,11 +96,11 @@ test("pause and hidden-tab intervals do not accumulate gameplay time", async () 
   assert.deepEqual(reports.map((request) => request.data.sequence), [1, 2, 3, 4, 5, 6]);
   assert.equal(b.intervals.size, 0); assert.equal(b.documentEvents.size, 0);
 });
-test("sign-in accepts only the expected popup, origin and state and exchanges PKCE", async () => {
-  const b = browser();
+test("sign-in accepts only the expected popup, origin and state and exchanges PKCE", async (t) => {
+  const b = browser(t);
   b.respond((action) => action === "token" ? { accessToken: "identity-token", mode: "identity", expiresIn: 43200 } : { sub: "player", username: "player" });
   const promise = b.sdk.signIn();
-  for (let i = 0; i < 100 && !b.popup.url; i++) await tick();
+  await t.waitFor(() => assert(b.popup.url), { interval: 10, timeout: 5000 });
   assert(b.popup.url);
   const url = new URL(b.popup.url), state = url.searchParams.get("state");
   const receive = b.windowEvents.get("message");
